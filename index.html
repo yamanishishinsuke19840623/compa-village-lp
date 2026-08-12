@@ -43,6 +43,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231D3420'/%3E%3Cpath d='M16 27V13a3 3 0 0 1 3-3v0a3 3 0 0 1 3 3v3M16 27V16a3 3 0 0 0-3-3v0a3 3 0 0 0-3 3v2' stroke='%238FBE3F' stroke-width='2.3' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='9.5' r='2.3' fill='%238FBE3F'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="photos/compa-hero.jpg" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Yomogi&family=Space+Mono:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -119,9 +120,9 @@
     opacity:0; animation:heroFade 24s infinite;
   }
   .hero-slideshow .slide:nth-child(1){background-image:url('photos/compa-hero.jpg'); animation-delay:0s;}
-  .hero-slideshow .slide:nth-child(2){background-image:url('photos/gallery-0-nightbbq.jpg'); animation-delay:6s;}
-  .hero-slideshow .slide:nth-child(3){background-image:url('photos/gallery-5-suikawari.jpg'); animation-delay:12s;}
-  .hero-slideshow .slide:nth-child(4){background-image:url('photos/gallery-10-sunset.jpg'); animation-delay:18s;}
+  .hero-slideshow .slide:nth-child(2){animation-delay:6s;}
+  .hero-slideshow .slide:nth-child(3){animation-delay:12s;}
+  .hero-slideshow .slide:nth-child(4){animation-delay:18s;}
   @keyframes heroFade{
     0%{opacity:0;} 4%{opacity:1;} 21%{opacity:1;} 25%{opacity:0;} 100%{opacity:0;}
   }
@@ -580,17 +581,17 @@
       <p class="lede">庭でのBBQ、スイカ割り、映画上映、そして裏山の鳥居まで。COMPAで実際に流れている時間です。</p>
     </div>
     <div class="gallery-lead">
-      <img src="photos/gallery-0-nightbbq.jpg" alt="夜、庭でBBQを楽しむ旅人たち" loading="lazy">
+      <img src="photos/gallery-0-nightbbq.jpg" alt="夜、庭でBBQを楽しむ旅人たち" loading="lazy" decoding="async">
     </div>
     <div class="gallery-grid">
-      <img src="photos/gallery-1-exterior.jpg" alt="COMPA VILLAGEの外観" loading="lazy">
-      <img src="photos/gallery-3-lounge.jpg" alt="屋外プロジェクターのある共用ラウンジ" loading="lazy">
-      <img src="photos/gallery-5-suikawari.jpg" alt="庭でのスイカ割り" loading="lazy">
-      <img src="photos/gallery-7-torii.jpg" alt="裏山にある鳥居への散歩道" loading="lazy">
-      <img src="photos/gallery-8-shrine.jpg" alt="森の中の小さな祠" loading="lazy">
-      <img src="photos/gallery-2-yard.jpg" alt="COMPA VILLAGEの庭・駐車スペース" loading="lazy">
-      <img src="photos/gallery-9-dining.jpg" alt="室内での乾杯タイム" loading="lazy">
-      <img src="photos/gallery-10-sunset.jpg" alt="近くの海岸から見る夕陽" loading="lazy">
+      <img src="photos/gallery-1-exterior.jpg" alt="COMPA VILLAGEの外観" loading="lazy" decoding="async">
+      <img src="photos/gallery-3-lounge.jpg" alt="屋外プロジェクターのある共用ラウンジ" loading="lazy" decoding="async">
+      <img src="photos/gallery-5-suikawari.jpg" alt="庭でのスイカ割り" loading="lazy" decoding="async">
+      <img src="photos/gallery-7-torii.jpg" alt="裏山にある鳥居への散歩道" loading="lazy" decoding="async">
+      <img src="photos/gallery-8-shrine.jpg" alt="森の中の小さな祠" loading="lazy" decoding="async">
+      <img src="photos/gallery-2-yard.jpg" alt="COMPA VILLAGEの庭・駐車スペース" loading="lazy" decoding="async">
+      <img src="photos/gallery-9-dining.jpg" alt="室内での乾杯タイム" loading="lazy" decoding="async">
+      <img src="photos/gallery-10-sunset.jpg" alt="近くの海岸から見る夕陽" loading="lazy" decoding="async">
     </div>
   </div>
 </section>
@@ -686,15 +687,15 @@
     </div>
     <div class="shop-grid">
       <a class="shop-item" href="https://worldcompa.base.shop/items/142650929" target="_blank" rel="noopener">
-        <img src="https://baseec-img-mng.akamaized.net/images/item/origin/715e2968ea45bf3115b80f31a9eaeacf.png?imformat=generic&q=90&im=Resize,width=400,type=normal" alt="¡compa! ロゴTシャツ" loading="lazy">
+        <img src="https://baseec-img-mng.akamaized.net/images/item/origin/715e2968ea45bf3115b80f31a9eaeacf.png?imformat=generic&q=90&im=Resize,width=400,type=normal" alt="¡compa! ロゴTシャツ" loading="lazy" decoding="async">
         <span>¡compa! ロゴTシャツ<strong>¥5,000</strong></span>
       </a>
       <a class="shop-item" href="https://worldcompa.base.shop/items/142063514" target="_blank" rel="noopener">
-        <img src="https://baseec-img-mng.akamaized.net/images/item/origin/4e50232c9596121fe7126f7149b69597.jpg?imformat=generic&q=90&im=Resize,width=400,type=normal" alt="SKATE JOURNEY ロンT ライムグリーン" loading="lazy">
+        <img src="https://baseec-img-mng.akamaized.net/images/item/origin/4e50232c9596121fe7126f7149b69597.jpg?imformat=generic&q=90&im=Resize,width=400,type=normal" alt="SKATE JOURNEY ロンT ライムグリーン" loading="lazy" decoding="async">
         <span>SKATE JOURNEY ロンT<strong>¥5,500</strong></span>
       </a>
       <a class="shop-item" href="https://worldcompa.base.shop/items/141823640" target="_blank" rel="noopener">
-        <img src="https://baseec-img-mng.akamaized.net/images/item/origin/74880bf5cb98e52fc15d78047ef0d5f2.png?imformat=generic&q=90&im=Resize,width=400,type=normal" alt="SKATE JOURNEY パーカー White" loading="lazy">
+        <img src="https://baseec-img-mng.akamaized.net/images/item/origin/74880bf5cb98e52fc15d78047ef0d5f2.png?imformat=generic&q=90&im=Resize,width=400,type=normal" alt="SKATE JOURNEY パーカー White" loading="lazy" decoding="async">
         <span>SKATE JOURNEY パーカー<strong>¥7,500</strong></span>
       </a>
     </div>
@@ -710,19 +711,19 @@
     </div>
     <div class="yt-grid">
       <a class="yt-item" href="https://www.youtube.com/shorts/ZXNctDZNEvg" target="_blank" rel="noopener">
-        <img src="https://i3.ytimg.com/vi/ZXNctDZNEvg/hqdefault.jpg" alt="こんなに過酷な旅は人生で初めて" loading="lazy">
+        <img src="https://i3.ytimg.com/vi/ZXNctDZNEvg/hqdefault.jpg" alt="こんなに過酷な旅は人生で初めて" loading="lazy" decoding="async">
         <span>こんなに過酷な旅は人生で初めて<strong>12,298 回視聴</strong></span>
       </a>
       <a class="yt-item" href="https://www.youtube.com/shorts/UM0ibofWrHM" target="_blank" rel="noopener">
-        <img src="https://i2.ytimg.com/vi/UM0ibofWrHM/hqdefault.jpg" alt="誰にでも秘密ってあるよね。。。" loading="lazy">
+        <img src="https://i2.ytimg.com/vi/UM0ibofWrHM/hqdefault.jpg" alt="誰にでも秘密ってあるよね。。。" loading="lazy" decoding="async">
         <span>誰にでも秘密ってあるよね。。。<strong>3,158 回視聴</strong></span>
       </a>
       <a class="yt-item" href="https://www.youtube.com/shorts/8QClzayC6hg" target="_blank" rel="noopener">
-        <img src="https://i1.ytimg.com/vi/8QClzayC6hg/hqdefault.jpg" alt="皆んなは夢って有りますか？" loading="lazy">
+        <img src="https://i1.ytimg.com/vi/8QClzayC6hg/hqdefault.jpg" alt="皆んなは夢って有りますか？" loading="lazy" decoding="async">
         <span>皆んなは夢って有りますか？<strong>2,833 回視聴</strong></span>
       </a>
       <a class="yt-item" href="https://www.youtube.com/shorts/XQv5sQl7dtc" target="_blank" rel="noopener">
-        <img src="https://i1.ytimg.com/vi/XQv5sQl7dtc/hqdefault.jpg" alt="大好きな山口県満喫中" loading="lazy">
+        <img src="https://i1.ytimg.com/vi/XQv5sQl7dtc/hqdefault.jpg" alt="大好きな山口県満喫中" loading="lazy" decoding="async">
         <span>大好きな山口県満喫中<strong>2,799 回視聴</strong></span>
       </a>
     </div>
@@ -777,11 +778,11 @@
     </div>
     <div class="room-types">
       <div class="room-type">
-        <img src="photos/room-group-common.jpg" alt="団体様用プランで使える共用ラウンジ" loading="lazy">
+        <img src="photos/room-group-common.jpg" alt="団体様用プランで使える共用ラウンジ" loading="lazy" decoding="async">
         <div class="room-type-body"><span class="mono">TYPE 01</span><h4>団体様用プラン</h4><p>1〜15名様まで・1階部分を貸し切り感覚でご利用いただけます（¥27,000/泊）</p></div>
       </div>
       <div class="room-type">
-        <img src="photos/room-standard.jpg" alt="スタンダードツインルームの一室" loading="lazy">
+        <img src="photos/room-standard.jpg" alt="スタンダードツインルームの一室" loading="lazy" decoding="async">
         <div class="room-type-body"><span class="mono">TYPE 02</span><h4>スタンダード ツインルーム</h4><p>共用バスルーム・1部屋2名まで・全3室（¥3,250/泊）</p></div>
       </div>
       <div class="room-type">
@@ -931,7 +932,7 @@
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <img src="photos/compa-logo.png" alt="COMPA VILLAGE" class="footer-logo-img">
+        <img src="photos/compa-logo.png" alt="COMPA VILLAGE" class="footer-logo-img" loading="lazy" decoding="async">
         <p style="max-width:32ch; color:rgba(246,241,228,.6); font-size:.88rem;">山口県下関市のゲストハウス。旅の途中に、最高の出会いを。</p>
       </div>
       <div class="footer-col">
@@ -956,6 +957,23 @@
     </div>
   </div>
 </footer>
+
+<script>
+(function(){
+  // 初期表示に不要な2〜4枚目のヒーロースライドは、LCP画像の読み込みを妨げないよう読み込み後に差し込む
+  function loadDeferredHeroSlides(){
+    const slides = document.querySelectorAll('.hero-slideshow .slide');
+    const images = ['photos/gallery-0-nightbbq.jpg', 'photos/gallery-5-suikawari.jpg', 'photos/gallery-10-sunset.jpg'];
+    slides.forEach((slide, i) => {
+      if(i === 0) return;
+      const src = images[i - 1];
+      if(src) slide.style.backgroundImage = "url('" + src + "')";
+    });
+  }
+  if(document.readyState === 'complete'){ loadDeferredHeroSlides(); }
+  else { window.addEventListener('load', loadDeferredHeroSlides); }
+})();
+</script>
 
 <script>
 (function(){
