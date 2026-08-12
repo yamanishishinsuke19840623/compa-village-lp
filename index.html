@@ -656,7 +656,7 @@
       </div>
     </div>
     <div class="room-types">
-      <div class="room-type"><span class="mono">TYPE 01</span><h4>ファミリールーム</h4><p>専用バスルーム付・最大6名（シングル×2＋二段ベッド×2）</p></div>
+      <div class="room-type"><span class="mono">TYPE 01</span><h4>団体様用プラン</h4><p>1〜15名様まで・一棟貸し感覚でご利用いただけます（¥27,000/泊）</p></div>
       <div class="room-type"><span class="mono">TYPE 02</span><h4>スタンダード ツインルーム</h4><p>共用バスルーム・1部屋2名まで・全3室（¥3,250/泊）</p></div>
       <div class="room-type"><span class="mono">TYPE 03</span><h4>ドミトリールーム</h4><p>4人部屋・男女共用・1ベッドから予約可（¥2,250/泊）</p></div>
     </div>
@@ -669,7 +669,7 @@
       <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10l1.3-4h11.4L19 10"/><rect x="3" y="10" width="18" height="7" rx="2"/><circle cx="7.5" cy="17.3" r="1.5" fill="var(--forest-deep)" stroke="none"/><circle cx="16.5" cy="17.3" r="1.5" fill="var(--forest-deep)" stroke="none"/></svg> 専用駐車場 無料</span>
       <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 15h13v3H2z"/><path d="M15 15.5c1-1 2.3-1 3.2 0M18.2 13.3c1.4-1.4 3.2-1.4 4.6 0"/><path d="M3 20L20 4"/></svg> 全館禁煙</span>
     </div>
-    <p style="margin-top:26px; font-size:.92rem; color:rgba(31,43,30,.7);">一棟貸し（最大12名）でのご利用もご相談ください。旅の仲間・家族・ペットと一緒に、まるごと一軒家で過ごせます。旅人も、長期滞在も、一人旅も、誰でも大歓迎。</p>
+    <p style="margin-top:26px; font-size:.92rem; color:rgba(31,43,30,.7);">団体様用プラン（1〜15名・¥27,000/泊）なら、一棟貸し感覚でまるごと一軒家を使えます。旅の仲間・家族・ペットと一緒に。旅人も、長期滞在も、一人旅も、誰でも大歓迎。</p>
   </div>
 </section>
 
@@ -725,7 +725,7 @@
         <h5>Guesthouse</h5>
         <p>山口県下関市（下関市立美術館・長府庭園エリア）</p>
         <p>最寄り：JR新下関駅</p>
-        <p>個室 ¥3,250〜 / 1泊・一棟貸し(最大12名)も可</p>
+        <p>個室 ¥3,250〜 / 1泊・団体プラン(1〜15名)¥27,000/泊も可</p>
       </div>
       <div class="footer-col">
         <h5>Follow / Contact</h5>
@@ -892,16 +892,17 @@
 
 <script>
 (function(){
-  // Stripeの支払いリンクが揃い次第、ここにURLを入れる（Stripe手順書_ゆうさん用.txt参照）
+  // ゆうさんがStripeを「本番環境」に切り替えて本番リンクを作り直したら、ここに貼る
+  // （2026-08-12時点でもらっている3つはまだ test_ 付きのテストモードなので未使用）
   const PAYMENT_LINKS = {
-    standard: '',
-    family: '',
-    dorm: ''
+    standard: '', // スタンダードツインルーム ¥3,250/泊
+    dorm: '',     // ドミトリールーム ¥2,250/泊
+    group: ''     // 団体様用プラン(1〜15名) ¥27,000/泊
   };
   // GASデプロイ後、ここにウェブアプリURLを貼る（gas/デプロイ手順書_やまちゃん用.txt参照）
   const GAS_BOOKING_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzDjZTTgivfNKeEE7_--Cx_MAaob7ZuBV2plVSP0woGOnMj21z8SsyP905NvJrSLbtR/exec';
   const IG_URL = 'https://www.instagram.com/compa0601/';
-  let bookedRanges = { standard: [], family: [], dorm: [] };
+  let bookedRanges = { standard: [], dorm: [], group: [] };
 
   const checkinBtn = document.getElementById('checkinBtn');
   const checkoutBtn = document.getElementById('checkoutBtn');
@@ -925,8 +926,8 @@
   const DOW = ['日','月','火','水','木','金','土'];
   const ROOMS = [
     { key:'standard', name:'スタンダード ツインルーム', cap:'共用バスルーム・1部屋2名まで・全3室', price:3250 },
-    { key:'family', name:'ファミリールーム', cap:'専用バスルーム付・最大6名', price:null },
-    { key:'dorm', name:'ドミトリールーム', cap:'4人部屋・男女共用・1ベッドから予約可', price:2250 }
+    { key:'dorm', name:'ドミトリールーム', cap:'4人部屋・男女共用・1ベッドから予約可', price:2250 },
+    { key:'group', name:'団体様用プラン', cap:'1〜15名様まで・一棟貸し感覚でご利用いただけます', price:27000 }
   ];
 
   function fmt(d){ return d.getFullYear() + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日'; }

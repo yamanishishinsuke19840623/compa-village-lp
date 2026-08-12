@@ -5,18 +5,18 @@
 
 var HOST_EMAIL = 'jannenenenene@gmail.com';
 var CC_EMAIL   = 'yamanishishinsuke19840623@gmail.com';
-var SHEET_ID   = ''; // setupSheet() 実行後にログへ出るIDをここに貼り付ける
+var SHEET_ID   = '1z8eWW_b7Xa40eRgY7fGZAfVOI58J9Vt1TKFIsHTNQfU';
 
-// 各部屋タイプの同時受付可能数（ゆうさんへの確認: standard=個室3室、dorm=4ベッド分。familyは要確認、暫定1）
+// 各プランの同時受付可能数（2026-08-12 ゆうさん確認済み：3プラン構成、ファミリールームは廃止し団体プランに統合）
 var ROOM_CAPACITY = {
   standard: 3, // スタンダード ツインルーム（個室3室、¥3,250/泊）
-  family:   1, // ファミリールーム（部屋数・料金とも要確認）
-  dorm:     4  // ドミトリールーム（4ベッド、1ベッドから予約可、¥2,250/泊）
+  dorm:     4, // ドミトリールーム（4ベッド、1ベッドから予約可、¥2,250/泊）
+  group:    1  // 団体様用プラン（1〜15名・一棟貸し感覚、¥27,000/泊）
 };
 var ROOM_NAMES = {
   standard: 'スタンダード ツインルーム',
-  family:   'ファミリールーム',
-  dorm:     'ドミトリールーム'
+  dorm:     'ドミトリールーム',
+  group:    '団体様用プラン'
 };
 
 // =============================================
