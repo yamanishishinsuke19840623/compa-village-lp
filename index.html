@@ -297,32 +297,48 @@
   .bk-date-btn.filled{border-color:var(--forest-deep); font-weight:700;}
   .bk-search{white-space:nowrap; padding:15px 24px;}
 
-  .bk-calendar{margin-top:22px; border-top:1px solid var(--line); padding-top:22px;}
-  .bk-cal-header{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
-  .bk-cal-header button{background:none; border:1px solid var(--line); border-radius:8px; width:34px; height:34px; cursor:pointer; font-size:1rem; color:var(--forest-deep);}
+  .bk-calendar{
+    margin-top:16px; border:1px solid var(--line); border-radius:12px;
+    padding:14px; background:var(--paper); max-width:296px; box-shadow:0 8px 24px rgba(31,43,30,.08);
+  }
+  .bk-cal-header{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;}
+  .bk-cal-header button{background:none; border:1px solid var(--line); border-radius:6px; width:26px; height:26px; cursor:pointer; font-size:.8rem; color:var(--forest-deep); line-height:1; padding:0;}
   .bk-cal-header button:hover{background:var(--sand);}
-  .bk-cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:4px;}
-  .bk-cal-grid .dow{font-family:'Space Mono',monospace; font-size:.66rem; text-align:center; color:rgba(31,43,30,.5); padding-bottom:6px;}
+  .bk-cal-header span{font-size:.78rem;}
+  .bk-cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:2px;}
+  .bk-cal-grid .dow{font-family:'Space Mono',monospace; font-size:.6rem; text-align:center; color:rgba(31,43,30,.45); padding-bottom:4px;}
   .bk-cal-grid button.day{
-    aspect-ratio:1; border:none; background:transparent; border-radius:8px; cursor:pointer;
-    font-size:.85rem; color:var(--ink); font-family:'Space Mono',monospace;
+    width:100%; aspect-ratio:1; border:none; background:transparent; border-radius:6px; cursor:pointer;
+    font-size:.72rem; color:var(--ink); font-family:'Space Mono',monospace;
   }
   .bk-cal-grid button.day:hover:not(:disabled){background:var(--sand);}
-  .bk-cal-grid button.day:disabled{color:rgba(31,43,30,.22); cursor:not-allowed;}
+  .bk-cal-grid button.day:disabled{color:rgba(31,43,30,.2); cursor:not-allowed;}
   .bk-cal-grid button.day.selected{background:var(--forest-deep); color:var(--paper); font-weight:700;}
   .bk-cal-grid button.day.in-range{background:rgba(143,190,63,.32);}
-  .bk-cal-hint{margin:14px 0 0; font-size:.8rem; color:rgba(31,43,30,.55);}
+  .bk-cal-hint{margin:10px 0 0; font-size:.7rem; color:rgba(31,43,30,.5);}
 
   .bk-results{margin-top:22px; border-top:1px solid var(--line); padding-top:22px;}
   .bk-results-summary{font-size:.85rem; color:var(--forest-deep); margin:0 0 16px;}
   .bk-room-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
   @media(max-width:820px){ .bk-room-grid{grid-template-columns:1fr;} }
   .bk-room-card{border:1px solid var(--line); border-radius:12px; padding:18px; background:var(--paper); display:flex; flex-direction:column;}
-  .bk-room-card h4{margin:0 0 4px; font-size:.98rem;}
+  .bk-room-card.unavailable{opacity:.55;}
+  .bk-room-card h4{margin:0 0 4px; font-size:.98rem; display:flex; align-items:center; gap:8px;}
+  .bk-room-card .badge-full{font-family:'Space Mono',monospace; font-size:.62rem; background:var(--sunset); color:#fff; padding:2px 7px; border-radius:999px;}
   .bk-room-card .cap{font-size:.8rem; color:rgba(31,43,30,.6); margin:0 0 14px;}
   .bk-room-card .price{font-family:'Space Mono',monospace; font-size:1.05rem; color:var(--forest-deep); margin:0 0 16px; display:block;}
   .bk-room-card .price small{font-size:.66rem; font-weight:400; color:rgba(31,43,30,.55); display:block; margin-top:3px;}
   .bk-room-card .btn{width:100%; justify-content:center; padding:11px; font-size:.85rem; margin-top:auto;}
+  .bk-room-card .btn:disabled{opacity:.5; cursor:not-allowed;}
+  .bk-request-form{display:grid; gap:8px; margin-top:auto;}
+  .bk-request-form input{
+    border:1px solid var(--line); border-radius:8px; padding:9px 11px; font-size:.84rem;
+    font-family:inherit; background:var(--paper-2);
+  }
+  .bk-request-form input:focus-visible{outline:2px solid var(--lime); outline-offset:1px;}
+  .bk-request-status{font-size:.76rem; margin-top:8px; min-height:1em;}
+  .bk-request-status.ok{color:var(--forest-deep);}
+  .bk-request-status.err{color:var(--sunset);}
 
   /* ---------- booking cta banner ---------- */
   .booking-banner{
@@ -579,7 +595,7 @@
       </div>
     </div>
 
-    <p class="draft-note">※ 決済（Stripe）連携は準備中です。金額未確定の部屋タイプ・予約ボタンは現在Instagramでのお問い合わせにつながります。</p>
+    <p class="draft-note">※ 予約リクエスト機能・リアルタイム空室管理は、GASデプロイ後に有効になります（gas/デプロイ手順書_やまちゃん用.txt参照）。決済（Stripe）連携も準備中です。それまでは予約ボタンがInstagramでのお問い合わせにつながります。</p>
   </div>
 </section>
 
@@ -766,7 +782,10 @@
     family: '',
     dorm: ''
   };
+  // GASデプロイ後、ここにウェブアプリURLを貼る（gas/デプロイ手順書_やまちゃん用.txt参照）
+  const GAS_BOOKING_ENDPOINT = '';
   const IG_URL = 'https://www.instagram.com/compa0601/';
+  let bookedRanges = { standard: [], family: [], dorm: [] };
 
   const checkinBtn = document.getElementById('checkinBtn');
   const checkoutBtn = document.getElementById('checkoutBtn');
@@ -796,6 +815,60 @@
 
   function fmt(d){ return d.getFullYear() + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日'; }
   function sameDay(a,b){ return a && b && a.getTime() === b.getTime(); }
+  function toISO(d){
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+
+  // GASから空室状況をリアルタイムで取得（JSONP）。未デプロイ時は何もしない
+  function loadAvailability(){
+    if(!GAS_BOOKING_ENDPOINT) return;
+    const cbName = 'compaAvailabilityCb_' + Date.now();
+    window[cbName] = function(data){
+      bookedRanges = data.booked || bookedRanges;
+      delete window[cbName];
+      script.remove();
+    };
+    const script = document.createElement('script');
+    script.src = GAS_BOOKING_ENDPOINT + '?action=availability&callback=' + cbName;
+    script.onerror = function(){ delete window[cbName]; script.remove(); };
+    document.body.appendChild(script);
+  }
+
+  function isRoomAvailable(roomKey, ci, co){
+    const ranges = bookedRanges[roomKey] || [];
+    for(let i=0;i<ranges.length;i++){
+      const existCi = new Date(ranges[i].checkin);
+      const existCo = new Date(ranges[i].checkout);
+      if(ci < existCo && existCi < co) return false;
+    }
+    return true;
+  }
+
+  function submitBookingRequest(payload, statusEl, submitBtn){
+    if(!GAS_BOOKING_ENDPOINT){
+      statusEl.textContent = 'オンライン予約は準備中です。Instagramからお問い合わせください。';
+      statusEl.className = 'bk-request-status err';
+      return;
+    }
+    submitBtn.disabled = true;
+    statusEl.textContent = '送信中…';
+    statusEl.className = 'bk-request-status';
+    fetch(GAS_BOOKING_ENDPOINT, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'text/plain'},
+      body: JSON.stringify(payload)
+    }).then(function(){
+      statusEl.textContent = '予約リクエストを送信しました。確認のご連絡をお待ちください。';
+      statusEl.className = 'bk-request-status ok';
+      bookedRanges[payload.roomType] = bookedRanges[payload.roomType] || [];
+      bookedRanges[payload.roomType].push({checkin: payload.checkin, checkout: payload.checkout});
+    }).catch(function(){
+      statusEl.textContent = '送信に失敗しました。Instagramからお問い合わせください。';
+      statusEl.className = 'bk-request-status err';
+      submitBtn.disabled = false;
+    });
+  }
 
   function renderCalendar(){
     calMonthLabel.textContent = viewYear + ' / ' + String(viewMonth+1).padStart(2,'0');
@@ -863,19 +936,60 @@
     bkSummary.textContent = fmt(checkin) + ' 〜 ' + fmt(checkout) + '（' + nights + '泊）';
     bkRoomGrid.innerHTML = '';
     ROOMS.forEach(function(room){
+      const available = isRoomAvailable(room.key, checkin, checkout);
       const card = document.createElement('div');
-      card.className = 'bk-room-card';
+      card.className = 'bk-room-card' + (available ? '' : ' unavailable');
+
       const priceLine = room.price
         ? '¥' + (room.price * nights).toLocaleString() + '<small>¥' + room.price.toLocaleString() + '/泊 × ' + nights + '泊</small>'
         : '料金はお問い合わせください';
-      const link = PAYMENT_LINKS[room.key] || IG_URL;
-      const label = PAYMENT_LINKS[room.key] ? 'この内容で予約する →' : 'Instagramで予約を相談する →';
-      const h4 = document.createElement('h4'); h4.textContent = room.name;
+
+      const h4 = document.createElement('h4');
+      h4.textContent = room.name;
+      if(!available){
+        const badge = document.createElement('span'); badge.className = 'badge-full'; badge.textContent = '満室';
+        h4.appendChild(badge);
+      }
       const cap = document.createElement('p'); cap.className = 'cap'; cap.textContent = room.cap;
       const price = document.createElement('span'); price.className = 'price'; price.innerHTML = priceLine;
-      const a = document.createElement('a'); a.className = 'btn btn-primary'; a.href = link;
-      a.target = '_blank'; a.rel = 'noopener'; a.textContent = label;
-      card.append(h4, cap, price, a);
+      card.append(h4, cap, price);
+
+      if(!available){
+        const note = document.createElement('p'); note.className = 'bk-request-status err';
+        note.textContent = 'この日程は満室です。別の日程をお試しください。';
+        card.appendChild(note);
+      } else if(GAS_BOOKING_ENDPOINT){
+        const form = document.createElement('div'); form.className = 'bk-request-form';
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text'; nameInput.placeholder = 'お名前'; nameInput.required = true;
+        const emailInput = document.createElement('input');
+        emailInput.type = 'email'; emailInput.placeholder = 'メールアドレス'; emailInput.required = true;
+        const btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'btn btn-primary'; btn.textContent = '予約リクエストを送る →';
+        const status = document.createElement('p'); status.className = 'bk-request-status';
+        btn.addEventListener('click', function(){
+          if(!nameInput.value || !emailInput.checkValidity()){
+            status.textContent = 'お名前とメールアドレスを入力してください。';
+            status.className = 'bk-request-status err';
+            return;
+          }
+          submitBookingRequest({
+            name: nameInput.value,
+            email: emailInput.value,
+            roomType: room.key,
+            checkin: toISO(checkin),
+            checkout: toISO(checkout),
+            nights: nights
+          }, status, btn);
+        });
+        form.append(nameInput, emailInput, btn, status);
+        card.appendChild(form);
+      } else {
+        const a = document.createElement('a'); a.className = 'btn btn-primary';
+        a.href = PAYMENT_LINKS[room.key] || IG_URL; a.target = '_blank'; a.rel = 'noopener';
+        a.textContent = PAYMENT_LINKS[room.key] ? 'この内容で予約する →' : 'Instagramで予約を相談する →';
+        card.appendChild(a);
+      }
       bkRoomGrid.appendChild(card);
     });
     calWrap.hidden = true;
@@ -883,6 +997,7 @@
   });
 
   renderCalendar();
+  loadAvailability();
 })();
 </script>
 
