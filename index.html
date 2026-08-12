@@ -56,9 +56,10 @@
   .logo{
     font-family:'Yomogi', cursive;
     font-size:1.5rem;
-    display:flex; align-items:baseline; gap:8px;
+    display:flex; align-items:center; gap:10px;
     text-decoration:none; color:var(--forest-deep);
   }
+  .logo-img{height:34px; width:auto; display:block;}
   .logo span{font-family:'Space Mono',monospace; font-size:.62rem; color:var(--sunset); letter-spacing:.14em;}
   .nav-links{display:flex; align-items:center; gap:28px; font-size:.92rem;}
   .nav-links a{text-decoration:none; color:var(--ink); opacity:.75;}
@@ -360,6 +361,7 @@
   footer{background:var(--forest-deep); color:rgba(246,241,228,.78); padding:56px 0 30px;}
   .footer-grid{display:flex; flex-wrap:wrap; justify-content:space-between; gap:32px; margin-bottom:36px;}
   .footer-logo{font-family:'Yomogi',cursive; font-size:1.4rem; color:var(--paper); margin-bottom:10px;}
+  .footer-logo-img{width:190px; height:auto; margin-bottom:14px;}
   .footer-col h5{font-family:'Space Mono',monospace; font-size:.7rem; letter-spacing:.14em; color:var(--lime); text-transform:uppercase; margin:0 0 12px;}
   .footer-col p, .footer-col a{font-size:.9rem; margin:0 0 8px; text-decoration:none; display:block; color:rgba(246,241,228,.78);}
   .footer-col a:hover{color:var(--lime);}
@@ -370,7 +372,7 @@
 
 <header>
   <div class="nav">
-    <a class="logo" href="#top">COMPA VILLAGE <span>SHIMONOSEKI GUESTHOUSE</span></a>
+    <a class="logo" href="#top"><img src="photos/compa-logo-small.png" alt="COMPA VILLAGE" class="logo-img"> <span>SHIMONOSEKI GUESTHOUSE</span></a>
     <nav class="nav-links">
       <a href="#vibe">過ごし方</a>
       <a href="#play">遊ぶ</a>
@@ -603,7 +605,7 @@
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <p class="footer-logo">COMPA VILLAGE</p>
+        <img src="photos/compa-logo.png" alt="COMPA VILLAGE" class="footer-logo-img">
         <p style="max-width:32ch; color:rgba(246,241,228,.6); font-size:.88rem;">山口県下関市のゲストハウス。旅の途中に、最高の出会いを。</p>
       </div>
       <div class="footer-col">
