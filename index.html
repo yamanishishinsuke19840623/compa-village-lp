@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>COMPA VILLAGE ゲストハウス｜下関 直接予約</title>
 <meta name="description" content="山口県下関市のゲストハウス COMPA VILLAGE。旅の途中に、最高の出会いを。BBQ・スケボー・イベントで過ごす、旅人がつながる宿。">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231D3420'/%3E%3Cpath d='M16 27V13a3 3 0 0 1 3-3v0a3 3 0 0 1 3 3v3M16 27V16a3 3 0 0 0-3-3v0a3 3 0 0 0-3 3v2' stroke='%238FBE3F' stroke-width='2.3' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='9.5' r='2.3' fill='%238FBE3F'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Yomogi&family=Space+Mono:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -99,6 +100,10 @@
     padding:6px 14px; margin-bottom:22px;
     opacity:0; animation:fadeUp .7s .1s ease forwards;
   }
+  .eyebrow svg{width:14px; height:14px; flex:none; stroke:var(--lime);}
+
+  /* ---------- icon set (line-art, replaces emoji-as-icon) ---------- */
+  .ico{width:20px; height:20px; flex:none; stroke:currentColor; fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round;}
   h1.headline{
     font-family:'Yomogi', cursive;
     font-size:clamp(2.4rem, 5.4vw, 4.1rem);
@@ -195,7 +200,7 @@
     background:rgba(246,241,228,.06); border:1px solid rgba(246,241,228,.16);
     border-radius:12px; padding:16px 18px;
   }
-  .pet-list li span.ico{font-size:1.3rem; line-height:1;}
+  .pet-list li svg.ico{width:22px; height:22px; flex:none; stroke:var(--lime); margin-top:1px;}
   .pet-list li em{display:block; font-style:normal; font-family:'Space Mono',monospace; font-size:.74rem; color:rgba(246,241,228,.55); margin-top:4px;}
 
   /* ---------- room types / amenities ---------- */
@@ -206,7 +211,12 @@
   .room-type h4{margin:8px 0 6px; font-size:1rem;}
   .room-type p{margin:0; font-size:.86rem; color:rgba(31,43,30,.72);}
   .amenity-strip{display:flex; flex-wrap:wrap; gap:10px; margin-top:24px;}
-  .amenity-strip span{font-family:'Space Mono',monospace; font-size:.76rem; background:var(--sand); padding:8px 14px; border-radius:999px; color:var(--forest-deep);}
+  .amenity-strip span{
+    display:inline-flex; align-items:center; gap:7px;
+    font-family:'Space Mono',monospace; font-size:.76rem;
+    background:var(--sand); padding:8px 14px 8px 10px; border-radius:999px; color:var(--forest-deep);
+  }
+  .amenity-strip svg.ico{width:17px; height:17px; stroke:var(--forest-deep);}
 
   /* ---------- vibe cards ---------- */
   .vibe-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
@@ -270,6 +280,50 @@
   .why-direct .item h4 .o{background:rgba(143,190,63,.18); color:var(--lime-deep);}
   .why-direct .item p{margin:0; font-size:.92rem; color:rgba(31,43,30,.72);}
 
+  /* ---------- booking widget ---------- */
+  .booking-widget{
+    background:var(--paper-2); border:1px solid var(--line); border-radius:var(--radius);
+    padding:28px;
+  }
+  .bk-controls{display:flex; flex-wrap:wrap; gap:14px; align-items:flex-end;}
+  .bk-field{display:flex; flex-direction:column; gap:6px; flex:1; min-width:180px;}
+  .bk-field label{font-family:'Space Mono',monospace; font-size:.68rem; letter-spacing:.08em; color:rgba(31,43,30,.6); text-transform:uppercase;}
+  .bk-date-btn{
+    border:1px solid var(--line); background:var(--paper); border-radius:10px;
+    padding:13px 16px; font-size:.95rem; text-align:left; cursor:pointer; color:var(--ink);
+    font-family:inherit;
+  }
+  .bk-date-btn:hover{border-color:var(--lime);}
+  .bk-date-btn.filled{border-color:var(--forest-deep); font-weight:700;}
+  .bk-search{white-space:nowrap; padding:15px 24px;}
+
+  .bk-calendar{margin-top:22px; border-top:1px solid var(--line); padding-top:22px;}
+  .bk-cal-header{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+  .bk-cal-header button{background:none; border:1px solid var(--line); border-radius:8px; width:34px; height:34px; cursor:pointer; font-size:1rem; color:var(--forest-deep);}
+  .bk-cal-header button:hover{background:var(--sand);}
+  .bk-cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:4px;}
+  .bk-cal-grid .dow{font-family:'Space Mono',monospace; font-size:.66rem; text-align:center; color:rgba(31,43,30,.5); padding-bottom:6px;}
+  .bk-cal-grid button.day{
+    aspect-ratio:1; border:none; background:transparent; border-radius:8px; cursor:pointer;
+    font-size:.85rem; color:var(--ink); font-family:'Space Mono',monospace;
+  }
+  .bk-cal-grid button.day:hover:not(:disabled){background:var(--sand);}
+  .bk-cal-grid button.day:disabled{color:rgba(31,43,30,.22); cursor:not-allowed;}
+  .bk-cal-grid button.day.selected{background:var(--forest-deep); color:var(--paper); font-weight:700;}
+  .bk-cal-grid button.day.in-range{background:rgba(143,190,63,.32);}
+  .bk-cal-hint{margin:14px 0 0; font-size:.8rem; color:rgba(31,43,30,.55);}
+
+  .bk-results{margin-top:22px; border-top:1px solid var(--line); padding-top:22px;}
+  .bk-results-summary{font-size:.85rem; color:var(--forest-deep); margin:0 0 16px;}
+  .bk-room-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+  @media(max-width:820px){ .bk-room-grid{grid-template-columns:1fr;} }
+  .bk-room-card{border:1px solid var(--line); border-radius:12px; padding:18px; background:var(--paper); display:flex; flex-direction:column;}
+  .bk-room-card h4{margin:0 0 4px; font-size:.98rem;}
+  .bk-room-card .cap{font-size:.8rem; color:rgba(31,43,30,.6); margin:0 0 14px;}
+  .bk-room-card .price{font-family:'Space Mono',monospace; font-size:1.05rem; color:var(--forest-deep); margin:0 0 16px; display:block;}
+  .bk-room-card .price small{font-size:.66rem; font-weight:400; color:rgba(31,43,30,.55); display:block; margin-top:3px;}
+  .bk-room-card .btn{width:100%; justify-content:center; padding:11px; font-size:.85rem; margin-top:auto;}
+
   /* ---------- booking cta banner ---------- */
   .booking-banner{
     background:var(--lime); color:var(--forest-deep);
@@ -314,7 +368,7 @@
 <section class="hero" id="top">
   <div class="hero-grid">
     <div>
-      <span class="eyebrow">🏠 山口・下関 ・ ペットと泊まれる一棟貸し宿</span>
+      <span class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/><path d="M9 20v-6h6v6"/></svg> 山口・下関 ・ ペットと泊まれる一棟貸し宿</span>
       <h1 class="headline">旅の途中に、<br>最高の<em>出会い</em>を。</h1>
       <p class="sub">笑って、遊んで、語り合って、気づけばみんな ¡COMPA!<br>
       BBQ🍖｜スケボー🛹｜イベント🎉、なんでも出来ます。旅人も、長期滞在も、一人旅も、誰でも大歓迎。</p>
@@ -404,15 +458,16 @@
 <section id="pets" style="background:var(--forest-deep); color:var(--paper);">
   <div class="wrap pet-layout">
     <div>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:30px; height:30px; stroke:var(--lime); margin-bottom:10px; display:block;"><circle cx="7.5" cy="8" r="1.7"/><circle cx="12" cy="6" r="1.7"/><circle cx="16.5" cy="8" r="1.7"/><path d="M12 10.5c-3.2 0-5.5 2.4-5.5 5.1 0 2 1.6 3.4 3.4 3.4.9 0 1.3-.5 2.1-.5s1.2.5 2.1.5c1.8 0 3.4-1.4 3.4-3.4 0-2.7-2.3-5.1-5.5-5.1z"/></svg>
       <p class="kicker" style="color:var(--lime);">Pet Friendly</p>
-      <h2 style="color:var(--paper);">🐾 ペットも、ここでは家族。</h2>
+      <h2 style="color:var(--paper);">ペットも、ここでは家族。</h2>
       <p class="lede" style="color:rgba(246,241,228,.78);">他のお客様に気を使うことなく、まるで“里帰り”をしたようにくつろげる一棟貸しの空間。犬もちろん、一緒にどうぞ。</p>
     </div>
     <ul class="pet-list">
-      <li><span class="ico">🐶</span><div>小型犬 宿泊OK<em>※応相談</em></div></li>
-      <li><span class="ico">🧼</span><div>リビングにペット用トイレ・ケージ・お皿を完備<em>※個室でのケージ利用は持参</em></div></li>
-      <li><span class="ico">🌳</span><div>お散歩にぴったりな、自然豊かな立地</div></li>
-      <li><span class="ico">🧹</span><div>チェックアウト後は専用清掃で、いつでも清潔</div></li>
+      <li><svg class="ico" viewBox="0 0 24 24"><circle cx="7.5" cy="8" r="1.6" fill="var(--lime)" stroke="none"/><circle cx="12" cy="6" r="1.6" fill="var(--lime)" stroke="none"/><circle cx="16.5" cy="8" r="1.6" fill="var(--lime)" stroke="none"/><path d="M12 10.5c-3.2 0-5.5 2.4-5.5 5.1 0 2 1.6 3.4 3.4 3.4.9 0 1.3-.5 2.1-.5s1.2.5 2.1.5c1.8 0 3.4-1.4 3.4-3.4 0-2.7-2.3-5.1-5.5-5.1z"/></svg><div>小型犬 宿泊OK<em>※応相談</em></div></li>
+      <li><svg class="ico" viewBox="0 0 24 24"><rect x="4" y="9" width="16" height="11" rx="1.5"/><path d="M4 13h16M9 9v11M15 9v11"/></svg><div>リビングにペット用トイレ・ケージ・お皿を完備<em>※個室でのケージ利用は持参</em></div></li>
+      <li><svg class="ico" viewBox="0 0 24 24"><path d="M12 3l6 9h-3.5l4.5 7H7l4.5-7H8z"/><path d="M12 19v3"/></svg><div>お散歩にぴったりな、自然豊かな立地</div></li>
+      <li><svg class="ico" viewBox="0 0 24 24"><path d="M12 2v3M12 17v3M5 5l2 2M17 17l2 2M2 12h3M19 12h3M5 19l2-2M17 7l2-2"/></svg><div>チェックアウト後は専用清掃で、いつでも清潔</div></li>
     </ul>
   </div>
 </section>
@@ -452,19 +507,19 @@
       </div>
       <div class="why-direct">
         <div class="item">
-          <h4><span class="x">外部予約サイト</span>手数料が積み重なる</h4>
-          <p>予約のたびに仲介手数料が発生。宿の運営コストに直結し、結果的に宿泊料にも影響します。</p>
+          <h4><span class="x">外部予約サイト</span>手数料分、宿泊料が高くなりがち</h4>
+          <p>サイトに支払う仲介手数料は、最終的に宿泊料へ上乗せされています。同じ部屋でも、どこ経由で予約するかで支払う金額が変わることも。</p>
         </div>
         <div class="item">
-          <h4><span class="o">COMPAへ直接</span>その分を、あなたと宿に</h4>
-          <p>手数料を挟まない分、より良い体験づくりに還元。ホストとも直接やり取りできるので、当日の相談もスムーズ。</p>
+          <h4><span class="o">COMPAへ直接</span>手数料ゼロの分、お得に泊まれる</h4>
+          <p>仲介手数料がかからない分、実質お得。ホストと直接やり取りできるので、到着時間の相談や部屋のリクエストもスムーズです。</p>
         </div>
         <div class="item">
-          <h4><span class="x">外部予約サイト</span>口コミに一喜一憂</h4>
-          <p>評価の波に運営が左右されがち。実際の雰囲気とズレることもあります。</p>
+          <h4><span class="x">外部予約サイト</span>評価の数字だけでは伝わらない</h4>
+          <p>スコアは一時的な波で変動しがち。実際の雰囲気とズレていることもあります。</p>
         </div>
         <div class="item">
-          <h4><span class="o">COMPAへ直接</span>Instagramで素の空気を確認できる</h4>
+          <h4><span class="o">COMPAへ直接</span>Instagramで素の空気を先に確認できる</h4>
           <p>加工されていない日々の様子を見てから予約できるので、来てからの「思ってたのと違う」がありません。</p>
         </div>
       </div>
@@ -475,20 +530,56 @@
       <div class="room-type"><span class="mono">TYPE 03</span><h4>ドミトリールーム</h4><p>4人部屋・男女共用・布団4組</p></div>
     </div>
     <div class="amenity-strip">
-      <span>📶 高速無料WiFi(295Mbps)</span><span>🍳 共用キッチン</span><span>🔥 庭でBBQ(有料設備)</span>
-      <span>🚲 自転車レンタル(有料)</span><span>🧺 洗濯機</span><span>🚗 専用駐車場 無料</span><span>🚭 全館禁煙</span>
+      <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.5a15 15 0 0 1 20 0"/><path d="M5.5 12a10 10 0 0 1 13 0"/><path d="M9 15.5a5 5 0 0 1 6 0"/><circle cx="12" cy="19" r="1" fill="var(--forest-deep)" stroke="none"/></svg> 高速無料WiFi(295Mbps)</span>
+      <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16v2a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6z"/><path d="M2 10h20"/><path d="M8 10V6.5A1.5 1.5 0 0 1 9.5 5h5A1.5 1.5 0 0 1 16 6.5V10"/></svg> 共用キッチン</span>
+      <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14c0 4 3.5 7 8 7s8-3 8-7"/><path d="M12 3c0 2-2 2.5-2 5a2 2 0 0 0 4 0c0-1.2-.7-1.8-1-2.6"/><path d="M6 14h12"/></svg> 庭でBBQ(有料設備)</span>
+      <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="3.2"/><circle cx="18" cy="17" r="3.2"/><path d="M6 17l4-8h3l4 8M10 9h3"/></svg> 自転車レンタル(有料)</span>
+      <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1.5"/><circle cx="12" cy="13" r="4.3"/><path d="M8 6h1M12 6h1"/></svg> 洗濯機</span>
+      <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10l1.3-4h11.4L19 10"/><rect x="3" y="10" width="18" height="7" rx="2"/><circle cx="7.5" cy="17.3" r="1.5" fill="var(--forest-deep)" stroke="none"/><circle cx="16.5" cy="17.3" r="1.5" fill="var(--forest-deep)" stroke="none"/></svg> 専用駐車場 無料</span>
+      <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 15h13v3H2z"/><path d="M15 15.5c1-1 2.3-1 3.2 0M18.2 13.3c1.4-1.4 3.2-1.4 4.6 0"/><path d="M3 20L20 4"/></svg> 全館禁煙</span>
     </div>
     <p style="margin-top:26px; font-size:.92rem; color:rgba(31,43,30,.7);">一棟貸し（最大12名）でのご利用もご相談ください。旅の仲間・家族・ペットと一緒に、まるごと一軒家で過ごせます。旅人も、長期滞在も、一人旅も、誰でも大歓迎。</p>
   </div>
 </section>
 
 <section id="book">
-  <div class="booking-banner">
-    <p class="kicker" style="color:rgba(29,52,32,.65);">Book Direct</p>
-    <h2>¡COMPA! 直接予約・決済</h2>
-    <p>このページから予約と支払いまで完結。外部サイトを経由しない分、ホストと直接つながれます。</p>
-    <button type="button" class="btn btn-primary" disabled style="opacity:.85; cursor:not-allowed;">予約カレンダーを見る（準備中）→</button>
-    <p class="draft-note">※ デザイン案の段階です。予約・決済（Stripe連携）は次のステップで実装します。</p>
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">Book Direct</p>
+      <h2>¡COMPA! 直接予約</h2>
+      <p class="lede">日程を選んで、部屋タイプごとに確認しましょう。外部サイトを経由しない分、ホストと直接つながれます。</p>
+    </div>
+
+    <div class="booking-widget">
+      <div class="bk-controls">
+        <div class="bk-field">
+          <label for="checkinBtn">チェックイン日</label>
+          <button type="button" class="bk-date-btn" id="checkinBtn">日付を選択</button>
+        </div>
+        <div class="bk-field">
+          <label for="checkoutBtn">チェックアウト日</label>
+          <button type="button" class="bk-date-btn" id="checkoutBtn">日付を選択</button>
+        </div>
+        <button type="button" class="btn btn-primary bk-search" id="searchBtn">空室状況を確認 →</button>
+      </div>
+
+      <div class="bk-calendar" id="bkCalendar" hidden>
+        <div class="bk-cal-header">
+          <button type="button" id="calPrev" aria-label="前の月">←</button>
+          <span id="calMonthLabel" class="mono"></span>
+          <button type="button" id="calNext" aria-label="次の月">→</button>
+        </div>
+        <div class="bk-cal-grid" id="calGrid"></div>
+        <p class="bk-cal-hint">チェックイン日 → チェックアウト日の順にクリックしてください</p>
+      </div>
+
+      <div class="bk-results" id="bkResults" hidden>
+        <p class="bk-results-summary mono" id="bkSummary"></p>
+        <div class="bk-room-grid" id="bkRoomGrid"></div>
+      </div>
+    </div>
+
+    <p class="draft-note">※ 決済（Stripe）連携は準備中です。金額未確定の部屋タイプ・予約ボタンは現在Instagramでのお問い合わせにつながります。</p>
   </div>
 </section>
 
@@ -509,7 +600,7 @@
         <h5>Follow / Contact</h5>
         <a href="https://www.instagram.com/compa0601/" target="_blank" rel="noopener">Instagram @compa0601 ↗</a>
         <a href="https://www.instagram.com/reel/DbK7D7sTPVt/" target="_blank" rel="noopener">最新リールを見る ↗</a>
-        <p style="margin-top:8px; color:rgba(246,241,228,.55); font-size:.84rem;">楽しいお話などお気軽にDMで ✌️</p>
+        <p style="margin-top:8px; color:rgba(246,241,228,.55); font-size:.84rem;">楽しいお話などお気軽にDMで。</p>
       </div>
     </div>
     <div class="footer-bottom">
@@ -539,16 +630,19 @@
   const skater = { x: 90, y: groundY - 34, w: 40, h: 34, vy: 0, jumping:false };
   const GRAVITY = 0.9;
   const JUMP_V = -14;
+  let nextSpawn = 60;
 
   function resetGame(){
-    score = 0; speed = 6; obstacles = []; frame = 0;
+    score = 0; speed = 6; obstacles = []; frame = 0; nextSpawn = 60;
     skater.y = groundY - skater.h; skater.vy = 0; skater.jumping = false;
     scoreEl.textContent = 'SCORE 0';
   }
 
   function spawnObstacle(){
-    const h = 22 + Math.random()*20;
-    obstacles.push({x: W + 20, y: groundY - h, w: 16, h: h});
+    const difficulty = Math.min(score, 2500);
+    const h = 20 + Math.random()*20 + difficulty/180;
+    const w = Math.random() < 0.25 ? 26 : 16;
+    obstacles.push({x: W + 20, y: groundY - h, w: w, h: h});
   }
 
   function jump(){
@@ -600,7 +694,17 @@
     skater.y += skater.vy;
     if(skater.y > groundY - skater.h){ skater.y = groundY - skater.h; skater.vy = 0; skater.jumping = false; }
 
-    if(frame % Math.max(40, 70 - Math.floor(speed*2)) === 0) spawnObstacle();
+    nextSpawn--;
+    if(nextSpawn <= 0){
+      spawnObstacle();
+      const difficulty = Math.min(score, 2500);
+      const minGap = Math.max(18, 50 - difficulty/50);
+      const maxGap = Math.max(minGap + 12, 86 - difficulty/35);
+      nextSpawn = minGap + Math.random() * (maxGap - minGap);
+      if(score > 200 && Math.random() < 0.28){
+        nextSpawn = 13 + Math.random() * 9;
+      }
+    }
 
     obstacles.forEach(o => o.x -= speed);
     obstacles = obstacles.filter(o => o.x + o.w > -10);
@@ -614,7 +718,7 @@
     }
 
     score += 1;
-    speed = 6 + Math.floor(score/300)*0.6;
+    speed = Math.min(13.5, 6 + score/220);
     scoreEl.textContent = 'SCORE ' + Math.floor(score/10);
 
     animId = requestAnimationFrame(loop);
@@ -651,6 +755,134 @@
 
   drawGround();
   drawSkater(skater.x, skater.y, skater.w, skater.h);
+})();
+</script>
+
+<script>
+(function(){
+  // Stripeの支払いリンクが揃い次第、ここにURLを入れる（Stripe手順書_ゆうさん用.txt参照）
+  const PAYMENT_LINKS = {
+    standard: '',
+    family: '',
+    dorm: ''
+  };
+  const IG_URL = 'https://www.instagram.com/compa0601/';
+
+  const checkinBtn = document.getElementById('checkinBtn');
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  const searchBtn = document.getElementById('searchBtn');
+  const calWrap = document.getElementById('bkCalendar');
+  const calGrid = document.getElementById('calGrid');
+  const calMonthLabel = document.getElementById('calMonthLabel');
+  const calPrev = document.getElementById('calPrev');
+  const calNext = document.getElementById('calNext');
+  const resultsWrap = document.getElementById('bkResults');
+  const bkSummary = document.getElementById('bkSummary');
+  const bkRoomGrid = document.getElementById('bkRoomGrid');
+  if(!checkinBtn) return;
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  let viewYear = today.getFullYear();
+  let viewMonth = today.getMonth();
+  let checkin = null;
+  let checkout = null;
+
+  const DOW = ['日','月','火','水','木','金','土'];
+  const ROOMS = [
+    { key:'standard', name:'スタンダード ツインルーム', cap:'共用バスルーム・布団2組', price:3250 },
+    { key:'family', name:'ファミリールーム', cap:'専用バスルーム付・最大6名', price:null },
+    { key:'dorm', name:'ドミトリールーム', cap:'4人部屋・男女共用・布団4組', price:null }
+  ];
+
+  function fmt(d){ return d.getFullYear() + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日'; }
+  function sameDay(a,b){ return a && b && a.getTime() === b.getTime(); }
+
+  function renderCalendar(){
+    calMonthLabel.textContent = viewYear + ' / ' + String(viewMonth+1).padStart(2,'0');
+    calGrid.innerHTML = '';
+    DOW.forEach(function(d){
+      const el = document.createElement('div');
+      el.className = 'dow'; el.textContent = d;
+      calGrid.appendChild(el);
+    });
+    const firstDay = new Date(viewYear, viewMonth, 1);
+    const startOffset = firstDay.getDay();
+    const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
+    for(let i=0;i<startOffset;i++) calGrid.appendChild(document.createElement('div'));
+    for(let d=1; d<=daysInMonth; d++){
+      const date = new Date(viewYear, viewMonth, d);
+      const btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'day'; btn.textContent = String(d);
+      btn.disabled = date < today;
+      if(sameDay(date, checkin) || sameDay(date, checkout)) btn.classList.add('selected');
+      else if(checkin && checkout && date > checkin && date < checkout) btn.classList.add('in-range');
+      btn.addEventListener('click', function(){ onPickDate(date); });
+      calGrid.appendChild(btn);
+    }
+  }
+
+  function onPickDate(date){
+    if(!checkin || (checkin && checkout)){
+      checkin = date; checkout = null;
+    } else if(date <= checkin){
+      checkin = date; checkout = null;
+    } else {
+      checkout = date;
+    }
+    updateButtons();
+    renderCalendar();
+  }
+
+  function updateButtons(){
+    checkinBtn.textContent = checkin ? fmt(checkin) : '日付を選択';
+    checkinBtn.classList.toggle('filled', !!checkin);
+    checkoutBtn.textContent = checkout ? fmt(checkout) : '日付を選択';
+    checkoutBtn.classList.toggle('filled', !!checkout);
+  }
+
+  function openCalendar(){
+    resultsWrap.hidden = true;
+    calWrap.hidden = false;
+    renderCalendar();
+  }
+
+  checkinBtn.addEventListener('click', openCalendar);
+  checkoutBtn.addEventListener('click', openCalendar);
+  calPrev.addEventListener('click', function(){
+    viewMonth--; if(viewMonth < 0){ viewMonth = 11; viewYear--; }
+    renderCalendar();
+  });
+  calNext.addEventListener('click', function(){
+    viewMonth++; if(viewMonth > 11){ viewMonth = 0; viewYear++; }
+    renderCalendar();
+  });
+
+  searchBtn.addEventListener('click', function(){
+    if(!checkin || !checkout){ openCalendar(); return; }
+    const nights = Math.round((checkout - checkin) / 86400000);
+    bkSummary.textContent = fmt(checkin) + ' 〜 ' + fmt(checkout) + '（' + nights + '泊）';
+    bkRoomGrid.innerHTML = '';
+    ROOMS.forEach(function(room){
+      const card = document.createElement('div');
+      card.className = 'bk-room-card';
+      const priceLine = room.price
+        ? '¥' + (room.price * nights).toLocaleString() + '<small>¥' + room.price.toLocaleString() + '/泊 × ' + nights + '泊</small>'
+        : '料金はお問い合わせください';
+      const link = PAYMENT_LINKS[room.key] || IG_URL;
+      const label = PAYMENT_LINKS[room.key] ? 'この内容で予約する →' : 'Instagramで予約を相談する →';
+      const h4 = document.createElement('h4'); h4.textContent = room.name;
+      const cap = document.createElement('p'); cap.className = 'cap'; cap.textContent = room.cap;
+      const price = document.createElement('span'); price.className = 'price'; price.innerHTML = priceLine;
+      const a = document.createElement('a'); a.className = 'btn btn-primary'; a.href = link;
+      a.target = '_blank'; a.rel = 'noopener'; a.textContent = label;
+      card.append(h4, cap, price, a);
+      bkRoomGrid.appendChild(card);
+    });
+    calWrap.hidden = true;
+    resultsWrap.hidden = false;
+  });
+
+  renderCalendar();
 })();
 </script>
 
