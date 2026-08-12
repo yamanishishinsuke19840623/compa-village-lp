@@ -202,7 +202,7 @@ function logBooking(d) {
     d.checkout,
     d.nights || '',
     'リクエスト受付',
-    ''
+    d.guests ? ('人数: ' + d.guests + '名') : ''
   ]);
 }
 
@@ -226,6 +226,7 @@ function sendHostNotification(d) {
   body += 'チェックイン：' + d.checkin + '\n';
   body += 'チェックアウト：' + d.checkout + '\n';
   body += '泊数　　：' + (d.nights || '') + '泊\n';
+  body += '人数　　：' + (d.guests || '') + '名\n';
   body += '━━━━━━━━━━━━━━━━━━━━\n\n';
   body += 'スプレッドシートの「ステータス」列を「確定」に変更すると、\n';
   body += '確定扱いになり、以後の空室判定にも反映されます。\n\n';
@@ -248,6 +249,7 @@ function sendGuestConfirmation(d) {
   body += 'チェックイン：' + d.checkin + '\n';
   body += 'チェックアウト：' + d.checkout + '\n';
   body += '泊数　　：' + (d.nights || '') + '泊\n';
+  body += '人数　　：' + (d.guests || '') + '名\n';
   body += '━━━━━━━━━━━━━━━━━━━━\n\n';
   body += 'ご不明な点があれば、このメールに返信いただくか、\n';
   body += 'Instagram（@compa0601）のDMでもお気軽にご連絡ください。\n\n';

@@ -393,6 +393,14 @@
     font-family:inherit; background:var(--paper-2);
   }
   .bk-request-form input:focus-visible{outline:2px solid var(--lime); outline-offset:1px;}
+  .bk-guests-label{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    font-size:.78rem; color:rgba(31,43,30,.6);
+  }
+  .bk-guests-label input{
+    width:64px; border:1px solid var(--line); border-radius:8px; padding:9px 10px; font-size:.84rem;
+    font-family:inherit; background:var(--paper-2); text-align:center;
+  }
   .bk-request-status{font-size:.76rem; margin-top:8px; min-height:1em;}
   .bk-request-status.ok{color:var(--forest-deep);}
   .bk-request-status.err{color:var(--sunset);}
@@ -997,9 +1005,9 @@
 
   const DOW = ['日','月','火','水','木','金','土'];
   const ROOMS = [
-    { key:'standard', name:'スタンダード ツインルーム', cap:'共用バスルーム・1部屋2名まで・全3室', price:3250, unit:'部屋' },
-    { key:'dorm', name:'ドミトリールーム', cap:'4人部屋・男女共用・1ベッドから予約可', price:2250, unit:'ベッド' },
-    { key:'group', name:'団体様用プラン', cap:'1〜15名様まで・1階部分を貸し切りでご利用いただけます', price:27000, unit:null }
+    { key:'standard', name:'スタンダード ツインルーム', cap:'共用バスルーム・1部屋2名まで・全3室', price:3250, unit:'部屋', maxGuests:2 },
+    { key:'dorm', name:'ドミトリールーム', cap:'4人部屋・男女共用・1ベッドから予約可', price:2250, unit:'ベッド', maxGuests:1 },
+    { key:'group', name:'団体様用プラン', cap:'1〜15名様まで・1階部分を貸し切りでご利用いただけます', price:27000, unit:null, maxGuests:15 }
   ];
   // GAS側(gas/Code.gs)のROOM_CAPACITYと同じ値。残数表示に使う
   const ROOM_CAPACITY = { standard: 3, dorm: 4, group: 1 };
@@ -1207,6 +1215,12 @@
         nameInput.type = 'text'; nameInput.placeholder = 'お名前'; nameInput.required = true;
         const emailInput = document.createElement('input');
         emailInput.type = 'email'; emailInput.placeholder = 'メールアドレス'; emailInput.required = true;
+        const guestsWrap = document.createElement('label'); guestsWrap.className = 'bk-guests-label';
+        guestsWrap.textContent = '人数';
+        const guestsInput = document.createElement('input');
+        guestsInput.type = 'number'; guestsInput.min = '1'; guestsInput.max = String(room.maxGuests || 1);
+        guestsInput.value = '1'; guestsInput.required = true;
+        guestsWrap.appendChild(guestsInput);
         const btn = document.createElement('button');
         btn.type = 'button'; btn.className = 'btn btn-primary'; btn.textContent = '予約リクエストを送る →';
         const status = document.createElement('p'); status.className = 'bk-request-status';
@@ -1216,16 +1230,23 @@
             status.className = 'bk-request-status err';
             return;
           }
+          const guests = parseInt(guestsInput.value, 10);
+          if(!guests || guests < 1 || guests > (room.maxGuests || 1)){
+            status.textContent = '人数をご確認ください（最大' + (room.maxGuests || 1) + '名）。';
+            status.className = 'bk-request-status err';
+            return;
+          }
           submitBookingRequest({
             name: nameInput.value,
             email: emailInput.value,
             roomType: room.key,
             checkin: toISO(checkin),
             checkout: toISO(checkout),
-            nights: nights
+            nights: nights,
+            guests: guests
           }, status, btn);
         });
-        form.append(nameInput, emailInput, btn, status);
+        form.append(nameInput, emailInput, guestsWrap, btn, status);
         card.appendChild(form);
       } else {
         const a = document.createElement('a'); a.className = 'btn btn-primary';
