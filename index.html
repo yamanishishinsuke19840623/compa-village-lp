@@ -5,6 +5,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>COMPA VILLAGE ゲストハウス｜下関 直接予約</title>
 <meta name="description" content="山口県下関市のゲストハウス COMPA VILLAGE。旅の途中に、最高の出会いを。BBQ・スケボー・イベントで過ごす、旅人がつながる宿。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="COMPA VILLAGE">
+<meta property="og:title" content="COMPA VILLAGE ゲストハウス｜下関 直接予約">
+<meta property="og:description" content="山口県下関市のゲストハウス COMPA VILLAGE。旅の途中に、最高の出会いを。ペットと泊まれる、旅人がつながる宿。">
+<meta property="og:image" content="https://yamanishishinsuke19840623.github.io/compa-village-lp/photos/compa-hero.jpg">
+<meta property="og:url" content="https://yamanishishinsuke19840623.github.io/compa-village-lp/">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="COMPA VILLAGE ゲストハウス｜下関 直接予約">
+<meta name="twitter:description" content="山口県下関市のゲストハウス COMPA VILLAGE。旅の途中に、最高の出会いを。">
+<meta name="twitter:image" content="https://yamanishishinsuke19840623.github.io/compa-village-lp/photos/compa-hero.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LodgingBusiness",
+  "name": "COMPA VILLAGE",
+  "description": "山口県下関市のペットと泊まれるゲストハウス。旅の途中に、最高の出会いを。",
+  "image": "https://yamanishishinsuke19840623.github.io/compa-village-lp/photos/compa-hero.jpg",
+  "url": "https://yamanishishinsuke19840623.github.io/compa-village-lp/",
+  "priceRange": "¥2,250 - ¥27,000",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "下関市",
+    "addressRegion": "山口県",
+    "addressCountry": "JP"
+  },
+  "petsAllowed": true,
+  "amenityFeature": [
+    {"@type": "LocationFeatureSpecification", "name": "Free WiFi"},
+    {"@type": "LocationFeatureSpecification", "name": "Free Parking"},
+    {"@type": "LocationFeatureSpecification", "name": "Shared Kitchen"},
+    {"@type": "LocationFeatureSpecification", "name": "BBQ Facilities"}
+  ]
+}
+</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231D3420'/%3E%3Cpath d='M16 27V13a3 3 0 0 1 3-3v0a3 3 0 0 1 3 3v3M16 27V16a3 3 0 0 0-3-3v0a3 3 0 0 0-3 3v2' stroke='%238FBE3F' stroke-width='2.3' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='9.5' r='2.3' fill='%238FBE3F'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -321,6 +356,17 @@
   .why-direct .item h4 .o{background:rgba(143,190,63,.18); color:var(--lime-deep);}
   .why-direct .item p{margin:0; font-size:.92rem; color:rgba(31,43,30,.72);}
 
+  /* ---------- guest voices ---------- */
+  .voice-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  @media(max-width:820px){ .voice-grid{grid-template-columns:1fr 1fr;} }
+  @media(max-width:560px){ .voice-grid{grid-template-columns:1fr;} }
+  .voice-card{background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:18px 20px;}
+  .voice-top{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .voice-score{font-family:'Space Mono',monospace; font-weight:700; font-size:.82rem; background:var(--forest-deep); color:var(--paper); padding:2px 8px; border-radius:6px; flex:none;}
+  .voice-meta{font-size:.76rem; color:rgba(31,43,30,.55);}
+  .voice-quote{margin:0; font-size:.88rem; line-height:1.75; color:var(--ink);}
+  .voice-note{margin-top:18px; font-size:.76rem; color:rgba(31,43,30,.5);}
+
   /* ---------- faq ---------- */
   .faq-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
   @media(max-width:720px){ .faq-grid{grid-template-columns:1fr;} }
@@ -387,6 +433,12 @@
   .bk-room-card .price small{font-size:.66rem; font-weight:400; color:rgba(31,43,30,.55); display:block; margin-top:3px;}
   .bk-room-card .btn{width:100%; justify-content:center; padding:11px; font-size:.85rem; margin-top:auto;}
   .bk-room-card .btn:disabled{opacity:.5; cursor:not-allowed;}
+  .bk-room-card .btn-pay{
+    display:flex; justify-content:center; width:100%; margin-top:8px; padding:11px; font-size:.85rem;
+    background:transparent; border:1.5px solid var(--forest-deep); color:var(--forest-deep); border-radius:999px;
+    text-decoration:none; font-weight:700; transition:background .18s ease;
+  }
+  .bk-room-card .btn-pay:hover{background:var(--forest-deep); color:var(--paper);}
   .bk-request-form{display:grid; gap:8px; margin-top:auto;}
   .bk-request-form input{
     border:1px solid var(--line); border-radius:8px; padding:9px 11px; font-size:.84rem;
@@ -740,6 +792,43 @@
   </div>
 </section>
 
+<section id="voices" style="background:var(--paper-2);">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">Guest Voices</p>
+      <h2>泊まった人の声。</h2>
+      <p class="lede">「おばあちゃんの家に帰ったみたい」——実際に泊まったゲストから、そんな声をよくいただきます。</p>
+    </div>
+    <div class="voice-grid">
+      <div class="voice-card">
+        <div class="voice-top"><span class="voice-score">9.0</span><span class="voice-meta">Masakatsu・ドミトリールーム・一人旅</span></div>
+        <p class="voice-quote">「値段も安く、宿主もとてもフレンドリーです。近くに品揃えの良いスーパーが有ります。」</p>
+      </div>
+      <div class="voice-card">
+        <div class="voice-top"><span class="voice-score">9.0</span><span class="voice-meta">Arisa・団体様用プラン・家族連れ</span></div>
+        <p class="voice-quote">「広々と部屋を利用でき、冷蔵庫や洗濯機など利用できたことやBBQスペースは特に嬉しかったです。」</p>
+      </div>
+      <div class="voice-card">
+        <div class="voice-top"><span class="voice-score">7.0</span><span class="voice-meta">直毅・団体様用プラン・グループ</span></div>
+        <p class="voice-quote">「短い滞在時間でしたが、おじいちゃんの家に泊まりに来たような、ゆったりとした気持ちで過ごすことができました。程よいゆるさが快適でした！」</p>
+      </div>
+      <div class="voice-card">
+        <div class="voice-top"><span class="voice-score">6.0</span><span class="voice-meta">Satomi・団体様用プラン・家族連れ</span></div>
+        <p class="voice-quote">「昭和の古き良き時代を感じました。愛犬たちもとても満足しているようで、朝になると鳥達の鳴き声が新鮮で和みました。」</p>
+      </div>
+      <div class="voice-card">
+        <div class="voice-top"><span class="voice-score">6.0</span><span class="voice-meta">Ueno・団体様用プラン・グループ</span></div>
+        <p class="voice-quote">「比較的自由に過ごすことが出来ました。田舎に帰省したような懐かしい感じ。リーズナブル。」</p>
+      </div>
+      <div class="voice-card">
+        <div class="voice-top"><span class="voice-score">5.0</span><span class="voice-meta">Isomura・団体様用プラン・家族連れ</span></div>
+        <p class="voice-quote">「広くて静かな所。おばあちゃん家に遊びに来た感覚。」</p>
+      </div>
+    </div>
+    <p class="voice-note">※ 実際にご宿泊いただいたお客様のレビューより抜粋</p>
+  </div>
+</section>
+
 <section id="book">
   <div class="wrap">
     <div class="section-head">
@@ -786,7 +875,7 @@
       </div>
     </div>
 
-    <p class="draft-note">※ 予約リクエスト機能・リアルタイム空室管理は、GASデプロイ後に有効になります（gas/デプロイ手順書_やまちゃん用.txt参照）。決済（Stripe）連携も準備中です。それまでは予約ボタンがInstagramでのお問い合わせにつながります。</p>
+    <p class="draft-note">※ 予約リクエストを送るとホストに通知が届きます。Stripeでの決済にもそのまま進めます。</p>
   </div>
 </section>
 
@@ -973,9 +1062,9 @@
   // ゆうさんがStripeを「本番環境」に切り替えて本番リンクを作り直したら、ここに貼る
   // （2026-08-12時点でもらっている3つはまだ test_ 付きのテストモードなので未使用）
   const PAYMENT_LINKS = {
-    standard: '', // スタンダードツインルーム ¥3,250/泊
-    dorm: '',     // ドミトリールーム ¥2,250/泊
-    group: ''     // 団体様用プラン(1〜15名) ¥27,000/泊
+    standard: 'https://buy.stripe.com/14A8wOewD4yC4mG0qM87K01', // スタンダードツインルーム ¥3,250/泊
+    dorm: 'https://buy.stripe.com/00w5kCfAHc147ySa1m87K03',     // ドミトリールーム ¥2,250/泊
+    group: 'https://buy.stripe.com/8x24gygELc14f1k7Te87K02'     // 団体様用プラン(1〜15名) ¥27,000/泊
   };
   // GASデプロイ後、ここにウェブアプリURLを貼る（gas/デプロイ手順書_やまちゃん用.txt参照）
   const GAS_BOOKING_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzDjZTTgivfNKeEE7_--Cx_MAaob7ZuBV2plVSP0woGOnMj21z8SsyP905NvJrSLbtR/exec';
@@ -1248,6 +1337,13 @@
         });
         form.append(nameInput, emailInput, guestsWrap, btn, status);
         card.appendChild(form);
+        if(PAYMENT_LINKS[room.key]){
+          const payLink = document.createElement('a');
+          payLink.className = 'btn btn-pay'; payLink.href = PAYMENT_LINKS[room.key];
+          payLink.target = '_blank'; payLink.rel = 'noopener';
+          payLink.textContent = '今すぐ決済に進む（Stripe）→';
+          card.appendChild(payLink);
+        }
       } else {
         const a = document.createElement('a'); a.className = 'btn btn-primary';
         a.href = PAYMENT_LINKS[room.key] || IG_URL; a.target = '_blank'; a.rel = 'noopener';
