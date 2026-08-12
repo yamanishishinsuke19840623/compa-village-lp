@@ -226,9 +226,10 @@
     width:100%; height:auto; display:block; border-radius:12px;
     background:var(--paper); touch-action:manipulation; cursor:pointer;
   }
-  .game-hud{display:flex; align-items:center; justify-content:space-between; margin-top:14px; gap:14px;}
+  .game-hud{display:flex; align-items:center; justify-content:space-between; margin-top:14px; gap:14px; flex-wrap:wrap;}
   .game-hud .mono{font-size:.85rem; color:var(--forest-deep);}
-  .game-hud .btn{padding:11px 20px; font-size:.9rem;}
+  .game-hud #gameHighScore{color:var(--sunset);}
+  .game-hud .btn{padding:11px 20px; font-size:.9rem; margin-left:auto;}
 
   /* ---------- gallery ---------- */
   .gallery-lead{border-radius:16px; overflow:hidden; margin-bottom:14px;}
@@ -607,6 +608,7 @@
       <canvas id="skateGame" width="800" height="280" aria-label="スケートボードのミニゲーム。スペースキーまたは画面タップでジャンプします。"></canvas>
       <div class="game-hud">
         <span class="mono" id="gameScore">SCORE 0</span>
+        <span class="mono" id="gameHighScore">HIGH 0</span>
         <button id="gameStart" class="btn btn-primary" type="button">プレイする ▶</button>
       </div>
     </div>
@@ -915,9 +917,14 @@
   if(!canvas) return;
   const ctx = canvas.getContext('2d');
   const scoreEl = document.getElementById('gameScore');
+  const highScoreEl = document.getElementById('gameHighScore');
   const startBtn = document.getElementById('gameStart');
   const W = canvas.width, H = canvas.height;
   const groundY = H - 46;
+
+  const HIGH_SCORE_KEY = 'compaSkateHighScore';
+  let highScore = parseInt(localStorage.getItem(HIGH_SCORE_KEY), 10) || 0;
+  if(highScoreEl) highScoreEl.textContent = 'HIGH ' + highScore;
 
   let running = false;
   let animId = null;
@@ -1026,14 +1033,22 @@
   function gameOver(){
     running = false;
     cancelAnimationFrame(animId);
+    const finalScore = Math.floor(score/10);
+    let isNewRecord = false;
+    if(finalScore > highScore){
+      highScore = finalScore;
+      localStorage.setItem(HIGH_SCORE_KEY, String(highScore));
+      if(highScoreEl) highScoreEl.textContent = 'HIGH ' + highScore;
+      isNewRecord = true;
+    }
     ctx.fillStyle = 'rgba(31,43,30,.82)';
     ctx.fillRect(0,0,W,H);
     ctx.fillStyle = '#F6F1E4';
     ctx.textAlign = 'center';
     ctx.font = '20px monospace';
-    ctx.fillText('GAME OVER — SCORE ' + Math.floor(score/10), W/2, H/2 - 6);
+    ctx.fillText('GAME OVER — SCORE ' + finalScore, W/2, H/2 - 6);
     ctx.font = '13px monospace';
-    ctx.fillText('もう一度プレイする ▶ を押してね', W/2, H/2 + 20);
+    ctx.fillText(isNewRecord ? '新記録！ ハイスコア更新！' : 'もう一度プレイする ▶ を押してね', W/2, H/2 + 20);
     startBtn.textContent = 'もう一度プレイする ▶';
     startBtn.disabled = false;
   }
