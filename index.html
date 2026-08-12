@@ -318,6 +318,13 @@
   .why-direct .item h4 .o{background:rgba(143,190,63,.18); color:var(--lime-deep);}
   .why-direct .item p{margin:0; font-size:.92rem; color:rgba(31,43,30,.72);}
 
+  /* ---------- faq ---------- */
+  .faq-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media(max-width:720px){ .faq-grid{grid-template-columns:1fr;} }
+  .faq-item{background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:20px 22px;}
+  .faq-item h4{margin:0 0 8px; font-size:.96rem; color:var(--forest-deep);}
+  .faq-item p{margin:0; font-size:.87rem; color:rgba(31,43,30,.72); line-height:1.7;}
+
   /* ---------- booking widget ---------- */
   .booking-widget{
     background:var(--paper-2); border:1px solid var(--line); border-radius:var(--radius);
@@ -674,6 +681,25 @@
   </div>
 </section>
 
+<section id="faq" style="background:var(--paper-2);">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">FAQ</p>
+      <h2>よくある質問</h2>
+    </div>
+    <div class="faq-grid">
+      <div class="faq-item"><h4>チェックイン／チェックアウトは何時ですか?</h4><p>チェックインは16:00〜22:00、チェックアウトは10:00までです。時間外をご希望の場合は、ご予約時の特別リクエストでご相談ください（確約ではありません）。</p></div>
+      <div class="faq-item"><h4>現地で駐車できますか?</h4><p>はい、専用駐車場を無料でご利用いただけます。</p></div>
+      <div class="faq-item"><h4>朝食の提供はありますか?</h4><p>朝食のご用意はありません。共用キッチンで自炊いただけます。</p></div>
+      <div class="faq-item"><h4>専用バスルームがあるお部屋はありますか?</h4><p>スタンダードツイン・ドミトリーは共用バスルームです。団体様用プラン（一棟貸し感覚）なら専用バスルームをご利用いただけます。</p></div>
+      <div class="faq-item"><h4>WiFiに関するポリシーはどうなっていますか?</h4><p>全室・共用スペースで高速無料WiFi（295Mbps）を制限なくご利用いただけます。</p></div>
+      <div class="faq-item"><h4>レストランはありますか?</h4><p>館内にレストランはございません。共用キッチンでの自炊や、庭でのBBQ（1組¥2,000）をご利用いただけます。</p></div>
+      <div class="faq-item"><h4>空港シャトルサービスはありますか?</h4><p>ご用意はありません。最寄りはJR新下関駅です。</p></div>
+      <div class="faq-item"><h4>スパ・プールはありますか?</h4><p>ご用意はありません。裏山の散歩道や庭でのBBQ・映画上映など、自然の中で過ごす時間をお楽しみください。</p></div>
+    </div>
+  </div>
+</section>
+
 <section id="book">
   <div class="wrap">
     <div class="section-head">
@@ -727,6 +753,7 @@
         <p>山口県下関市（下関市立美術館・長府庭園エリア）</p>
         <p>最寄り：JR新下関駅</p>
         <p>個室 ¥3,250〜 / 1泊・団体プラン(1〜15名)¥27,000/泊も可</p>
+        <p>チェックイン 16:00〜22:00／チェックアウト 〜10:00</p>
       </div>
       <div class="footer-col">
         <h5>Follow / Contact</h5>
