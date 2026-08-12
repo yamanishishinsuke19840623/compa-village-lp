@@ -110,21 +110,35 @@
   .hero{
     position:relative; overflow:hidden;
     padding:88px 0 96px;
+    background:var(--forest-deep);
+    color:var(--paper);
+  }
+  .hero-slideshow{position:absolute; inset:0; z-index:0;}
+  .hero-slideshow .slide{
+    position:absolute; inset:0; background-size:cover; background-position:center;
+    opacity:0; animation:heroFade 24s infinite;
+  }
+  .hero-slideshow .slide:nth-child(1){background-image:url('photos/compa-hero.jpg'); animation-delay:0s;}
+  .hero-slideshow .slide:nth-child(2){background-image:url('photos/gallery-0-nightbbq.jpg'); animation-delay:6s;}
+  .hero-slideshow .slide:nth-child(3){background-image:url('photos/gallery-5-suikawari.jpg'); animation-delay:12s;}
+  .hero-slideshow .slide:nth-child(4){background-image:url('photos/gallery-10-sunset.jpg'); animation-delay:18s;}
+  @keyframes heroFade{
+    0%{opacity:0;} 4%{opacity:1;} 21%{opacity:1;} 25%{opacity:0;} 100%{opacity:0;}
+  }
+  .hero-overlay{
+    position:absolute; inset:0; z-index:1;
     background:
       radial-gradient(ellipse 60% 50% at 85% 0%, rgba(143,190,63,0.28), transparent 60%),
       radial-gradient(ellipse 50% 40% at 5% 100%, rgba(226,118,46,0.16), transparent 60%),
-      linear-gradient(100deg, rgba(29,52,32,.95) 0%, rgba(29,52,32,.86) 40%, rgba(29,52,32,.72) 100%),
-      url('photos/compa-hero.jpg') center / cover no-repeat,
-      var(--forest-deep);
-    color:var(--paper);
+      linear-gradient(100deg, rgba(29,52,32,.95) 0%, rgba(29,52,32,.86) 40%, rgba(29,52,32,.72) 100%);
   }
   .hero::before{
     content:"";
-    position:absolute; inset:0; opacity:.5; mix-blend-mode:overlay; pointer-events:none;
+    position:absolute; inset:0; z-index:2; opacity:.5; mix-blend-mode:overlay; pointer-events:none;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
   }
   .hero-grid{
-    position:relative; z-index:1;
+    position:relative; z-index:3;
     display:grid; grid-template-columns:1.15fr .85fr; gap:48px; align-items:center;
     max-width:var(--maxw); margin:0 auto; padding:0 24px;
   }
@@ -509,6 +523,13 @@
 </header>
 
 <section class="hero" id="top">
+  <div class="hero-slideshow" aria-hidden="true">
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+  </div>
+  <div class="hero-overlay" aria-hidden="true"></div>
   <div class="hero-grid">
     <div>
       <span class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/><path d="M9 20v-6h6v6"/></svg> 山口・下関 ・ ペットと泊まれるゲストハウス</span>
