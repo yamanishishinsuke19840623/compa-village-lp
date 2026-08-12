@@ -120,28 +120,48 @@ function setupSheet() {
 //  空室判定・台帳操作
 // =============================================
 
+// 団体様用プラン（一棟貸し感覚）は建物全体（standard/dormと同じ部屋）を使うため、
+// 「団体プランが入っている日はstandard/dormも予約不可」「standard/dormが1件でも入っていたら団体プランは予約不可」
+// というルールを両方向でチェックする（2026-08-12 打合せで確認済みの業務ルール）
+var GROUND_FLOOR_TYPES = ['standard', 'dorm', 'group'];
+
 function isAvailable(roomType, checkin, checkout) {
   var capacity = ROOM_CAPACITY[roomType] || 0;
   if (capacity <= 0) return false;
 
-  var overlapCount = 0;
-  var rows = getBookingRows();
   var ci = new Date(checkin);
   var co = new Date(checkout);
+  var rows = getBookingRows();
 
-  for (var i = 0; i < rows.length; i++) {
-    var row = rows[i];
-    if (row[3] !== roomType) continue;
-    if (row[7] === 'キャンセル') continue;
-    var existCi = new Date(row[4]);
-    var existCo = new Date(row[5]);
-    // 期間が重なっているか（片方の開始が相手の終了より前 かつ 相手の開始が自分の終了より前）
-    if (ci < existCo && existCi < co) overlapCount++;
+  if (roomType === 'group') {
+    // standard/dorm/group、いずれかで重なる予約が1件でもあれば不可
+    for (var i = 0; i < rows.length; i++) {
+      var row = rows[i];
+      if (row[7] === 'キャンセル') continue;
+      if (GROUND_FLOOR_TYPES.indexOf(row[3]) === -1) continue;
+      var existCi = new Date(row[4]);
+      var existCo = new Date(row[5]);
+      if (ci < existCo && existCi < co) return false;
+    }
+    return true;
+  }
+
+  // standard/dorm: 同タイプの重複数がcapacity未満、かつ団体プランと重なっていないこと
+  var overlapCount = 0;
+  for (var j = 0; j < rows.length; j++) {
+    var r = rows[j];
+    if (r[7] === 'キャンセル') continue;
+    var eCi = new Date(r[4]);
+    var eCo = new Date(r[5]);
+    if (!(ci < eCo && eCi < co)) continue; // 重なっていない
+    if (r[3] === 'group') return false; // 団体プランと重なったら即不可
+    if (r[3] === roomType) overlapCount++;
   }
   return overlapCount < capacity;
 }
 
 // 部屋タイプごとの予約済み日程一覧（LPのカレンダー表示用）
+// 団体プランはstandard/dormにも波及し、standard/dormは団体プランにも波及する
 function getBookedRanges() {
   var rows = getBookingRows();
   var byRoom = {};
@@ -151,10 +171,14 @@ function getBookedRanges() {
     var roomType = row[3];
     if (row[7] === 'キャンセル') return;
     if (!byRoom[roomType]) return;
-    byRoom[roomType].push({
-      checkin:  formatDate_(row[4]),
-      checkout: formatDate_(row[5])
-    });
+    var range = { checkin: formatDate_(row[4]), checkout: formatDate_(row[5]) };
+
+    if (roomType === 'group') {
+      GROUND_FLOOR_TYPES.forEach(function(t){ byRoom[t].push(range); });
+    } else {
+      byRoom[roomType].push(range);
+      if (byRoom['group']) byRoom['group'].push(range);
+    }
   });
   return byRoom;
 }
