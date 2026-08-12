@@ -542,8 +542,8 @@
     </div>
     <div class="room-types">
       <div class="room-type"><span class="mono">TYPE 01</span><h4>ファミリールーム</h4><p>専用バスルーム付・最大6名（シングル×2＋二段ベッド×2）</p></div>
-      <div class="room-type"><span class="mono">TYPE 02</span><h4>スタンダード ツインルーム</h4><p>共用バスルーム・布団2組</p></div>
-      <div class="room-type"><span class="mono">TYPE 03</span><h4>ドミトリールーム</h4><p>4人部屋・男女共用・布団4組</p></div>
+      <div class="room-type"><span class="mono">TYPE 02</span><h4>スタンダード ツインルーム</h4><p>共用バスルーム・1部屋2名まで・全3室（¥3,250/泊）</p></div>
+      <div class="room-type"><span class="mono">TYPE 03</span><h4>ドミトリールーム</h4><p>4人部屋・男女共用・1ベッドから予約可（¥2,250/泊）</p></div>
     </div>
     <div class="amenity-strip">
       <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.5a15 15 0 0 1 20 0"/><path d="M5.5 12a10 10 0 0 1 13 0"/><path d="M9 15.5a5 5 0 0 1 6 0"/><circle cx="12" cy="19" r="1" fill="var(--forest-deep)" stroke="none"/></svg> 高速無料WiFi(295Mbps)</span>
@@ -783,7 +783,7 @@
     dorm: ''
   };
   // GASデプロイ後、ここにウェブアプリURLを貼る（gas/デプロイ手順書_やまちゃん用.txt参照）
-  const GAS_BOOKING_ENDPOINT = '';
+  const GAS_BOOKING_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzDjZTTgivfNKeEE7_--Cx_MAaob7ZuBV2plVSP0woGOnMj21z8SsyP905NvJrSLbtR/exec';
   const IG_URL = 'https://www.instagram.com/compa0601/';
   let bookedRanges = { standard: [], family: [], dorm: [] };
 
@@ -808,9 +808,9 @@
 
   const DOW = ['日','月','火','水','木','金','土'];
   const ROOMS = [
-    { key:'standard', name:'スタンダード ツインルーム', cap:'共用バスルーム・布団2組', price:3250 },
+    { key:'standard', name:'スタンダード ツインルーム', cap:'共用バスルーム・1部屋2名まで・全3室', price:3250 },
     { key:'family', name:'ファミリールーム', cap:'専用バスルーム付・最大6名', price:null },
-    { key:'dorm', name:'ドミトリールーム', cap:'4人部屋・男女共用・布団4組', price:null }
+    { key:'dorm', name:'ドミトリールーム', cap:'4人部屋・男女共用・1ベッドから予約可', price:2250 }
   ];
 
   function fmt(d){ return d.getFullYear() + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日'; }

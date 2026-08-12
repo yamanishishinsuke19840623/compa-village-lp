@@ -7,11 +7,11 @@ var HOST_EMAIL = 'jannenenenene@gmail.com';
 var CC_EMAIL   = 'yamanishishinsuke19840623@gmail.com';
 var SHEET_ID   = ''; // setupSheet() 実行後にログへ出るIDをここに貼り付ける
 
-// 各部屋タイプの部屋数（現状「1部屋ずつ」という前提。実際の部屋数が違う場合は要修正）
+// 各部屋タイプの同時受付可能数（ゆうさんへの確認: standard=個室3室、dorm=4ベッド分。familyは要確認、暫定1）
 var ROOM_CAPACITY = {
-  standard: 1, // スタンダード ツインルーム
-  family:   1, // ファミリールーム
-  dorm:     1  // ドミトリールーム
+  standard: 3, // スタンダード ツインルーム（個室3室、¥3,250/泊）
+  family:   1, // ファミリールーム（部屋数・料金とも要確認）
+  dorm:     4  // ドミトリールーム（4ベッド、1ベッドから予約可、¥2,250/泊）
 };
 var ROOM_NAMES = {
   standard: 'スタンダード ツインルーム',
