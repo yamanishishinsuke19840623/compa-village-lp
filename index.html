@@ -216,7 +216,9 @@
   /* ---------- room types / amenities ---------- */
   .room-types{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:44px;}
   @media(max-width:820px){ .room-types{grid-template-columns:1fr;} }
-  .room-type{border:1px solid var(--line); border-radius:12px; padding:20px; background:var(--paper-2);}
+  .room-type{border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--paper-2);}
+  .room-type img{width:100%; aspect-ratio:16/9; object-fit:cover; display:block;}
+  .room-type .room-type-body{padding:20px;}
   .room-type .mono{font-family:'Space Mono',monospace; font-size:.68rem; color:var(--sunset); letter-spacing:.1em;}
   .room-type h4{margin:8px 0 6px; font-size:1rem;}
   .room-type p{margin:0; font-size:.86rem; color:rgba(31,43,30,.72);}
@@ -488,6 +490,8 @@
       <img src="photos/gallery-7-torii.jpg" alt="裏山にある鳥居への散歩道" loading="lazy">
       <img src="photos/gallery-8-shrine.jpg" alt="森の中の小さな祠" loading="lazy">
       <img src="photos/gallery-2-yard.jpg" alt="COMPA VILLAGEの庭・駐車スペース" loading="lazy">
+      <img src="photos/gallery-9-dining.jpg" alt="室内での乾杯タイム" loading="lazy">
+      <img src="photos/gallery-10-sunset.jpg" alt="近くの海岸から見る夕陽" loading="lazy">
     </div>
   </div>
 </section>
@@ -664,9 +668,17 @@
       </div>
     </div>
     <div class="room-types">
-      <div class="room-type"><span class="mono">TYPE 01</span><h4>団体様用プラン</h4><p>1〜15名様まで・一棟貸し感覚でご利用いただけます（¥27,000/泊）</p></div>
-      <div class="room-type"><span class="mono">TYPE 02</span><h4>スタンダード ツインルーム</h4><p>共用バスルーム・1部屋2名まで・全3室（¥3,250/泊）</p></div>
-      <div class="room-type"><span class="mono">TYPE 03</span><h4>ドミトリールーム</h4><p>4人部屋・男女共用・1ベッドから予約可（¥2,250/泊）</p></div>
+      <div class="room-type">
+        <img src="photos/room-group-common.jpg" alt="団体様用プランで使える共用ラウンジ" loading="lazy">
+        <div class="room-type-body"><span class="mono">TYPE 01</span><h4>団体様用プラン</h4><p>1〜15名様まで・一棟貸し感覚でご利用いただけます（¥27,000/泊）</p></div>
+      </div>
+      <div class="room-type">
+        <img src="photos/room-standard.jpg" alt="スタンダードツインルームの一室" loading="lazy">
+        <div class="room-type-body"><span class="mono">TYPE 02</span><h4>スタンダード ツインルーム</h4><p>共用バスルーム・1部屋2名まで・全3室（¥3,250/泊）</p></div>
+      </div>
+      <div class="room-type">
+        <div class="room-type-body"><span class="mono">TYPE 03</span><h4>ドミトリールーム</h4><p>4人部屋・男女共用・1ベッドから予約可（¥2,250/泊）</p></div>
+      </div>
     </div>
     <div class="amenity-strip">
       <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.5a15 15 0 0 1 20 0"/><path d="M5.5 12a10 10 0 0 1 13 0"/><path d="M9 15.5a5 5 0 0 1 6 0"/><circle cx="12" cy="19" r="1" fill="var(--forest-deep)" stroke="none"/></svg> 高速無料WiFi(295Mbps)</span>
