@@ -78,6 +78,8 @@
     background:
       radial-gradient(ellipse 60% 50% at 85% 0%, rgba(143,190,63,0.28), transparent 60%),
       radial-gradient(ellipse 50% 40% at 5% 100%, rgba(226,118,46,0.16), transparent 60%),
+      linear-gradient(100deg, rgba(29,52,32,.95) 0%, rgba(29,52,32,.86) 40%, rgba(29,52,32,.72) 100%),
+      url('photos/compa-hero.jpg') center / cover no-repeat,
       var(--forest-deep);
     color:var(--paper);
   }
@@ -191,6 +193,13 @@
   .game-hud{display:flex; align-items:center; justify-content:space-between; margin-top:14px; gap:14px;}
   .game-hud .mono{font-size:.85rem; color:var(--forest-deep);}
   .game-hud .btn{padding:11px 20px; font-size:.9rem;}
+
+  /* ---------- gallery ---------- */
+  .gallery-lead{border-radius:16px; overflow:hidden; margin-bottom:14px;}
+  .gallery-lead img{width:100%; aspect-ratio:16/9; object-fit:cover; display:block;}
+  .gallery-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+  @media(max-width:720px){ .gallery-grid{grid-template-columns:1fr 1fr;} }
+  .gallery-grid img{width:100%; aspect-ratio:1; object-fit:cover; display:block; border-radius:12px;}
 
   /* ---------- pets ---------- */
   .pet-layout{display:grid; grid-template-columns:.9fr 1.1fr; gap:44px; align-items:center;}
@@ -451,6 +460,27 @@
       <p class="pull hand">「帰る場所のない旅人に、ほっとできる拠点を。<br>家族の一員であるペットと、一緒に過ごせる空間を。」</p>
       <p>ここにあるのは、ホテルのようなサービスではなく「人の手」と「旅の記憶」。旅人だったからこそわかる、落ち着ける距離感とやさしさを大事にしています。庭で遊ぶペットを眺めながら朝のコーヒーを飲んだり、友人と語らいながら自炊をしたり。ひとり静かに過ごすのも、もちろん歓迎です。</p>
       <p class="host-note">💬 ホストより　「田舎でしか出来ない最高の時間を、みんなで過ごしましょう！」</p>
+    </div>
+  </div>
+</section>
+
+<section id="gallery" style="background:var(--paper-2);">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">Real Moments</p>
+      <h2>加工なしの、日常。</h2>
+      <p class="lede">庭でのBBQ、スイカ割り、映画上映、そして裏山の鳥居まで。COMPAで実際に流れている時間です。</p>
+    </div>
+    <div class="gallery-lead">
+      <img src="photos/gallery-0-nightbbq.jpg" alt="夜、庭でBBQを楽しむ旅人たち" loading="lazy">
+    </div>
+    <div class="gallery-grid">
+      <img src="photos/gallery-1-exterior.jpg" alt="COMPA VILLAGEの外観" loading="lazy">
+      <img src="photos/gallery-3-lounge.jpg" alt="屋外プロジェクターのある共用ラウンジ" loading="lazy">
+      <img src="photos/gallery-5-suikawari.jpg" alt="庭でのスイカ割り" loading="lazy">
+      <img src="photos/gallery-7-torii.jpg" alt="裏山にある鳥居への散歩道" loading="lazy">
+      <img src="photos/gallery-8-shrine.jpg" alt="森の中の小さな祠" loading="lazy">
+      <img src="photos/gallery-2-yard.jpg" alt="COMPA VILLAGEの庭・駐車スペース" loading="lazy">
     </div>
   </div>
 </section>
