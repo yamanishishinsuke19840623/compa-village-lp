@@ -18,6 +18,14 @@ var ROOM_NAMES = {
   dorm:     'ドミトリールーム',
   group:    '団体様用プラン'
 };
+// 確定メールの決済案内に使うStripe本番決済リンク（2026-08-12 やまちゃん確認済み、index.htmlのPAYMENT_LINKSと同一）
+var STRIPE_LINKS = {
+  standard: 'https://buy.stripe.com/14A8wOewD4yC4mG0qM87K01',
+  dorm:     'https://buy.stripe.com/00w5kCfAHc147ySa1m87K03',
+  group:    'https://buy.stripe.com/8x24gygELc14f1k7Te87K02'
+};
+var ACCESS_MAP_URL = 'https://www.google.com/maps?q=COMPA+VILLAGE+%E4%B8%8B%E9%96%A2%E5%B8%82';
+var IG_URL = 'https://www.instagram.com/compa0601/';
 
 // =============================================
 //  エントリーポイント
@@ -295,6 +303,19 @@ function menuConfirmBooking() {
 
   sheet.getRange(row, 8).setValue('確定');
 
+  MailApp.sendEmail({
+    to: d.email, replyTo: HOST_EMAIL,
+    subject: '【COMPA VILLAGE】ご予約が確定しました',
+    body: buildConfirmationText_(d),
+    htmlBody: buildConfirmationHtml_(d)
+  });
+
+  SpreadsheetApp.getUi().alert('確定メールを送信しました');
+}
+
+// 確定メール：プレーンテキスト版（HTML非対応クライアント向けフォールバック）
+function buildConfirmationText_(d) {
+  var payLink = STRIPE_LINKS[d.roomType];
   var body = d.name + ' 様\n\n';
   body += 'ご予約が確定しましたのでご連絡いたします。\n\n';
   body += '━━━━━━━━━━━━━━━━━━━━\n';
@@ -302,16 +323,71 @@ function menuConfirmBooking() {
   body += 'チェックイン：' + d.checkin + '\n';
   body += 'チェックアウト：' + d.checkout + '\n';
   body += '━━━━━━━━━━━━━━━━━━━━\n\n';
+  body += '【チェックインについて】\n';
+  body += 'チェックイン：16:00〜22:00 / チェックアウト：10:00まで\n';
+  body += '駐車場は無料でご利用いただけます。全室・共用スペースで高速無料WiFiもご利用いただけます。\n\n';
+  body += '【アクセス】\n';
+  body += '山口県下関市（下関市立美術館・長府庭園エリア）／最寄り：JR新下関駅\n';
+  body += ACCESS_MAP_URL + '\n\n';
+  if (payLink) {
+    body += '【お支払い】\n';
+    body += 'まだお支払いがお済みでない場合は、以下より決済をお願いいたします。\n';
+    body += payLink + '\n\n';
+  }
+  body += 'ご不明な点があれば、このメールに返信いただくか、\n';
+  body += 'Instagram（@compa0601）のDMでもお気軽にご連絡ください。\n\n';
   body += '当日を楽しみにお待ちしております！\n\n';
-  body += 'COMPA VILLAGE\n';
+  body += 'COMPA VILLAGE\n' + IG_URL;
+  return body;
+}
 
-  MailApp.sendEmail({
-    to: d.email, replyTo: HOST_EMAIL,
-    subject: '【COMPA VILLAGE】ご予約が確定しました',
-    body: body
-  });
+// 確定メール：HTML版（ブランドカラーで整形。Gmail等HTML対応クライアントで表示）
+function buildConfirmationHtml_(d) {
+  var roomName = ROOM_NAMES[d.roomType] || d.roomType;
+  var payLink = STRIPE_LINKS[d.roomType];
+  var esc = function(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
 
-  SpreadsheetApp.getUi().alert('確定メールを送信しました');
+  var payButton = '';
+  if (payLink) {
+    payButton =
+      '<tr><td style="padding:24px 28px 0;">' +
+        '<p style="margin:0 0 10px; font-size:14px; color:#1F2B1E;">まだお支払いがお済みでない場合は、以下より決済をお願いいたします。</p>' +
+        '<a href="' + esc(payLink) + '" style="display:inline-block; background:#8FBE3F; color:#1D3420; text-decoration:none; font-weight:bold; padding:12px 22px; border-radius:999px; font-size:14px;">お支払いはこちら →</a>' +
+      '</td></tr>';
+  }
+
+  return '' +
+  '<div style="font-family:\'Hiragino Sans\',\'Yu Gothic\',sans-serif; background:#F6F1E4; padding:28px 16px;">' +
+    '<table role="presentation" width="100%" style="max-width:520px; margin:0 auto; background:#ffffff; border-radius:16px; overflow:hidden; border:1px solid #DCCFAE;">' +
+      '<tr><td style="background:#1D3420; padding:22px 28px;">' +
+        '<p style="margin:0; color:#8FBE3F; font-size:12px; letter-spacing:.14em; text-transform:uppercase;">Booking Confirmed</p>' +
+        '<p style="margin:6px 0 0; color:#F6F1E4; font-size:20px; font-weight:bold;">COMPA VILLAGE</p>' +
+      '</td></tr>' +
+      '<tr><td style="padding:26px 28px 0;">' +
+        '<p style="margin:0 0 4px; font-size:15px; color:#1F2B1E;">' + esc(d.name) + ' 様</p>' +
+        '<p style="margin:0; font-size:14px; color:rgba(31,43,30,.75); line-height:1.7;">ご予約が確定しましたのでご連絡いたします。当日を楽しみにお待ちしております！</p>' +
+      '</td></tr>' +
+      '<tr><td style="padding:20px 28px 0;">' +
+        '<table role="presentation" width="100%" style="background:#EFE7D3; border-radius:12px;">' +
+          '<tr><td style="padding:16px 20px; font-size:13px; color:#1F2B1E;">部屋タイプ</td><td style="padding:16px 20px; font-size:13px; color:#1D3420; font-weight:bold; text-align:right;">' + esc(roomName) + '</td></tr>' +
+          '<tr><td style="padding:0 20px 16px; font-size:13px; color:#1F2B1E;">チェックイン</td><td style="padding:0 20px 16px; font-size:13px; color:#1D3420; font-weight:bold; text-align:right;">' + esc(d.checkin) + '</td></tr>' +
+          '<tr><td style="padding:0 20px 16px; font-size:13px; color:#1F2B1E;">チェックアウト</td><td style="padding:0 20px 16px; font-size:13px; color:#1D3420; font-weight:bold; text-align:right;">' + esc(d.checkout) + '</td></tr>' +
+        '</table>' +
+      '</td></tr>' +
+      '<tr><td style="padding:20px 28px 0;">' +
+        '<p style="margin:0 0 6px; font-size:13px; font-weight:bold; color:#1D3420;">チェックインについて</p>' +
+        '<p style="margin:0; font-size:13px; color:rgba(31,43,30,.75); line-height:1.8;">チェックイン 16:00〜22:00 ／ チェックアウト 10:00まで<br>駐車場：無料 ／ WiFi：全室・共用スペースで高速無料</p>' +
+      '</td></tr>' +
+      '<tr><td style="padding:18px 28px 0;">' +
+        '<p style="margin:0 0 6px; font-size:13px; font-weight:bold; color:#1D3420;">アクセス</p>' +
+        '<p style="margin:0; font-size:13px; color:rgba(31,43,30,.75); line-height:1.8;">山口県下関市（下関市立美術館・長府庭園エリア）／最寄り：JR新下関駅<br><a href="' + esc(ACCESS_MAP_URL) + '" style="color:#2B4A2E;">地図で見る →</a></p>' +
+      '</td></tr>' +
+      payButton +
+      '<tr><td style="padding:24px 28px 26px;">' +
+        '<p style="margin:0; font-size:12px; color:rgba(31,43,30,.6); line-height:1.7;">ご不明な点があれば、このメールに返信いただくか、Instagram（<a href="' + esc(IG_URL) + '" style="color:#2B4A2E;">@compa0601</a>）のDMでもお気軽にご連絡ください。<br><br>旅の途中に、最高の出会いを。<br>COMPA VILLAGE</p>' +
+      '</td></tr>' +
+    '</table>' +
+  '</div>';
 }
 
 // =============================================
