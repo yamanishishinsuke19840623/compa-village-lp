@@ -347,23 +347,31 @@
 
   .bk-calendar{
     margin-top:16px; border:1px solid var(--line); border-radius:12px;
-    padding:14px; background:var(--paper); max-width:296px; box-shadow:0 8px 24px rgba(31,43,30,.08);
+    padding:16px; background:var(--paper); max-width:600px; box-shadow:0 8px 24px rgba(31,43,30,.08);
   }
-  .bk-cal-header{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;}
-  .bk-cal-header button{background:none; border:1px solid var(--line); border-radius:6px; width:26px; height:26px; cursor:pointer; font-size:.8rem; color:var(--forest-deep); line-height:1; padding:0;}
+  .bk-cal-header{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px;}
+  .bk-cal-header button{background:none; border:1px solid var(--line); border-radius:6px; width:26px; height:26px; flex:none; cursor:pointer; font-size:.8rem; color:var(--forest-deep); line-height:1; padding:0;}
   .bk-cal-header button:hover{background:var(--sand);}
-  .bk-cal-header span{font-size:.78rem;}
+  .bk-cal-header span{font-size:.7rem; color:rgba(31,43,30,.55); text-align:center;}
+  .bk-cal-dual{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  @media(max-width:560px){ .bk-cal-dual{grid-template-columns:1fr;} }
+  .bk-cal-month-label{margin:0 0 8px; font-size:.76rem; font-weight:700; color:var(--forest-deep); text-align:center;}
   .bk-cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:2px;}
   .bk-cal-grid .dow{font-family:'Space Mono',monospace; font-size:.6rem; text-align:center; color:rgba(31,43,30,.45); padding-bottom:4px;}
   .bk-cal-grid button.day{
-    width:100%; aspect-ratio:1; border:none; background:transparent; border-radius:6px; cursor:pointer;
-    font-size:.72rem; color:var(--ink); font-family:'Space Mono',monospace;
+    width:100%; min-height:38px; border:none; background:transparent; border-radius:6px; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; padding:4px 0;
+    color:var(--ink); font-family:'Space Mono',monospace;
   }
+  .bk-cal-grid .d-num{font-size:.74rem;}
+  .bk-cal-grid .d-price{font-size:.5rem; color:var(--sunset);}
+  .bk-cal-grid .d-price.full{color:rgba(31,43,30,.3);}
   .bk-cal-grid button.day:hover:not(:disabled){background:var(--sand);}
   .bk-cal-grid button.day:disabled{color:rgba(31,43,30,.2); cursor:not-allowed;}
   .bk-cal-grid button.day.selected{background:var(--forest-deep); color:var(--paper); font-weight:700;}
+  .bk-cal-grid button.day.selected .d-price{color:rgba(246,241,228,.75);}
   .bk-cal-grid button.day.in-range{background:rgba(143,190,63,.32);}
-  .bk-cal-hint{margin:10px 0 0; font-size:.7rem; color:rgba(31,43,30,.5);}
+  .bk-cal-hint{margin:12px 0 0; font-size:.7rem; color:rgba(31,43,30,.5);}
 
   .bk-results{margin-top:22px; border-top:1px solid var(--line); padding-top:22px;}
   .bk-results-summary{font-size:.85rem; color:var(--forest-deep); margin:0 0 16px;}
@@ -373,6 +381,7 @@
   .bk-room-card.unavailable{opacity:.55;}
   .bk-room-card h4{margin:0 0 4px; font-size:.98rem; display:flex; align-items:center; gap:8px;}
   .bk-room-card .badge-full{font-family:'Space Mono',monospace; font-size:.62rem; background:var(--sunset); color:#fff; padding:2px 7px; border-radius:999px;}
+  .bk-room-card .badge-remaining{font-family:'Space Mono',monospace; font-size:.62rem; background:var(--lime); color:var(--forest-deep); padding:2px 7px; border-radius:999px;}
   .bk-room-card .cap{font-size:.8rem; color:rgba(31,43,30,.6); margin:0 0 14px;}
   .bk-room-card .price{font-family:'Space Mono',monospace; font-size:1.05rem; color:var(--forest-deep); margin:0 0 16px; display:block;}
   .bk-room-card .price small{font-size:.66rem; font-weight:400; color:rgba(31,43,30,.55); display:block; margin-top:3px;}
@@ -434,7 +443,7 @@
 <section class="hero" id="top">
   <div class="hero-grid">
     <div>
-      <span class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/><path d="M9 20v-6h6v6"/></svg> 山口・下関 ・ ペットと泊まれる一棟貸し宿</span>
+      <span class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/><path d="M9 20v-6h6v6"/></svg> 山口・下関 ・ ペットと泊まれるゲストハウス</span>
       <h1 class="headline">旅の途中に、<br>最高の<em>出会い</em>を。</h1>
       <p class="sub">笑って、遊んで、語り合って、気づけばみんな ¡COMPA!<br>
       BBQ<svg class="inline-ico" viewBox="0 0 24 24"><path d="M4 14c0 4 3.5 7 8 7s8-3 8-7"/><path d="M12 3c0 2-2 2.5-2 5a2 2 0 0 0 4 0c0-1.2-.7-1.8-1-2.6"/><path d="M6 14h12"/></svg>｜スケボー<svg class="inline-ico" viewBox="0 0 24 24"><path d="M3 16h14"/><circle cx="6" cy="18.5" r="1.5"/><circle cx="15" cy="18.5" r="1.5"/><path d="M17 12l4-6"/></svg>｜イベント<svg class="inline-ico" viewBox="0 0 24 24"><path d="M4 20l3-9 9-9 5 5-9 9-9 3z"/><path d="M14.5 6.5l3 3"/></svg>、なんでも出来ます。旅人も、長期滞在も、一人旅も、誰でも大歓迎。</p>
@@ -550,7 +559,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="width:30px; height:30px; stroke:var(--lime); margin-bottom:10px; display:block;"><circle cx="7.5" cy="8" r="1.7"/><circle cx="12" cy="6" r="1.7"/><circle cx="16.5" cy="8" r="1.7"/><path d="M12 10.5c-3.2 0-5.5 2.4-5.5 5.1 0 2 1.6 3.4 3.4 3.4.9 0 1.3-.5 2.1-.5s1.2.5 2.1.5c1.8 0 3.4-1.4 3.4-3.4 0-2.7-2.3-5.1-5.5-5.1z"/></svg>
       <p class="kicker" style="color:var(--lime);">Pet Friendly</p>
       <h2 style="color:var(--paper);">ペットも、ここでは家族。</h2>
-      <p class="lede" style="color:rgba(246,241,228,.78);">他のお客様に気を使うことなく、まるで“里帰り”をしたようにくつろげる一棟貸しの空間。犬もちろん、一緒にどうぞ。</p>
+      <p class="lede" style="color:rgba(246,241,228,.78);">他のお客様に気を使うことなく、まるで“里帰り”をしたようにくつろげる、アットホームな空間。犬もちろん、一緒にどうぞ。</p>
     </div>
     <ul class="pet-list">
       <li><svg class="ico" viewBox="0 0 24 24"><circle cx="7.5" cy="8" r="1.6" fill="var(--lime)" stroke="none"/><circle cx="12" cy="6" r="1.6" fill="var(--lime)" stroke="none"/><circle cx="16.5" cy="8" r="1.6" fill="var(--lime)" stroke="none"/><path d="M12 10.5c-3.2 0-5.5 2.4-5.5 5.1 0 2 1.6 3.4 3.4 3.4.9 0 1.3-.5 2.1-.5s1.2.5 2.1.5c1.8 0 3.4-1.4 3.4-3.4 0-2.7-2.3-5.1-5.5-5.1z"/></svg><div>犬 宿泊OK<em>※ケージに入れていただける場合</em></div></li>
@@ -651,27 +660,35 @@
       </div>
       <div class="why-direct">
         <div class="item">
-          <h4><span class="x">外部予約サイト</span>手数料分、宿泊料が高くなりがち</h4>
-          <p>サイトに支払う仲介手数料は、最終的に宿泊料へ上乗せされています。同じ部屋でも、どこ経由で予約するかで支払う金額が変わることも。</p>
+          <h4><span class="x">外部予約サイト</span>手数料は仲介サイトへ</h4>
+          <p>予約サイトに支払う手数料は、宿の運営やおもてなしには還元されません。</p>
+        </div>
+        <div class="item">
+          <h4><span class="o">COMPAへ直接</span>支援がまっすぐホストに届く</h4>
+          <p>手数料を挟まない分、宿を直接応援できます。次に来る旅人のための庭づくりや設備に還元されます。</p>
+        </div>
+        <div class="item">
+          <h4><span class="x">外部予約サイト</span>ペット不可のことが多い</h4>
+          <p>外部予約サイトの掲載情報ではペット不可となっています。</p>
         </div>
         <div class="item">
           <h4><span class="o">COMPAへ直接</span>ペットと一緒に泊まれる</h4>
-          <p>外部予約サイトではペット不可ですが、COMPAへ直接予約なら愛犬と一緒に泊まれます（ケージご利用の場合）。ホストと直接やり取りできるので、到着時間の相談もスムーズです。</p>
+          <p>COMPAへ直接予約なら愛犬と一緒に泊まれます（ケージご利用の場合）。ホストと直接やり取りできるので、到着時間の相談もスムーズです。</p>
         </div>
         <div class="item">
-          <h4><span class="x">外部予約サイト</span>評価の数字だけでは伝わらない</h4>
-          <p>スコアは一時的な波で変動しがち。実際の雰囲気とズレていることもあります。</p>
+          <h4><span class="x">外部予約サイト</span>情報が更新しきれないことも</h4>
+          <p>外部サイトの写真や説明は、最新の宿の様子と少しズレていることがあります。</p>
         </div>
         <div class="item">
-          <h4><span class="o">COMPAへ直接</span>Instagramで素の空気を先に確認できる</h4>
-          <p>加工されていない日々の様子を見てから予約できるので、来てからの「思ってたのと違う」がありません。</p>
+          <h4><span class="o">COMPAへ直接</span>InstagramとYouTubeで今の空気を確認できる</h4>
+          <p>加工されていない日々の様子や旅の記録動画を見てから予約できるので、来てからの「思ってたのと違う」がありません。</p>
         </div>
       </div>
     </div>
     <div class="room-types">
       <div class="room-type">
         <img src="photos/room-group-common.jpg" alt="団体様用プランで使える共用ラウンジ" loading="lazy">
-        <div class="room-type-body"><span class="mono">TYPE 01</span><h4>団体様用プラン</h4><p>1〜15名様まで・一棟貸し感覚でご利用いただけます（¥27,000/泊）</p></div>
+        <div class="room-type-body"><span class="mono">TYPE 01</span><h4>団体様用プラン</h4><p>1〜15名様まで・1階部分を貸し切り感覚でご利用いただけます（¥27,000/泊）</p></div>
       </div>
       <div class="room-type">
         <img src="photos/room-standard.jpg" alt="スタンダードツインルームの一室" loading="lazy">
@@ -690,7 +707,7 @@
       <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10l1.3-4h11.4L19 10"/><rect x="3" y="10" width="18" height="7" rx="2"/><circle cx="7.5" cy="17.3" r="1.5" fill="var(--forest-deep)" stroke="none"/><circle cx="16.5" cy="17.3" r="1.5" fill="var(--forest-deep)" stroke="none"/></svg> 専用駐車場 無料</span>
       <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 15h13v3H2z"/><path d="M15 15.5c1-1 2.3-1 3.2 0M18.2 13.3c1.4-1.4 3.2-1.4 4.6 0"/><path d="M3 20L20 4"/></svg> 全館禁煙</span>
     </div>
-    <p style="margin-top:26px; font-size:.92rem; color:rgba(31,43,30,.7);">団体様用プラン（1〜15名・¥27,000/泊）なら、一棟貸し感覚でまるごと一軒家を使えます。旅の仲間・家族・ペットと一緒に。旅人も、長期滞在も、一人旅も、誰でも大歓迎。</p>
+    <p style="margin-top:26px; font-size:.92rem; color:rgba(31,43,30,.7);">団体様用プラン（1〜15名・¥27,000/泊）なら、1階部分を貸し切り感覚でまるごと使えます。旅の仲間・家族・ペットと一緒に。旅人も、長期滞在も、一人旅も、誰でも大歓迎。</p>
   </div>
 </section>
 
@@ -704,7 +721,7 @@
       <div class="faq-item"><h4>チェックイン／チェックアウトは何時ですか?</h4><p>チェックインは16:00〜22:00、チェックアウトは10:00までです。時間外をご希望の場合は、ご予約時の特別リクエストでご相談ください（確約ではありません）。</p></div>
       <div class="faq-item"><h4>現地で駐車できますか?</h4><p>はい、専用駐車場を無料でご利用いただけます。</p></div>
       <div class="faq-item"><h4>朝食の提供はありますか?</h4><p>朝食のご用意はありません。共用キッチンで自炊いただけます。</p></div>
-      <div class="faq-item"><h4>専用バスルームがあるお部屋はありますか?</h4><p>スタンダードツイン・ドミトリーは共用バスルームです。団体様用プラン（一棟貸し感覚）なら専用バスルームをご利用いただけます。</p></div>
+      <div class="faq-item"><h4>専用バスルームがあるお部屋はありますか?</h4><p>スタンダードツイン・ドミトリーは共用バスルームです。団体様用プラン（1階貸し切り感覚）なら専用バスルームをご利用いただけます。</p></div>
       <div class="faq-item"><h4>WiFiに関するポリシーはどうなっていますか?</h4><p>全室・共用スペースで高速無料WiFi（295Mbps）を制限なくご利用いただけます。</p></div>
       <div class="faq-item"><h4>レストランはありますか?</h4><p>館内にレストランはございません。共用キッチンでの自炊や、庭でのBBQ（1組¥2,000）をご利用いただけます。</p></div>
       <div class="faq-item"><h4>空港シャトルサービスはありますか?</h4><p>ご用意はありません。最寄りはJR新下関駅です。</p></div>
@@ -739,11 +756,20 @@
       <div class="bk-calendar" id="bkCalendar" hidden>
         <div class="bk-cal-header">
           <button type="button" id="calPrev" aria-label="前の月">←</button>
-          <span id="calMonthLabel" class="mono"></span>
+          <span class="mono">日程を選ぶと、料金の目安が日付ごとに表示されます</span>
           <button type="button" id="calNext" aria-label="次の月">→</button>
         </div>
-        <div class="bk-cal-grid" id="calGrid"></div>
-        <p class="bk-cal-hint">チェックイン日 → チェックアウト日の順にクリックしてください</p>
+        <div class="bk-cal-dual">
+          <div class="bk-cal-month">
+            <p class="bk-cal-month-label mono" id="calMonthLabel1"></p>
+            <div class="bk-cal-grid" id="calGrid1"></div>
+          </div>
+          <div class="bk-cal-month">
+            <p class="bk-cal-month-label mono" id="calMonthLabel2"></p>
+            <div class="bk-cal-grid" id="calGrid2"></div>
+          </div>
+        </div>
+        <p class="bk-cal-hint">チェックイン日 → チェックアウト日の順にクリックしてください。日付の下は1泊あたりの最安プラン料金の目安です。</p>
       </div>
 
       <div class="bk-results" id="bkResults" hidden>
@@ -952,8 +978,10 @@
   const checkoutBtn = document.getElementById('checkoutBtn');
   const searchBtn = document.getElementById('searchBtn');
   const calWrap = document.getElementById('bkCalendar');
-  const calGrid = document.getElementById('calGrid');
-  const calMonthLabel = document.getElementById('calMonthLabel');
+  const calGrid1 = document.getElementById('calGrid1');
+  const calGrid2 = document.getElementById('calGrid2');
+  const calMonthLabel1 = document.getElementById('calMonthLabel1');
+  const calMonthLabel2 = document.getElementById('calMonthLabel2');
   const calPrev = document.getElementById('calPrev');
   const calNext = document.getElementById('calNext');
   const resultsWrap = document.getElementById('bkResults');
@@ -969,10 +997,12 @@
 
   const DOW = ['日','月','火','水','木','金','土'];
   const ROOMS = [
-    { key:'standard', name:'スタンダード ツインルーム', cap:'共用バスルーム・1部屋2名まで・全3室', price:3250 },
-    { key:'dorm', name:'ドミトリールーム', cap:'4人部屋・男女共用・1ベッドから予約可', price:2250 },
-    { key:'group', name:'団体様用プラン', cap:'1〜15名様まで・一棟貸し感覚でご利用いただけます', price:27000 }
+    { key:'standard', name:'スタンダード ツインルーム', cap:'共用バスルーム・1部屋2名まで・全3室', price:3250, unit:'部屋' },
+    { key:'dorm', name:'ドミトリールーム', cap:'4人部屋・男女共用・1ベッドから予約可', price:2250, unit:'ベッド' },
+    { key:'group', name:'団体様用プラン', cap:'1〜15名様まで・1階部分を貸し切りでご利用いただけます', price:27000, unit:null }
   ];
+  // GAS側(gas/Code.gs)のROOM_CAPACITYと同じ値。残数表示に使う
+  const ROOM_CAPACITY = { standard: 3, dorm: 4, group: 1 };
 
   function fmt(d){ return d.getFullYear() + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日'; }
   function sameDay(a,b){ return a && b && a.getTime() === b.getTime(); }
@@ -995,14 +1025,26 @@
     document.body.appendChild(script);
   }
 
-  function isRoomAvailable(roomKey, ci, co){
+  // 指定した日程に重なっている予約件数（同じroomKey内での重複数）
+  function countOverlaps(roomKey, ci, co){
     const ranges = bookedRanges[roomKey] || [];
+    let count = 0;
     for(let i=0;i<ranges.length;i++){
       const existCi = new Date(ranges[i].checkin);
       const existCo = new Date(ranges[i].checkout);
-      if(ci < existCo && existCi < co) return false;
+      if(ci < existCo && existCi < co) count++;
     }
-    return true;
+    return count;
+  }
+
+  // 残数（部屋数・ベッド数）。0以下なら満室
+  function getRemaining(roomKey, ci, co){
+    const capacity = ROOM_CAPACITY[roomKey] || 1;
+    return capacity - countOverlaps(roomKey, ci, co);
+  }
+
+  function isRoomAvailable(roomKey, ci, co){
+    return getRemaining(roomKey, ci, co) > 0;
   }
 
   function submitBookingRequest(payload, statusEl, submitBtn){
@@ -1031,28 +1073,63 @@
     });
   }
 
-  function renderCalendar(){
-    calMonthLabel.textContent = viewYear + ' / ' + String(viewMonth+1).padStart(2,'0');
-    calGrid.innerHTML = '';
+  // その日にまだ空きがあるプランの中で、最安の1泊料金を返す（全プラン満室ならnull）
+  function datePriceHint(date){
+    const next = new Date(date); next.setDate(next.getDate()+1);
+    let min = null;
+    ROOMS.forEach(function(room){
+      if(!room.price) return;
+      if(getRemaining(room.key, date, next) > 0){
+        if(min === null || room.price < min) min = room.price;
+      }
+    });
+    return min;
+  }
+
+  function formatPriceShort(p){
+    return p >= 10000 ? (Math.round(p/1000) + 'k') : ((p/1000).toFixed(1) + 'k');
+  }
+
+  function buildMonthGrid(container, labelEl, year, month){
+    labelEl.textContent = year + '年' + (month+1) + '月';
+    container.innerHTML = '';
     DOW.forEach(function(d){
       const el = document.createElement('div');
       el.className = 'dow'; el.textContent = d;
-      calGrid.appendChild(el);
+      container.appendChild(el);
     });
-    const firstDay = new Date(viewYear, viewMonth, 1);
+    const firstDay = new Date(year, month, 1);
     const startOffset = firstDay.getDay();
-    const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
-    for(let i=0;i<startOffset;i++) calGrid.appendChild(document.createElement('div'));
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+    for(let i=0;i<startOffset;i++) container.appendChild(document.createElement('div'));
     for(let d=1; d<=daysInMonth; d++){
-      const date = new Date(viewYear, viewMonth, d);
+      const date = new Date(year, month, d);
       const btn = document.createElement('button');
-      btn.type = 'button'; btn.className = 'day'; btn.textContent = String(d);
-      btn.disabled = date < today;
+      btn.type = 'button'; btn.className = 'day';
+      const disabled = date < today;
+      btn.disabled = disabled;
+      const numSpan = document.createElement('span');
+      numSpan.className = 'd-num'; numSpan.textContent = String(d);
+      btn.appendChild(numSpan);
+      if(!disabled && GAS_BOOKING_ENDPOINT){
+        const hint = datePriceHint(date);
+        const priceSpan = document.createElement('span');
+        priceSpan.className = 'd-price' + (hint === null ? ' full' : '');
+        priceSpan.textContent = hint !== null ? ('¥' + formatPriceShort(hint)) : '×';
+        btn.appendChild(priceSpan);
+      }
       if(sameDay(date, checkin) || sameDay(date, checkout)) btn.classList.add('selected');
       else if(checkin && checkout && date > checkin && date < checkout) btn.classList.add('in-range');
       btn.addEventListener('click', function(){ onPickDate(date); });
-      calGrid.appendChild(btn);
+      container.appendChild(btn);
     }
+  }
+
+  function renderCalendar(){
+    let m2y = viewYear, m2m = viewMonth + 1;
+    if(m2m > 11){ m2m = 0; m2y++; }
+    buildMonthGrid(calGrid1, calMonthLabel1, viewYear, viewMonth);
+    buildMonthGrid(calGrid2, calMonthLabel2, m2y, m2m);
   }
 
   function onPickDate(date){
@@ -1097,7 +1174,8 @@
     bkSummary.textContent = fmt(checkin) + ' 〜 ' + fmt(checkout) + '（' + nights + '泊）';
     bkRoomGrid.innerHTML = '';
     ROOMS.forEach(function(room){
-      const available = isRoomAvailable(room.key, checkin, checkout);
+      const remaining = getRemaining(room.key, checkin, checkout);
+      const available = remaining > 0;
       const card = document.createElement('div');
       card.className = 'bk-room-card' + (available ? '' : ' unavailable');
 
@@ -1109,6 +1187,10 @@
       h4.textContent = room.name;
       if(!available){
         const badge = document.createElement('span'); badge.className = 'badge-full'; badge.textContent = '満室';
+        h4.appendChild(badge);
+      } else if(GAS_BOOKING_ENDPOINT && room.unit){
+        const badge = document.createElement('span'); badge.className = 'badge-remaining';
+        badge.textContent = '残り' + remaining + room.unit;
         h4.appendChild(badge);
       }
       const cap = document.createElement('p'); cap.className = 'cap'; cap.textContent = room.cap;
