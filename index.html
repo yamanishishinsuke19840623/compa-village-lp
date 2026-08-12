@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COMPA VILLAGE ゲストハウス｜下関 直接予約</title>
+<meta name="description" content="山口県下関市のゲストハウス COMPA VILLAGE。旅の途中に、最高の出会いを。BBQ・スケボー・イベントで過ごす、旅人がつながる宿。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yomogi&family=Space+Mono:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F1E4;
+    --paper-2:#EFE7D3;
+    --ink:#1F2B1E;
+    --forest:#2B4A2E;
+    --forest-deep:#1D3420;
+    --lime:#8FBE3F;
+    --lime-deep:#6E9A2C;
+    --sunset:#E2762E;
+    --sand:#DCCFAE;
+    --line:rgba(31,43,30,0.16);
+    --radius:18px;
+    --maxw:1180px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px;}
+  .mono{font-family:'Space Mono', monospace; letter-spacing:.03em;}
+  .hand{font-family:'Yomogi', cursive;}
+
+  :focus-visible{outline:3px solid var(--sunset); outline-offset:3px;}
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(246,241,228,0.88);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px; max-width:var(--maxw); margin:0 auto;
+  }
+  .logo{
+    font-family:'Yomogi', cursive;
+    font-size:1.5rem;
+    display:flex; align-items:baseline; gap:8px;
+    text-decoration:none; color:var(--forest-deep);
+  }
+  .logo span{font-family:'Space Mono',monospace; font-size:.62rem; color:var(--sunset); letter-spacing:.14em;}
+  .nav-links{display:flex; align-items:center; gap:28px; font-size:.92rem;}
+  .nav-links a{text-decoration:none; color:var(--ink); opacity:.75;}
+  .nav-links a:hover{opacity:1;}
+  .nav-links a.cta{
+    opacity:1; background:var(--forest-deep); color:var(--paper);
+    padding:9px 18px; border-radius:999px; font-weight:700;
+  }
+  .nav-links a.cta:hover{background:var(--lime-deep);}
+  @media(max-width:720px){ .nav-links a:not(.cta){display:none;} }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative; overflow:hidden;
+    padding:88px 0 96px;
+    background:
+      radial-gradient(ellipse 60% 50% at 85% 0%, rgba(143,190,63,0.28), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 5% 100%, rgba(226,118,46,0.16), transparent 60%),
+      var(--forest-deep);
+    color:var(--paper);
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0; opacity:.5; mix-blend-mode:overlay; pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+  }
+  .hero-grid{
+    position:relative; z-index:1;
+    display:grid; grid-template-columns:1.15fr .85fr; gap:48px; align-items:center;
+    max-width:var(--maxw); margin:0 auto; padding:0 24px;
+  }
+  @media(max-width:860px){ .hero-grid{grid-template-columns:1fr;} }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'Space Mono',monospace; font-size:.72rem; letter-spacing:.16em;
+    color:var(--lime); text-transform:uppercase;
+    border:1px solid rgba(143,190,63,.5); border-radius:999px;
+    padding:6px 14px; margin-bottom:22px;
+    opacity:0; animation:fadeUp .7s .1s ease forwards;
+  }
+  h1.headline{
+    font-family:'Yomogi', cursive;
+    font-size:clamp(2.4rem, 5.4vw, 4.1rem);
+    line-height:1.28;
+    margin:0 0 22px;
+    transform:rotate(-0.6deg);
+    opacity:0; animation:fadeUp .8s .22s ease forwards;
+  }
+  h1.headline em{font-style:normal; color:var(--lime);}
+  .hero p.sub{
+    font-size:1.08rem; max-width:46ch; color:rgba(246,241,228,0.86);
+    margin:0 0 34px;
+    opacity:0; animation:fadeUp .8s .34s ease forwards;
+  }
+  .hero-tagline{
+    font-family:'Yomogi',cursive; font-size:1.15rem; color:var(--lime);
+    margin:0 0 30px; opacity:0; animation:fadeUp .8s .4s ease forwards;
+  }
+  .hero-ctas{display:flex; gap:14px; flex-wrap:wrap; opacity:0; animation:fadeUp .8s .46s ease forwards;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:15px 26px; border-radius:999px; font-weight:700; font-size:.98rem;
+    text-decoration:none; border:1px solid transparent; cursor:pointer;
+    transition:transform .18s ease, background .18s ease;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-primary{background:var(--lime); color:var(--forest-deep);}
+  .btn-primary:hover{background:#A3CE5C;}
+  .btn-ghost{background:transparent; color:var(--paper); border-color:rgba(246,241,228,.42);}
+  .btn-ghost:hover{background:rgba(246,241,228,.1);}
+
+  @keyframes fadeUp{ from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
+
+  /* stamp badge — signature element */
+  .stamp-wrap{position:relative; display:flex; justify-content:center; opacity:0; animation:fadeUp .9s .5s ease forwards;}
+  .stamp{ width:min(280px, 78vw); animation:stampSpin 32s linear infinite; }
+  .stamp .ring-text{ font-family:'Space Mono',monospace; font-size:8.6px; letter-spacing:2.4px; fill:var(--paper); }
+  .stamp circle.outer{ fill:none; stroke:var(--lime); stroke-width:1.4; stroke-dasharray:3 4; }
+  .stamp circle.inner{ fill:none; stroke:rgba(246,241,228,.55); stroke-width:1; }
+  .stamp .center-hand{ font-family:'Yomogi',cursive; fill:var(--paper); font-size:26px; }
+  .stamp .center-sub{ font-family:'Space Mono',monospace; fill:var(--sunset); font-size:9.5px; letter-spacing:1.5px; }
+  @keyframes stampSpin{ from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+  @media(prefers-reduced-motion: reduce){
+    .stamp{animation:none;}
+    .eyebrow,h1.headline,.hero p.sub,.hero-ctas,.stamp-wrap{animation:none; opacity:1;}
+  }
+
+  /* ---------- section shells ---------- */
+  section{padding:88px 0;}
+  .section-head{max-width:640px; margin:0 0 48px;}
+  .kicker{
+    font-family:'Space Mono',monospace; font-size:.74rem; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--sunset); margin:0 0 12px;
+  }
+  h2{
+    font-family:'Yomogi',cursive; font-size:clamp(1.7rem,3.4vw,2.5rem);
+    margin:0 0 14px; color:var(--forest-deep);
+  }
+  .lede{font-size:1.05rem; color:rgba(31,43,30,.78); margin:0;}
+
+  /* ---------- story ---------- */
+  .story-body{max-width:68ch;}
+  .story-body p{font-size:1.03rem; color:rgba(31,43,30,.82); margin:0 0 22px;}
+  .story-body p.pull{
+    font-family:'Yomogi',cursive; font-size:1.5rem; line-height:1.65;
+    color:var(--forest-deep); margin:34px 0; padding:24px 28px;
+    background:linear-gradient(100deg, rgba(143,190,63,.22), rgba(143,190,63,.05));
+    border-left:4px solid var(--lime); border-radius:4px;
+  }
+  .story-body p.host-note{
+    font-family:'Space Mono',monospace; font-size:.86rem; color:var(--sunset);
+    border-top:1px dashed var(--line); padding-top:20px; margin-top:30px;
+  }
+
+  /* ---------- game ---------- */
+  .game-frame{
+    position:relative; border:1px solid var(--line); border-radius:var(--radius);
+    background:var(--paper-2); padding:18px;
+  }
+  #skateGame{
+    width:100%; height:auto; display:block; border-radius:12px;
+    background:var(--paper); touch-action:manipulation; cursor:pointer;
+  }
+  .game-hud{display:flex; align-items:center; justify-content:space-between; margin-top:14px; gap:14px;}
+  .game-hud .mono{font-size:.85rem; color:var(--forest-deep);}
+  .game-hud .btn{padding:11px 20px; font-size:.9rem;}
+
+  /* ---------- pets ---------- */
+  .pet-layout{display:grid; grid-template-columns:.9fr 1.1fr; gap:44px; align-items:center;}
+  @media(max-width:820px){ .pet-layout{grid-template-columns:1fr;} }
+  .pet-list{list-style:none; margin:0; padding:0; display:grid; gap:14px;}
+  .pet-list li{
+    display:flex; gap:14px; align-items:flex-start; font-size:.98rem;
+    background:rgba(246,241,228,.06); border:1px solid rgba(246,241,228,.16);
+    border-radius:12px; padding:16px 18px;
+  }
+  .pet-list li span.ico{font-size:1.3rem; line-height:1;}
+  .pet-list li em{display:block; font-style:normal; font-family:'Space Mono',monospace; font-size:.74rem; color:rgba(246,241,228,.55); margin-top:4px;}
+
+  /* ---------- room types / amenities ---------- */
+  .room-types{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:44px;}
+  @media(max-width:820px){ .room-types{grid-template-columns:1fr;} }
+  .room-type{border:1px solid var(--line); border-radius:12px; padding:20px; background:var(--paper-2);}
+  .room-type .mono{font-family:'Space Mono',monospace; font-size:.68rem; color:var(--sunset); letter-spacing:.1em;}
+  .room-type h4{margin:8px 0 6px; font-size:1rem;}
+  .room-type p{margin:0; font-size:.86rem; color:rgba(31,43,30,.72);}
+  .amenity-strip{display:flex; flex-wrap:wrap; gap:10px; margin-top:24px;}
+  .amenity-strip span{font-family:'Space Mono',monospace; font-size:.76rem; background:var(--sand); padding:8px 14px; border-radius:999px; color:var(--forest-deep);}
+
+  /* ---------- vibe cards ---------- */
+  .vibe-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  @media(max-width:820px){ .vibe-grid{grid-template-columns:1fr;} }
+  .vibe-card{
+    background:var(--paper-2); border:1px solid var(--line); border-radius:var(--radius);
+    padding:30px 26px; position:relative; overflow:hidden;
+  }
+  .vibe-card .num{
+    font-family:'Space Mono',monospace; font-size:.7rem; color:var(--sunset);
+    letter-spacing:.1em; margin-bottom:16px; display:block;
+  }
+  .vibe-card svg{width:40px; height:40px; margin-bottom:16px; stroke:var(--forest-deep);}
+  .vibe-card h3{font-size:1.15rem; margin:0 0 8px; font-weight:700;}
+  .vibe-card p{margin:0; font-size:.94rem; color:rgba(31,43,30,.75);}
+
+  /* ---------- reel section ---------- */
+  .reel-section{background:var(--sand);}
+  .reel-layout{display:grid; grid-template-columns:.9fr 1.1fr; gap:52px; align-items:center;}
+  @media(max-width:860px){ .reel-layout{grid-template-columns:1fr;} }
+  .reel-embed{
+    border-radius:var(--radius); overflow:hidden; border:1px solid var(--line);
+    background:#fff; min-height:420px; display:flex; align-items:center; justify-content:center;
+  }
+  .ig-link{
+    display:inline-flex; align-items:center; gap:10px; margin-top:22px;
+    font-weight:700; text-decoration:none; color:var(--forest-deep);
+    border-bottom:2px solid var(--lime); padding-bottom:2px;
+  }
+  .ig-link:hover{color:var(--sunset); border-color:var(--sunset);}
+
+  /* ---------- pricing ---------- */
+  .price-layout{display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:stretch;}
+  @media(max-width:820px){ .price-layout{grid-template-columns:1fr;} }
+  .price-card{
+    background:var(--forest-deep); color:var(--paper);
+    border-radius:var(--radius); padding:38px 34px;
+    position:relative; overflow:hidden;
+  }
+  .price-card .tag{
+    font-family:'Space Mono',monospace; font-size:.72rem; letter-spacing:.14em;
+    color:var(--lime); text-transform:uppercase; margin-bottom:18px; display:block;
+  }
+  .price-amount{
+    font-family:'Yomogi',cursive; font-size:3.4rem; line-height:1; margin:0 0 6px;
+    display:flex; align-items:baseline; gap:10px;
+  }
+  .price-amount small{font-family:'Space Mono',monospace; font-size:1rem; color:rgba(246,241,228,.7);}
+  .price-card ul{list-style:none; margin:26px 0 0; padding:0; display:grid; gap:12px;}
+  .price-card li{display:flex; gap:10px; font-size:.94rem; color:rgba(246,241,228,.88);}
+  .price-card li svg{flex:none; width:18px; height:18px; stroke:var(--lime); margin-top:3px;}
+
+  .why-direct{padding:6px 0;}
+  .why-direct .item{padding:20px 0; border-bottom:1px solid var(--line);}
+  .why-direct .item:first-child{padding-top:0;}
+  .why-direct .item h4{margin:0 0 6px; font-size:1.02rem; display:flex; gap:10px; align-items:center;}
+  .why-direct .item h4 .x, .why-direct .item h4 .o{
+    font-family:'Space Mono',monospace; font-size:.7rem; border-radius:5px; padding:2px 7px;
+  }
+  .why-direct .item h4 .x{background:rgba(226,118,46,.14); color:var(--sunset);}
+  .why-direct .item h4 .o{background:rgba(143,190,63,.18); color:var(--lime-deep);}
+  .why-direct .item p{margin:0; font-size:.92rem; color:rgba(31,43,30,.72);}
+
+  /* ---------- booking cta banner ---------- */
+  .booking-banner{
+    background:var(--lime); color:var(--forest-deep);
+    border-radius:24px; padding:52px 44px; text-align:center;
+    margin:0 24px; max-width:calc(var(--maxw) - 48px); margin-inline:auto;
+    position:relative;
+  }
+  .booking-banner h2{color:var(--forest-deep);}
+  .booking-banner p{max-width:52ch; margin:0 auto 28px; color:rgba(29,52,32,.82);}
+  .booking-banner .btn-primary{background:var(--forest-deep); color:var(--paper);}
+  .booking-banner .btn-primary:hover{background:var(--forest);}
+  .draft-note{
+    margin-top:18px; font-family:'Space Mono',monospace; font-size:.72rem;
+    color:rgba(29,52,32,.6);
+  }
+
+  /* ---------- footer ---------- */
+  footer{background:var(--forest-deep); color:rgba(246,241,228,.78); padding:56px 0 30px;}
+  .footer-grid{display:flex; flex-wrap:wrap; justify-content:space-between; gap:32px; margin-bottom:36px;}
+  .footer-logo{font-family:'Yomogi',cursive; font-size:1.4rem; color:var(--paper); margin-bottom:10px;}
+  .footer-col h5{font-family:'Space Mono',monospace; font-size:.7rem; letter-spacing:.14em; color:var(--lime); text-transform:uppercase; margin:0 0 12px;}
+  .footer-col p, .footer-col a{font-size:.9rem; margin:0 0 8px; text-decoration:none; display:block; color:rgba(246,241,228,.78);}
+  .footer-col a:hover{color:var(--lime);}
+  .footer-bottom{border-top:1px solid rgba(246,241,228,.14); padding-top:22px; font-size:.78rem; font-family:'Space Mono',monospace; color:rgba(246,241,228,.5); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="logo" href="#top">COMPA VILLAGE <span>SHIMONOSEKI GUESTHOUSE</span></a>
+    <nav class="nav-links">
+      <a href="#vibe">過ごし方</a>
+      <a href="#play">遊ぶ</a>
+      <a href="#reel">雰囲気</a>
+      <a href="#stay">部屋・料金</a>
+      <a href="#book" class="cta">直接予約する</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-grid">
+    <div>
+      <span class="eyebrow">🏠 山口・下関 ・ ペットと泊まれる一棟貸し宿</span>
+      <h1 class="headline">旅の途中に、<br>最高の<em>出会い</em>を。</h1>
+      <p class="sub">笑って、遊んで、語り合って、気づけばみんな ¡COMPA!<br>
+      BBQ🍖｜スケボー🛹｜イベント🎉、なんでも出来ます。旅人も、長期滞在も、一人旅も、誰でも大歓迎。</p>
+      <p class="hero-tagline hand">「また帰ってきたい。」そんな場所を目指しています。</p>
+      <div class="hero-ctas">
+        <a href="#book" class="btn btn-primary">直接予約する →</a>
+        <a href="https://www.instagram.com/compa0601/" class="btn btn-ghost" target="_blank" rel="noopener">Instagramで雰囲気を見る</a>
+      </div>
+    </div>
+    <div class="stamp-wrap">
+      <svg class="stamp" viewBox="0 0 200 200">
+        <circle class="outer" cx="100" cy="100" r="92"/>
+        <circle class="inner" cx="100" cy="100" r="78"/>
+        <path id="ringTop" d="M 24,100 A 76,76 0 1,1 176,100" fill="none"/>
+        <path id="ringBottom" d="M 176,100 A 76,76 0 1,1 24,100" fill="none"/>
+        <text class="ring-text"><textPath href="#ringTop" startOffset="50%" text-anchor="middle">¡ COMPA VILLAGE !</textPath></text>
+        <text class="ring-text"><textPath href="#ringBottom" startOffset="50%" text-anchor="middle">SHIMONOSEKI · YAMAGUCHI</textPath></text>
+        <text x="100" y="96" text-anchor="middle" class="center-hand">¡COMPA!</text>
+        <text x="100" y="118" text-anchor="middle" class="center-sub">EST. GUESTHOUSE</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section id="story">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">Our Story</p>
+      <h2>ヒッチハイクとスケボーの、<br>その先で見つけた場所。</h2>
+    </div>
+    <div class="story-body">
+      <p>ホストは、ヒッチハイクでアメリカを横断し、スケボーで日本を縦断した根っからの旅人。旅の途中で惹かれたのが、山口県下関でした。その勢いのまま、この地でゲストハウスをオープンしました。</p>
+      <p class="pull hand">「帰る場所のない旅人に、ほっとできる拠点を。<br>家族の一員であるペットと、一緒に過ごせる空間を。」</p>
+      <p>ここにあるのは、ホテルのようなサービスではなく「人の手」と「旅の記憶」。旅人だったからこそわかる、落ち着ける距離感とやさしさを大事にしています。庭で遊ぶペットを眺めながら朝のコーヒーを飲んだり、友人と語らいながら自炊をしたり。ひとり静かに過ごすのも、もちろん歓迎です。</p>
+      <p class="host-note">💬 ホストより　「田舎でしか出来ない最高の時間を、みんなで過ごしましょう！」</p>
+    </div>
+  </div>
+</section>
+
+<section id="vibe">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">How we hang out</p>
+      <h2>好きな事を、好きな時に。</h2>
+      <p class="lede">泊まるだけじゃない。旅人同士が自然につながる時間を、COMPAは大事にしています。</p>
+    </div>
+    <div class="vibe-grid">
+      <div class="vibe-card">
+        <span class="num">01 / BBQ</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14c0 4 3.5 7 8 7s8-3 8-7"/><path d="M12 3c0 2-2 2.5-2 5a2 2 0 0 0 4 0c0-1.2-.7-1.8-1-2.6"/><path d="M6 14h12"/></svg>
+        <h3>庭でBBQ</h3>
+        <p>夕暮れどき、宿の庭に集まって火を囲む。国も言葉もばらばらな旅人が、なぜか自然と輪になります。</p>
+      </div>
+      <div class="vibe-card">
+        <span class="num">02 / SKATE</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16h14"/><circle cx="6" cy="18.5" r="1.5"/><circle cx="15" cy="18.5" r="1.5"/><path d="M17 12l4-6"/></svg>
+        <h3>スケボー</h3>
+        <p>玄関先にはいつも誰かのデッキが転がっている。ふらっと下関の海沿いを滑りに行くのがCOMPA流。</p>
+      </div>
+      <div class="vibe-card">
+        <span class="num">03 / EVENT</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l3-9 9-9 5 5-9 9-9 3z"/><path d="M14.5 6.5l3 3"/></svg>
+        <h3>不定期イベント</h3>
+        <p>ライブや持ち寄りパーティー、旅の情報交換会。予定は気まぐれ、だから毎回が一期一会。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="play">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">Just for fun</p>
+      <h2>暇つぶしに、<br>ちょっとスケボー。</h2>
+      <p class="lede">予約を待つ間に、下関の道をひと滑り。スペースキー / タップでジャンプ、障害物をよけてスコアを伸ばそう。</p>
+    </div>
+    <div class="game-frame">
+      <canvas id="skateGame" width="800" height="280" aria-label="スケートボードのミニゲーム。スペースキーまたは画面タップでジャンプします。"></canvas>
+      <div class="game-hud">
+        <span class="mono" id="gameScore">SCORE 0</span>
+        <button id="gameStart" class="btn btn-primary" type="button">プレイする ▶</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pets" style="background:var(--forest-deep); color:var(--paper);">
+  <div class="wrap pet-layout">
+    <div>
+      <p class="kicker" style="color:var(--lime);">Pet Friendly</p>
+      <h2 style="color:var(--paper);">🐾 ペットも、ここでは家族。</h2>
+      <p class="lede" style="color:rgba(246,241,228,.78);">他のお客様に気を使うことなく、まるで“里帰り”をしたようにくつろげる一棟貸しの空間。犬もちろん、一緒にどうぞ。</p>
+    </div>
+    <ul class="pet-list">
+      <li><span class="ico">🐶</span><div>小型犬 宿泊OK<em>※応相談</em></div></li>
+      <li><span class="ico">🧼</span><div>リビングにペット用トイレ・ケージ・お皿を完備<em>※個室でのケージ利用は持参</em></div></li>
+      <li><span class="ico">🌳</span><div>お散歩にぴったりな、自然豊かな立地</div></li>
+      <li><span class="ico">🧹</span><div>チェックアウト後は専用清掃で、いつでも清潔</div></li>
+    </ul>
+  </div>
+</section>
+
+<section id="reel" class="reel-section">
+  <div class="wrap reel-layout">
+    <div>
+      <p class="kicker">Take a look inside</p>
+      <h2>旅の空気を、<br>のぞいてみる。</h2>
+      <p class="lede">写真や言葉だけじゃ伝わらない、COMPAの空気感。実際の滞在の様子をのぞいてみてください。</p>
+      <a class="ig-link" href="https://www.instagram.com/compa0601/" target="_blank" rel="noopener">@compa0601 をInstagramで見る ↗</a>
+    </div>
+    <div class="reel-embed">
+      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DbK7D7sTPVt/" data-instgrm-version="14" style="width:100%; margin:0;"></blockquote>
+    </div>
+  </div>
+</section>
+<script async src="//www.instagram.com/embed.js"></script>
+
+<section id="stay">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">Room & Rate</p>
+      <h2>個室、一泊 ¥3,250から。</h2>
+      <p class="lede">外部予約サイトの手数料や口コミの波に振り回されず、必要な分だけシンプルに。ここから先はCOMPAへ直接どうぞ。</p>
+    </div>
+    <div class="price-layout">
+      <div class="price-card">
+        <span class="tag">Private Room</span>
+        <p class="price-amount">¥3,250 <small>/ 1泊・1室</small></p>
+        <p style="margin:0; color:rgba(246,241,228,.75); font-size:.92rem;">下関の街と海が近い、旅の拠点にちょうどいい一室。</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>庭でのBBQ・イベントに自由参加</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Wi-Fi・共用キッチン利用可</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>下関市立美術館・長府庭園エリアが近い</li>
+        </ul>
+      </div>
+      <div class="why-direct">
+        <div class="item">
+          <h4><span class="x">外部予約サイト</span>手数料が積み重なる</h4>
+          <p>予約のたびに仲介手数料が発生。宿の運営コストに直結し、結果的に宿泊料にも影響します。</p>
+        </div>
+        <div class="item">
+          <h4><span class="o">COMPAへ直接</span>その分を、あなたと宿に</h4>
+          <p>手数料を挟まない分、より良い体験づくりに還元。ホストとも直接やり取りできるので、当日の相談もスムーズ。</p>
+        </div>
+        <div class="item">
+          <h4><span class="x">外部予約サイト</span>口コミに一喜一憂</h4>
+          <p>評価の波に運営が左右されがち。実際の雰囲気とズレることもあります。</p>
+        </div>
+        <div class="item">
+          <h4><span class="o">COMPAへ直接</span>Instagramで素の空気を確認できる</h4>
+          <p>加工されていない日々の様子を見てから予約できるので、来てからの「思ってたのと違う」がありません。</p>
+        </div>
+      </div>
+    </div>
+    <div class="room-types">
+      <div class="room-type"><span class="mono">TYPE 01</span><h4>ファミリールーム</h4><p>専用バスルーム付・最大6名（シングル×2＋二段ベッド×2）</p></div>
+      <div class="room-type"><span class="mono">TYPE 02</span><h4>スタンダード ツインルーム</h4><p>共用バスルーム・布団2組</p></div>
+      <div class="room-type"><span class="mono">TYPE 03</span><h4>ドミトリールーム</h4><p>4人部屋・男女共用・布団4組</p></div>
+    </div>
+    <div class="amenity-strip">
+      <span>📶 高速無料WiFi(295Mbps)</span><span>🍳 共用キッチン</span><span>🔥 庭でBBQ(有料設備)</span>
+      <span>🚲 自転車レンタル(有料)</span><span>🧺 洗濯機</span><span>🚗 専用駐車場 無料</span><span>🚭 全館禁煙</span>
+    </div>
+    <p style="margin-top:26px; font-size:.92rem; color:rgba(31,43,30,.7);">一棟貸し（最大12名）でのご利用もご相談ください。旅の仲間・家族・ペットと一緒に、まるごと一軒家で過ごせます。旅人も、長期滞在も、一人旅も、誰でも大歓迎。</p>
+  </div>
+</section>
+
+<section id="book">
+  <div class="booking-banner">
+    <p class="kicker" style="color:rgba(29,52,32,.65);">Book Direct</p>
+    <h2>¡COMPA! 直接予約・決済</h2>
+    <p>このページから予約と支払いまで完結。外部サイトを経由しない分、ホストと直接つながれます。</p>
+    <button type="button" class="btn btn-primary" disabled style="opacity:.85; cursor:not-allowed;">予約カレンダーを見る（準備中）→</button>
+    <p class="draft-note">※ デザイン案の段階です。予約・決済（Stripe連携）は次のステップで実装します。</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-logo">COMPA VILLAGE</p>
+        <p style="max-width:32ch; color:rgba(246,241,228,.6); font-size:.88rem;">山口県下関市のゲストハウス。旅の途中に、最高の出会いを。</p>
+      </div>
+      <div class="footer-col">
+        <h5>Guesthouse</h5>
+        <p>山口県下関市（下関市立美術館・長府庭園エリア）</p>
+        <p>最寄り：JR新下関駅</p>
+        <p>個室 ¥3,250〜 / 1泊・一棟貸し(最大12名)も可</p>
+      </div>
+      <div class="footer-col">
+        <h5>Follow / Contact</h5>
+        <a href="https://www.instagram.com/compa0601/" target="_blank" rel="noopener">Instagram @compa0601 ↗</a>
+        <a href="https://www.instagram.com/reel/DbK7D7sTPVt/" target="_blank" rel="noopener">最新リールを見る ↗</a>
+        <p style="margin-top:8px; color:rgba(246,241,228,.55); font-size:.84rem;">楽しいお話などお気軽にDMで ✌️</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© COMPA VILLAGE GUESTHOUSE</span>
+      <span>DESIGN DRAFT — v0.1</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const canvas = document.getElementById('skateGame');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const scoreEl = document.getElementById('gameScore');
+  const startBtn = document.getElementById('gameStart');
+  const W = canvas.width, H = canvas.height;
+  const groundY = H - 46;
+
+  let running = false;
+  let animId = null;
+  let score = 0;
+  let speed = 6;
+  let obstacles = [];
+  let frame = 0;
+
+  const skater = { x: 90, y: groundY - 34, w: 40, h: 34, vy: 0, jumping:false };
+  const GRAVITY = 0.9;
+  const JUMP_V = -14;
+
+  function resetGame(){
+    score = 0; speed = 6; obstacles = []; frame = 0;
+    skater.y = groundY - skater.h; skater.vy = 0; skater.jumping = false;
+    scoreEl.textContent = 'SCORE 0';
+  }
+
+  function spawnObstacle(){
+    const h = 22 + Math.random()*20;
+    obstacles.push({x: W + 20, y: groundY - h, w: 16, h: h});
+  }
+
+  function jump(){
+    if(!running || skater.jumping) return;
+    skater.vy = JUMP_V;
+    skater.jumping = true;
+  }
+
+  function drawSkater(x,y,w,h){
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.fillStyle = '#8FBE3F';
+    ctx.fillRect(0, h-6, w, 6);
+    ctx.beginPath(); ctx.arc(6, h, 4, 0, Math.PI*2); ctx.arc(w-6, h, 4, 0, Math.PI*2);
+    ctx.fillStyle = '#1F2B1E'; ctx.fill();
+    ctx.strokeStyle = '#1F2B1E'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(w*0.5, h-8); ctx.lineTo(w*0.5, h*0.4);
+    ctx.moveTo(w*0.5, h*0.45); ctx.lineTo(w*0.2, h*0.65);
+    ctx.moveTo(w*0.5, h*0.45); ctx.lineTo(w*0.8, h*0.65);
+    ctx.moveTo(w*0.5, h*0.45); ctx.lineTo(w*0.25, h*0.25);
+    ctx.stroke();
+    ctx.beginPath(); ctx.arc(w*0.5, h*0.22, 7, 0, Math.PI*2);
+    ctx.fillStyle = '#E2762E'; ctx.fill();
+    ctx.restore();
+  }
+
+  function drawObstacle(o){
+    ctx.fillStyle = '#2B4A2E';
+    ctx.beginPath();
+    ctx.moveTo(o.x, o.y+o.h);
+    ctx.lineTo(o.x+o.w/2, o.y);
+    ctx.lineTo(o.x+o.w, o.y+o.h);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function drawGround(){
+    ctx.strokeStyle = 'rgba(31,43,30,.25)'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(0, groundY); ctx.lineTo(W, groundY); ctx.stroke();
+  }
+
+  function loop(){
+    frame++;
+    ctx.clearRect(0,0,W,H);
+    drawGround();
+
+    skater.vy += GRAVITY;
+    skater.y += skater.vy;
+    if(skater.y > groundY - skater.h){ skater.y = groundY - skater.h; skater.vy = 0; skater.jumping = false; }
+
+    if(frame % Math.max(40, 70 - Math.floor(speed*2)) === 0) spawnObstacle();
+
+    obstacles.forEach(o => o.x -= speed);
+    obstacles = obstacles.filter(o => o.x + o.w > -10);
+    obstacles.forEach(drawObstacle);
+    drawSkater(skater.x, skater.y, skater.w, skater.h);
+
+    for(const o of obstacles){
+      if(skater.x < o.x+o.w-6 && skater.x+skater.w-6 > o.x && skater.y+skater.h > o.y+6){
+        return gameOver();
+      }
+    }
+
+    score += 1;
+    speed = 6 + Math.floor(score/300)*0.6;
+    scoreEl.textContent = 'SCORE ' + Math.floor(score/10);
+
+    animId = requestAnimationFrame(loop);
+  }
+
+  function gameOver(){
+    running = false;
+    cancelAnimationFrame(animId);
+    ctx.fillStyle = 'rgba(31,43,30,.82)';
+    ctx.fillRect(0,0,W,H);
+    ctx.fillStyle = '#F6F1E4';
+    ctx.textAlign = 'center';
+    ctx.font = '20px monospace';
+    ctx.fillText('GAME OVER — SCORE ' + Math.floor(score/10), W/2, H/2 - 6);
+    ctx.font = '13px monospace';
+    ctx.fillText('もう一度プレイする ▶ を押してね', W/2, H/2 + 20);
+    startBtn.textContent = 'もう一度プレイする ▶';
+    startBtn.disabled = false;
+  }
+
+  function startGame(){
+    if(running) return;
+    resetGame();
+    running = true;
+    startBtn.textContent = 'プレイ中…';
+    loop();
+  }
+
+  startBtn.addEventListener('click', startGame);
+  window.addEventListener('keydown', function(e){
+    if(e.code === 'Space' && running){ e.preventDefault(); jump(); }
+  });
+  canvas.addEventListener('pointerdown', jump);
+
+  drawGround();
+  drawSkater(skater.x, skater.y, skater.w, skater.h);
+})();
+</script>
+
+</body>
+</html>
