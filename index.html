@@ -249,6 +249,34 @@
   }
   .ig-link:hover{color:var(--sunset); border-color:var(--sunset);}
 
+  /* ---------- shop ---------- */
+  .shop-layout{display:grid; grid-template-columns:.85fr 1.15fr; gap:44px; align-items:center;}
+  @media(max-width:820px){ .shop-layout{grid-template-columns:1fr;} }
+  .shop-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+  @media(max-width:560px){ .shop-grid{grid-template-columns:1fr 1fr;} }
+  .shop-item{
+    display:block; text-decoration:none; color:var(--ink);
+    background:var(--paper); border:1px solid var(--line); border-radius:12px;
+    overflow:hidden; transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .shop-item:hover{transform:translateY(-3px); box-shadow:0 10px 20px rgba(31,43,30,.1);}
+  .shop-item img{width:100%; aspect-ratio:1; object-fit:cover; display:block; background:#fff;}
+  .shop-item span{display:block; padding:10px 12px; font-size:.78rem; line-height:1.4;}
+  .shop-item span strong{display:block; margin-top:3px; color:var(--forest-deep); font-family:'Space Mono',monospace; font-size:.82rem;}
+
+  /* ---------- youtube ---------- */
+  .yt-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+  @media(max-width:820px){ .yt-grid{grid-template-columns:1fr 1fr;} }
+  .yt-item{
+    display:block; text-decoration:none; color:var(--ink);
+    background:var(--paper-2); border:1px solid var(--line); border-radius:12px;
+    overflow:hidden; transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .yt-item:hover{transform:translateY(-3px); box-shadow:0 10px 20px rgba(31,43,30,.1);}
+  .yt-item img{width:100%; aspect-ratio:16/9; object-fit:cover; display:block; background:#111;}
+  .yt-item span{display:block; padding:10px 12px; font-size:.78rem; line-height:1.4;}
+  .yt-item span strong{display:block; margin-top:4px; color:var(--sunset); font-family:'Space Mono',monospace; font-size:.7rem; font-weight:400;}
+
   /* ---------- pricing ---------- */
   .price-layout{display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:stretch;}
   @media(max-width:820px){ .price-layout{grid-template-columns:1fr;} }
@@ -377,6 +405,7 @@
       <a href="#vibe">過ごし方</a>
       <a href="#play">遊ぶ</a>
       <a href="#reel">雰囲気</a>
+      <a href="#shop">グッズ</a>
       <a href="#stay">部屋・料金</a>
       <a href="#book" class="cta">直接予約する</a>
     </nav>
@@ -505,6 +534,60 @@
 </section>
 <script async src="//www.instagram.com/embed.js"></script>
 
+<section id="shop" style="background:var(--sand);">
+  <div class="wrap shop-layout">
+    <div>
+      <p class="kicker">Goods</p>
+      <h2>¡COMPA! グッズも、あります。</h2>
+      <p class="lede">"compañero"はスペイン語で仲間・兄弟。旅で出会ったアーティストとのコラボデザインなど、COMPAの空気をそのまま着られるアイテムを販売中です。</p>
+      <a class="btn btn-primary" href="https://worldcompa.base.shop/" target="_blank" rel="noopener">ショップを見る →</a>
+    </div>
+    <div class="shop-grid">
+      <a class="shop-item" href="https://worldcompa.base.shop/items/142650929" target="_blank" rel="noopener">
+        <img src="https://baseec-img-mng.akamaized.net/images/item/origin/715e2968ea45bf3115b80f31a9eaeacf.png?imformat=generic&q=90&im=Resize,width=400,type=normal" alt="¡compa! ロゴTシャツ" loading="lazy">
+        <span>¡compa! ロゴTシャツ<strong>¥5,000</strong></span>
+      </a>
+      <a class="shop-item" href="https://worldcompa.base.shop/items/142063514" target="_blank" rel="noopener">
+        <img src="https://baseec-img-mng.akamaized.net/images/item/origin/4e50232c9596121fe7126f7149b69597.jpg?imformat=generic&q=90&im=Resize,width=400,type=normal" alt="SKATE JOURNEY ロンT ライムグリーン" loading="lazy">
+        <span>SKATE JOURNEY ロンT<strong>¥5,500</strong></span>
+      </a>
+      <a class="shop-item" href="https://worldcompa.base.shop/items/141823640" target="_blank" rel="noopener">
+        <img src="https://baseec-img-mng.akamaized.net/images/item/origin/74880bf5cb98e52fc15d78047ef0d5f2.png?imformat=generic&q=90&im=Resize,width=400,type=normal" alt="SKATE JOURNEY パーカー White" loading="lazy">
+        <span>SKATE JOURNEY パーカー<strong>¥7,500</strong></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="youtube">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="kicker">Watch</p>
+      <h2>旅の記録は、YouTubeにも。</h2>
+      <p class="lede">スケボーで日本を縦断した旅の記録を、チャンネル「【ゆう】スケジャニ」で配信中。人気の4本をどうぞ。</p>
+    </div>
+    <div class="yt-grid">
+      <a class="yt-item" href="https://www.youtube.com/shorts/ZXNctDZNEvg" target="_blank" rel="noopener">
+        <img src="https://i3.ytimg.com/vi/ZXNctDZNEvg/hqdefault.jpg" alt="こんなに過酷な旅は人生で初めて" loading="lazy">
+        <span>こんなに過酷な旅は人生で初めて<strong>12,298 回視聴</strong></span>
+      </a>
+      <a class="yt-item" href="https://www.youtube.com/shorts/UM0ibofWrHM" target="_blank" rel="noopener">
+        <img src="https://i2.ytimg.com/vi/UM0ibofWrHM/hqdefault.jpg" alt="誰にでも秘密ってあるよね。。。" loading="lazy">
+        <span>誰にでも秘密ってあるよね。。。<strong>3,158 回視聴</strong></span>
+      </a>
+      <a class="yt-item" href="https://www.youtube.com/shorts/8QClzayC6hg" target="_blank" rel="noopener">
+        <img src="https://i1.ytimg.com/vi/8QClzayC6hg/hqdefault.jpg" alt="皆んなは夢って有りますか？" loading="lazy">
+        <span>皆んなは夢って有りますか？<strong>2,833 回視聴</strong></span>
+      </a>
+      <a class="yt-item" href="https://www.youtube.com/shorts/XQv5sQl7dtc" target="_blank" rel="noopener">
+        <img src="https://i1.ytimg.com/vi/XQv5sQl7dtc/hqdefault.jpg" alt="大好きな山口県満喫中" loading="lazy">
+        <span>大好きな山口県満喫中<strong>2,799 回視聴</strong></span>
+      </a>
+    </div>
+    <a class="ig-link" href="https://www.youtube.com/channel/UCb4MYQCla-KmD3cXS7FPKjA" target="_blank" rel="noopener" style="margin-top:22px;">チャンネルをもっと見る ↗</a>
+  </div>
+</section>
+
 <section id="stay">
   <div class="wrap">
     <div class="section-head">
@@ -617,7 +700,8 @@
       <div class="footer-col">
         <h5>Follow / Contact</h5>
         <a href="https://www.instagram.com/compa0601/" target="_blank" rel="noopener">Instagram @compa0601 ↗</a>
-        <a href="https://www.instagram.com/reel/DbK7D7sTPVt/" target="_blank" rel="noopener">最新リールを見る ↗</a>
+        <a href="https://www.youtube.com/channel/UCb4MYQCla-KmD3cXS7FPKjA" target="_blank" rel="noopener">YouTube【ゆう】スケジャニ ↗</a>
+        <a href="https://worldcompa.base.shop/" target="_blank" rel="noopener">グッズショップ compañero ↗</a>
         <p style="margin-top:8px; color:rgba(246,241,228,.55); font-size:.84rem;">楽しいお話などお気軽にDMで。</p>
       </div>
     </div>
