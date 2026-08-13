@@ -480,6 +480,7 @@
     display:flex; align-items:center; justify-content:space-between; gap:8px;
     font-size:.78rem; color:rgba(31,43,30,.6);
   }
+  .bk-guests-value{display:flex; align-items:center; gap:6px;}
   .bk-guests-label input{
     width:64px; border:1px solid var(--line); border-radius:8px; padding:9px 10px; font-size:.84rem;
     font-family:inherit; background:var(--paper-2); text-align:center;
@@ -788,7 +789,7 @@
     <div class="room-types">
       <div class="room-type">
         <img src="photos/room-group-common.jpg" alt="団体様用プランで使える1階共用ラウンジでの乾杯タイム" loading="lazy" decoding="async">
-        <div class="room-type-body"><span class="mono">TYPE 01</span><h4>団体様用プラン</h4><p>1〜15名様まで・1階部分を貸し切り感覚でご利用いただけます（¥27,000/泊）</p></div>
+        <div class="room-type-body"><span class="mono">TYPE 01</span><h4>団体様用プラン（一棟貸し）</h4><p>1〜15名様まで・1階部分を一棟貸しでご利用いただけます（¥27,000/泊）</p></div>
       </div>
       <div class="room-type">
         <img src="photos/room-standard.jpg" alt="スタンダードツインルームの一室" loading="lazy" decoding="async">
@@ -808,7 +809,7 @@
       <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10l1.3-4h11.4L19 10"/><rect x="3" y="10" width="18" height="7" rx="2"/><circle cx="7.5" cy="17.3" r="1.5" fill="var(--forest-deep)" stroke="none"/><circle cx="16.5" cy="17.3" r="1.5" fill="var(--forest-deep)" stroke="none"/></svg> 専用駐車場 無料</span>
       <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 15h13v3H2z"/><path d="M15 15.5c1-1 2.3-1 3.2 0M18.2 13.3c1.4-1.4 3.2-1.4 4.6 0"/><path d="M3 20L20 4"/></svg> 全館禁煙</span>
     </div>
-    <p style="margin-top:26px; font-size:.92rem; color:rgba(31,43,30,.7);">団体様用プラン（1〜15名・¥27,000/泊）なら、1階部分を貸し切り感覚でまるごと使えます。旅の仲間・家族・ペットと一緒に。旅人も、長期滞在も、一人旅も、誰でも大歓迎。</p>
+    <p style="margin-top:26px; font-size:.92rem; color:rgba(31,43,30,.7);">団体様用プラン（一棟貸し・1〜15名・¥27,000/泊）なら、1階部分をまるごと一棟貸しで使えます。旅の仲間・家族・ペットと一緒に。旅人も、長期滞在も、一人旅も、誰でも大歓迎。</p>
   </div>
 </section>
 
@@ -1182,10 +1183,11 @@
   let checkout = null;
 
   const DOW = ['日','月','火','水','木','金','土'];
+  // standard/dormは「部屋数・ベッド数」を選ぶ予約単位、groupは一棟貸しで「人数」を選ぶ予約単位(2026-08-13 やまちゃん指示に合わせて区別)
   const ROOMS = [
-    { key:'standard', name:'スタンダード ツインルーム', cap:'共用バスルーム・1部屋2名まで・全3室', price:3250, unit:'部屋', maxGuests:2 },
-    { key:'dorm', name:'ドミトリールーム', cap:'4人部屋・男女共用・1ベッドから予約可', price:2250, unit:'ベッド', maxGuests:1 },
-    { key:'group', name:'団体様用プラン', cap:'1〜15名様まで・1階部分を貸し切りでご利用いただけます', price:27000, unit:null, maxGuests:15 }
+    { key:'standard', name:'スタンダード ツインルーム', cap:'共用バスルーム・1部屋2名まで・全3室', price:3250, unit:'部屋', maxGuests:3, qtyLabel:'部屋数', qtyUnit:'室' },
+    { key:'dorm', name:'ドミトリールーム', cap:'4人部屋・男女共用・1ベッドから予約可', price:2250, unit:'ベッド', maxGuests:4, qtyLabel:'ベッド数', qtyUnit:'ベッド' },
+    { key:'group', name:'団体様用プラン（一棟貸し）', cap:'一棟貸し・1〜15名様まで・1階部分を貸し切りでご利用いただけます', price:27000, unit:null, maxGuests:15, qtyLabel:'人数', qtyUnit:'名', requiresRequest:true }
   ];
   // GAS側(gas/Code.gs)のROOM_CAPACITYと同じ値。残数表示に使う
   const ROOM_CAPACITY = { standard: 3, dorm: 4, group: 1 };
@@ -1387,18 +1389,32 @@
         const note = document.createElement('p'); note.className = 'bk-request-status err';
         note.textContent = 'この日程は満室です。別の日程をお試しください。';
         card.appendChild(note);
+      } else if(GAS_BOOKING_ENDPOINT && !room.requiresRequest && PAYMENT_LINKS[room.key]){
+        const payLink = document.createElement('a');
+        payLink.className = 'btn btn-primary'; payLink.href = PAYMENT_LINKS[room.key];
+        payLink.target = '_blank'; payLink.rel = 'noopener';
+        payLink.textContent = '予約に進む →';
+        card.appendChild(payLink);
       } else if(GAS_BOOKING_ENDPOINT){
+        if(room.requiresRequest){
+          const reqNote = document.createElement('p'); reqNote.className = 'bk-cal-hint';
+          reqNote.textContent = 'こちらのプランは、一度、予約リクエストでお尋ねください。';
+          card.appendChild(reqNote);
+        }
         const form = document.createElement('div'); form.className = 'bk-request-form';
         const nameInput = document.createElement('input');
         nameInput.type = 'text'; nameInput.placeholder = 'お名前'; nameInput.required = true;
         const emailInput = document.createElement('input');
         emailInput.type = 'email'; emailInput.placeholder = 'メールアドレス'; emailInput.required = true;
         const guestsWrap = document.createElement('label'); guestsWrap.className = 'bk-guests-label';
-        guestsWrap.textContent = '人数';
+        guestsWrap.textContent = room.qtyLabel || '人数';
         const guestsInput = document.createElement('input');
         guestsInput.type = 'number'; guestsInput.min = '1'; guestsInput.max = String(room.maxGuests || 1);
         guestsInput.value = '1'; guestsInput.required = true;
-        guestsWrap.appendChild(guestsInput);
+        const guestsValueWrap = document.createElement('span'); guestsValueWrap.className = 'bk-guests-value';
+        guestsValueWrap.appendChild(guestsInput);
+        guestsValueWrap.appendChild(document.createTextNode(room.qtyUnit || '名'));
+        guestsWrap.appendChild(guestsValueWrap);
         const btn = document.createElement('button');
         btn.type = 'button'; btn.className = 'btn btn-primary'; btn.textContent = '予約リクエストを送る →';
         const status = document.createElement('p'); status.className = 'bk-request-status';
@@ -1410,7 +1426,7 @@
           }
           const guests = parseInt(guestsInput.value, 10);
           if(!guests || guests < 1 || guests > (room.maxGuests || 1)){
-            status.textContent = '人数をご確認ください（最大' + (room.maxGuests || 1) + '名）。';
+            status.textContent = (room.qtyLabel || '人数') + 'をご確認ください（最大' + (room.maxGuests || 1) + (room.qtyUnit || '名') + '）。';
             status.className = 'bk-request-status err';
             return;
           }
@@ -1426,13 +1442,6 @@
         });
         form.append(nameInput, emailInput, guestsWrap, btn, status);
         card.appendChild(form);
-        if(PAYMENT_LINKS[room.key]){
-          const payLink = document.createElement('a');
-          payLink.className = 'btn btn-pay'; payLink.href = PAYMENT_LINKS[room.key];
-          payLink.target = '_blank'; payLink.rel = 'noopener';
-          payLink.textContent = '今すぐ決済に進む（Stripe）→';
-          card.appendChild(payLink);
-        }
       } else {
         const a = document.createElement('a'); a.className = 'btn btn-primary';
         a.href = PAYMENT_LINKS[room.key] || IG_URL; a.target = '_blank'; a.rel = 'noopener';
