@@ -1253,6 +1253,20 @@
     });
   }
 
+  // スタンダード/ドミトリーは予約リクエストなしで直接Stripe決済へ進むため、
+  // 決済ページを開くのと同時に空室管理用の仮予約をGASへ記録する（名前・メール不要、通知メールなし）
+  function logPendingPayment(payload){
+    if(!GAS_BOOKING_ENDPOINT) return;
+    fetch(GAS_BOOKING_ENDPOINT, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'text/plain'},
+      body: JSON.stringify(payload)
+    }).catch(function(){});
+    bookedRanges[payload.roomType] = bookedRanges[payload.roomType] || [];
+    bookedRanges[payload.roomType].push({checkin: payload.checkin, checkout: payload.checkout});
+  }
+
   // その日にまだ空きがあるプランの中で、最安の1泊料金を返す（全プラン満室ならnull）
   function datePriceHint(date){
     const next = new Date(date); next.setDate(next.getDate()+1);
@@ -1382,11 +1396,39 @@
         note.textContent = 'この日程は満室です。別の日程をお試しください。';
         card.appendChild(note);
       } else if(GAS_BOOKING_ENDPOINT && !room.requiresRequest && PAYMENT_LINKS[room.key]){
-        const payLink = document.createElement('a');
-        payLink.className = 'btn btn-primary'; payLink.href = PAYMENT_LINKS[room.key];
-        payLink.target = '_blank'; payLink.rel = 'noopener';
-        payLink.textContent = '予約に進む →';
-        card.appendChild(payLink);
+        const qtyWrap = document.createElement('label'); qtyWrap.className = 'bk-guests-label';
+        qtyWrap.textContent = room.qtyLabel || '数量';
+        const qtyInput = document.createElement('input');
+        qtyInput.type = 'number'; qtyInput.min = '1'; qtyInput.max = String(room.maxGuests || 1);
+        qtyInput.value = '1'; qtyInput.required = true;
+        const qtyValueWrap = document.createElement('span'); qtyValueWrap.className = 'bk-guests-value';
+        qtyValueWrap.appendChild(qtyInput);
+        qtyValueWrap.appendChild(document.createTextNode(room.qtyUnit || ''));
+        qtyWrap.appendChild(qtyValueWrap);
+        const payBtn = document.createElement('a');
+        payBtn.className = 'btn btn-primary'; payBtn.href = PAYMENT_LINKS[room.key];
+        payBtn.target = '_blank'; payBtn.rel = 'noopener';
+        payBtn.textContent = '予約に進む →';
+        const qtyStatus = document.createElement('p'); qtyStatus.className = 'bk-request-status';
+        payBtn.addEventListener('click', function(e){
+          const qty = parseInt(qtyInput.value, 10);
+          if(!qty || qty < 1 || qty > (room.maxGuests || 1)){
+            e.preventDefault();
+            qtyStatus.textContent = (room.qtyLabel || '数量') + 'をご確認ください（最大' + (room.maxGuests || 1) + (room.qtyUnit || '') + '）。';
+            qtyStatus.className = 'bk-request-status err';
+            return;
+          }
+          // 決済ページを開くのと同時に、空室管理用の仮予約をバックグラウンドで記録する
+          logPendingPayment({
+            kind: 'stripe_pending',
+            roomType: room.key,
+            checkin: toISO(checkin),
+            checkout: toISO(checkout),
+            nights: nights,
+            guests: qty
+          });
+        });
+        card.append(qtyWrap, payBtn, qtyStatus);
       } else if(GAS_BOOKING_ENDPOINT){
         if(room.requiresRequest){
           const reqNote = document.createElement('p'); reqNote.className = 'bk-cal-hint';

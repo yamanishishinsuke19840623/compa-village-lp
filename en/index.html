@@ -1243,6 +1243,20 @@
     });
   }
 
+  // Standard/Dormitory go straight to Stripe with no request form, so we log a lightweight
+  // placeholder booking to keep availability accurate the moment checkout is opened
+  function logPendingPayment(payload){
+    if(!GAS_BOOKING_ENDPOINT) return;
+    fetch(GAS_BOOKING_ENDPOINT, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'text/plain'},
+      body: JSON.stringify(payload)
+    }).catch(function(){});
+    bookedRanges[payload.roomType] = bookedRanges[payload.roomType] || [];
+    bookedRanges[payload.roomType].push({checkin: payload.checkin, checkout: payload.checkout});
+  }
+
   function datePriceHint(date){
     const next = new Date(date); next.setDate(next.getDate()+1);
     let min = null;
@@ -1371,11 +1385,38 @@
         note.textContent = 'Fully booked for these dates. Please try a different date range.';
         card.appendChild(note);
       } else if(GAS_BOOKING_ENDPOINT && !room.requiresRequest && PAYMENT_LINKS[room.key]){
+        const qtyWrap = document.createElement('label'); qtyWrap.className = 'bk-guests-label';
+        qtyWrap.textContent = room.qtyLabel || 'Quantity';
+        const qtyInput = document.createElement('input');
+        qtyInput.type = 'number'; qtyInput.min = '1'; qtyInput.max = String(room.maxGuests || 1);
+        qtyInput.value = '1'; qtyInput.required = true;
+        const qtyValueWrap = document.createElement('span'); qtyValueWrap.className = 'bk-guests-value';
+        qtyValueWrap.appendChild(qtyInput);
+        if(room.qtyUnit) qtyValueWrap.appendChild(document.createTextNode(room.qtyUnit));
+        qtyWrap.appendChild(qtyValueWrap);
+        const qtyStatus = document.createElement('p'); qtyStatus.className = 'bk-request-status';
         const payLink = document.createElement('a');
+        payLink.addEventListener('click', function(e){
+          const qty = parseInt(qtyInput.value, 10);
+          if(!qty || qty < 1 || qty > (room.maxGuests || 1)){
+            e.preventDefault();
+            qtyStatus.textContent = 'Please check the ' + (room.qtyLabel || 'quantity').toLowerCase() + ' (max ' + (room.maxGuests || 1) + ').';
+            qtyStatus.className = 'bk-request-status err';
+            return;
+          }
+          logPendingPayment({
+            kind: 'stripe_pending',
+            roomType: room.key,
+            checkin: toISO(checkin),
+            checkout: toISO(checkout),
+            nights: nights,
+            guests: qty
+          });
+        });
         payLink.className = 'btn btn-primary'; payLink.href = PAYMENT_LINKS[room.key];
         payLink.target = '_blank'; payLink.rel = 'noopener';
         payLink.textContent = 'Proceed to booking →';
-        card.appendChild(payLink);
+        card.append(qtyWrap, payLink, qtyStatus);
       } else if(GAS_BOOKING_ENDPOINT){
         if(room.requiresRequest){
           const reqNote = document.createElement('p'); reqNote.className = 'bk-cal-hint';

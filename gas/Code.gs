@@ -33,14 +33,17 @@ var IG_URL = 'https://www.instagram.com/compa0601/';
 // =============================================
 
 // LP の予約フォームから送信される
+// kind === 'stripe_pending' の場合は、スタンダード/ドミトリーが直接Stripe決済へ進む際の
+// 空室確保用の仮予約ログ（名前・メール不要、確定メールは送らない。2026-08-13追加）
 function doPost(e) {
   try {
     var d = JSON.parse(e.postData.contents);
     var roomType = d.roomType;
     var checkin  = d.checkin;   // 'YYYY-MM-DD'
     var checkout = d.checkout;  // 'YYYY-MM-DD'
+    var isPending = d.kind === 'stripe_pending';
 
-    if (!roomType || !checkin || !checkout || !d.name || !d.email) {
+    if (!roomType || !checkin || !checkout || (!isPending && (!d.name || !d.email))) {
       return res({ok: false, reason: 'invalid_input'});
     }
     if (!ROOM_NAMES[roomType]) {
@@ -50,9 +53,14 @@ function doPost(e) {
       return res({ok: false, reason: 'unavailable'});
     }
 
-    logBooking(d);
-    sendHostNotification(d);
-    sendGuestConfirmation(d);
+    if (isPending) {
+      logPendingPayment(d);
+      sendPendingPaymentNotification(d);
+    } else {
+      logBooking(d);
+      sendHostNotification(d);
+      sendGuestConfirmation(d);
+    }
 
     return res({ok: true});
   } catch (err) {
@@ -113,7 +121,7 @@ function setupSheet() {
   sheet.setFrozenRows(1);
 
   var statusRule = SpreadsheetApp.newDataValidation()
-    .requireValueInList(['リクエスト受付', '確定', 'キャンセル'], true).build();
+    .requireValueInList(['リクエスト受付', '決済へ進行中', '確定', 'キャンセル'], true).build();
   sheet.getRange('H2:H1000').setDataValidation(statusRule);
 
   sheet.autoResizeColumns(1, headers.length);
@@ -215,6 +223,23 @@ function logBooking(d) {
   ]);
 }
 
+// スタンダード/ドミトリー用：決済ページを開くのと同時に記録する仮予約（名前・メールなし）
+function logPendingPayment(d) {
+  if (!SHEET_ID) return;
+  var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('予約台帳');
+  sheet.appendRow([
+    new Date(),
+    '（Stripe決済へ・お名前未取得）',
+    '',
+    d.roomType,
+    d.checkin,
+    d.checkout,
+    d.nights || '',
+    '決済へ進行中',
+    d.guests ? ('数量: ' + d.guests) : ''
+  ]);
+}
+
 function formatDate_(v) {
   if (v instanceof Date) {
     return Utilities.formatDate(v, Session.getScriptTimeZone(), 'yyyy-MM-dd');
@@ -225,6 +250,30 @@ function formatDate_(v) {
 // =============================================
 //  メール通知
 // =============================================
+
+// スタンダード/ドミトリー用：決済ページへの遷移があったことをホストへ軽く知らせる（お客様へのメールなし）
+function sendPendingPaymentNotification(d) {
+  var body = 'Stripe決済ページへ進んだ方がいます（お名前・メールはまだ取得できません）。\n\n';
+  body += '━━━━━━━━━━━━━━━━━━━━\n';
+  body += '部屋タイプ：' + (ROOM_NAMES[d.roomType] || d.roomType) + '\n';
+  body += 'チェックイン：' + d.checkin + '\n';
+  body += 'チェックアウト：' + d.checkout + '\n';
+  body += '泊数　　：' + (d.nights || '') + '泊\n';
+  body += '数量　　：' + (d.guests || '') + '\n';
+  body += '━━━━━━━━━━━━━━━━━━━━\n\n';
+  body += 'Stripe側で実際の入金が確認できたら、スプレッドシートの該当行を選んで\n';
+  body += '「🌵 COMPA予約」→「選択行を『決済確認済み』にする」を押してください（メールは送りません）。\n\n';
+  body += 'このまま入金が確認できない場合は、同じメニューの\n';
+  body += '「選択行の決済保留を解除する」で空室に戻せます。\n\n';
+  body += '▶ 予約台帳: ' + sheetUrl();
+
+  MailApp.sendEmail({
+    to: HOST_EMAIL,
+    cc: CC_EMAIL,
+    subject: '【COMPA VILLAGE】決済ページへ進みました — ' + (ROOM_NAMES[d.roomType] || ''),
+    body: body
+  });
+}
 
 function sendHostNotification(d) {
   var body = '新しい予約リクエストが届きました。\n\n';
@@ -282,7 +331,43 @@ function onOpen() {
     .createMenu('🌵 COMPA予約')
     .addItem('✅ 選択行を「確定」にして確定メールを送信', 'menuConfirmBooking')
     .addItem('❌ 選択行を「お断り」にしてお詫びメールを送信', 'menuRejectBooking')
+    .addSeparator()
+    .addItem('💳 選択行を「決済確認済み」にする（メール送信なし）', 'menuMarkPaymentReceived')
+    .addItem('🗑 選択行の決済保留を解除する（メール送信なし）', 'menuCancelPendingHold')
     .addToUi();
+}
+
+// スタンダード/ドミトリーの仮予約（決済へ進行中）で、Stripe側の入金を確認できた時に使う。
+// お名前・メールが無い行なので確認メールは送らない
+function menuMarkPaymentReceived() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var row = sheet.getActiveCell().getRow();
+  if (row <= 1) { SpreadsheetApp.getUi().alert('データ行を選択してください'); return; }
+
+  var confirm = SpreadsheetApp.getUi().alert(
+    'この行を「決済確認済み（確定）」にしますか？（メールは送信されません）',
+    SpreadsheetApp.getUi().ButtonSet.YES_NO
+  );
+  if (confirm !== SpreadsheetApp.getUi().Button.YES) return;
+
+  sheet.getRange(row, 8).setValue('確定');
+  SpreadsheetApp.getUi().alert('決済確認済みにしました');
+}
+
+// 仮予約のまま決済が完了しなかった行を、空室に戻す（メール送信なし）
+function menuCancelPendingHold() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var row = sheet.getActiveCell().getRow();
+  if (row <= 1) { SpreadsheetApp.getUi().alert('データ行を選択してください'); return; }
+
+  var confirm = SpreadsheetApp.getUi().alert(
+    'この行の決済保留を解除して空室に戻しますか？（メールは送信されません）',
+    SpreadsheetApp.getUi().ButtonSet.YES_NO
+  );
+  if (confirm !== SpreadsheetApp.getUi().Button.YES) return;
+
+  sheet.getRange(row, 8).setValue('キャンセル');
+  SpreadsheetApp.getUi().alert('決済保留を解除しました');
 }
 
 function menuConfirmBooking() {
