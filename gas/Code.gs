@@ -8,21 +8,22 @@ var CC_EMAIL   = 'yamanishishinsuke19840623@gmail.com';
 var SHEET_ID   = '1z8eWW_b7Xa40eRgY7fGZAfVOI58J9Vt1TKFIsHTNQfU';
 
 // 各プランの同時受付可能数（2026-08-12 ゆうさん確認済み：3プラン構成、ファミリールームは廃止し団体プランに統合）
+// 2026-08-13 団体様用プランは床面積の都合で15名収容が不可と判明したため「一棟貸しプラン」に改称、10名様まで・¥30,000/泊に変更
 var ROOM_CAPACITY = {
   standard: 3, // スタンダード ツインルーム（個室3室、¥3,250/泊）
   dorm:     4, // ドミトリールーム（4ベッド、1ベッドから予約可、¥2,250/泊）
-  group:    1  // 団体様用プラン（1〜15名・一棟貸し感覚、¥27,000/泊）
+  group:    1  // 一棟貸しプラン（10名様まで・一棟貸し、¥30,000/泊）
 };
 var ROOM_NAMES = {
   standard: 'スタンダード ツインルーム',
   dorm:     'ドミトリールーム',
-  group:    '団体様用プラン'
+  group:    '一棟貸しプラン'
 };
-// 確定メールの決済案内に使うStripe本番決済リンク（2026-08-12 やまちゃん確認済み、index.htmlのPAYMENT_LINKSと同一）
+// 確定メールの決済案内に使うStripe本番決済リンク（2026-08-13 やまちゃん確認済み、index.htmlのPAYMENT_LINKSと同一）
 var STRIPE_LINKS = {
   standard: 'https://buy.stripe.com/14A8wOewD4yC4mG0qM87K01',
   dorm:     'https://buy.stripe.com/00w5kCfAHc147ySa1m87K03',
-  group:    'https://buy.stripe.com/8x24gygELc14f1k7Te87K02'
+  group:    'https://buy.stripe.com/9B600i3RZ8OS1auehC87K04'
 };
 var ACCESS_MAP_URL = 'https://www.google.com/maps?q=COMPA+VILLAGE+%E4%B8%8B%E9%96%A2%E5%B8%82';
 var IG_URL = 'https://www.instagram.com/compa0601/';
@@ -128,8 +129,8 @@ function setupSheet() {
 //  空室判定・台帳操作
 // =============================================
 
-// 団体様用プラン（一棟貸し感覚）は建物全体（standard/dormと同じ部屋）を使うため、
-// 「団体プランが入っている日はstandard/dormも予約不可」「standard/dormが1件でも入っていたら団体プランは予約不可」
+// 一棟貸しプラン（旧・団体様用プラン）は建物全体（standard/dormと同じ部屋）を使うため、
+// 「一棟貸しプランが入っている日はstandard/dormも予約不可」「standard/dormが1件でも入っていたら一棟貸しプランは予約不可」
 // というルールを両方向でチェックする（2026-08-12 打合せで確認済みの業務ルール）
 var GROUND_FLOOR_TYPES = ['standard', 'dorm', 'group'];
 
