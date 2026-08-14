@@ -281,6 +281,7 @@ function onOpen() {
   SpreadsheetApp.getUi()
     .createMenu('🌵 COMPA予約')
     .addItem('✅ 選択行を「確定」にして確定メールを送信', 'menuConfirmBooking')
+    .addItem('❌ 選択行を「お断り」にしてお詫びメールを送信', 'menuRejectBooking')
     .addToUi();
 }
 
@@ -312,6 +313,46 @@ function menuConfirmBooking() {
   });
 
   SpreadsheetApp.getUi().alert('確定メールを送信しました');
+}
+
+function menuRejectBooking() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var row = sheet.getActiveCell().getRow();
+  if (row <= 1) { SpreadsheetApp.getUi().alert('データ行を選択してください'); return; }
+
+  var data = sheet.getRange(row, 1, 1, 9).getValues()[0];
+  var d = {
+    name: data[1], email: data[2], roomType: data[3],
+    checkin: formatDate_(data[4]), checkout: formatDate_(data[5]), nights: data[6]
+  };
+  if (!d.email) { SpreadsheetApp.getUi().alert('メールアドレスが空です'); return; }
+
+  var confirm = SpreadsheetApp.getUi().alert(
+    d.name + ' 様（' + (ROOM_NAMES[d.roomType] || d.roomType) + '）へお詫びメールを送り、キャンセル扱いにしますか？',
+    SpreadsheetApp.getUi().ButtonSet.YES_NO
+  );
+  if (confirm !== SpreadsheetApp.getUi().Button.YES) return;
+
+  sheet.getRange(row, 8).setValue('キャンセル');
+
+  var body = d.name + ' 様\n\n';
+  body += 'このたびはCOMPA VILLAGEへご予約リクエストをいただき、誠にありがとうございました。\n';
+  body += '大変申し訳ございませんが、今回はご希望に添うことができませんでした。\n\n';
+  body += '━━━━━━━━━━━━━━━━━━━━\n';
+  body += '部屋タイプ：' + (ROOM_NAMES[d.roomType] || d.roomType) + '\n';
+  body += 'チェックイン：' + d.checkin + '\n';
+  body += 'チェックアウト：' + d.checkout + '\n';
+  body += '━━━━━━━━━━━━━━━━━━━━\n\n';
+  body += 'またの機会がございましたら、ぜひよろしくお願いいたします。\n\n';
+  body += 'COMPA VILLAGE';
+
+  MailApp.sendEmail({
+    to: d.email, replyTo: HOST_EMAIL,
+    subject: '【COMPA VILLAGE】ご予約リクエストについて',
+    body: body
+  });
+
+  SpreadsheetApp.getUi().alert('お詫びメールを送信しました');
 }
 
 // 確定メール：プレーンテキスト版（HTML非対応クライアント向けフォールバック）
