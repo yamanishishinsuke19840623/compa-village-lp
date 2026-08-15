@@ -1404,9 +1404,13 @@
             qtyStatus.className = 'bk-request-status err';
             return;
           }
+          // A unique reference ID used to match this Stripe payment back to this GAS row later
+          const refId = 'cv' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+          payLink.href = PAYMENT_LINKS[room.key] + '?client_reference_id=' + encodeURIComponent(refId);
           logPendingPayment({
             kind: 'stripe_pending',
             roomType: room.key,
+            refId: refId,
             checkin: toISO(checkin),
             checkout: toISO(checkout),
             nights: nights,

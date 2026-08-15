@@ -27,6 +27,9 @@ var STRIPE_LINKS = {
 };
 var ACCESS_MAP_URL = 'https://www.google.com/maps?q=COMPA+VILLAGE+%E4%B8%8B%E9%96%A2%E5%B8%82';
 var IG_URL = 'https://www.instagram.com/compa0601/';
+// StripeのWebhookエンドポイントURLに ?wh=このトークン を付けて登録する簡易認証（2026-08-15追加）
+// GASのdoPost(e)はStripe-Signatureヘッダーを読み取れないため、標準的な署名検証の代わりに使用
+var STRIPE_WEBHOOK_SECRET = '2922dae4fb4470280cb48a0ace5778231f81d463c94879e0';
 
 // =============================================
 //  エントリーポイント
@@ -37,6 +40,10 @@ var IG_URL = 'https://www.instagram.com/compa0601/';
 // 空室確保用の仮予約ログ（名前・メール不要、確定メールは送らない。2026-08-13追加）
 function doPost(e) {
   try {
+    if (e.parameter && e.parameter.wh === STRIPE_WEBHOOK_SECRET) {
+      return handleStripeWebhook_(e);
+    }
+
     var d = JSON.parse(e.postData.contents);
     var roomType = d.roomType;
     var checkin  = d.checkin;   // 'YYYY-MM-DD'
@@ -223,7 +230,9 @@ function logBooking(d) {
   ]);
 }
 
-// スタンダード/ドミトリー用：決済ページを開くのと同時に記録する仮予約（名前・メールなし）
+// スタンダード/ドミトリー用：決済ページを開くのと同時に記録する仮予約
+// お名前・メールはStripe Webhook（handleStripeWebhook_）が決済完了時に自動で埋める。
+// refIdは10列目に保存し、WebhookからのStripeイベントとこの行を突き合わせるためのキーになる
 function logPendingPayment(d) {
   if (!SHEET_ID) return;
   var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('予約台帳');
@@ -236,8 +245,55 @@ function logPendingPayment(d) {
     d.checkout,
     d.nights || '',
     '決済へ進行中',
-    d.guests ? ('数量: ' + d.guests) : ''
+    d.guests ? ('数量: ' + d.guests) : '',
+    d.refId || ''
   ]);
+}
+
+// 予約台帳の10列目（refId）を全行スキャンして一致する行番号(1-based)を返す。無ければnull
+function findRowByRefId_(refId) {
+  if (!SHEET_ID || !refId) return null;
+  var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('予約台帳');
+  var values = sheet.getDataRange().getValues();
+  for (var i = 1; i < values.length; i++) {
+    if (String(values[i][9] || '') === refId) return i + 1;
+  }
+  return null;
+}
+
+// StripeのWebhook（checkout.session.completed）を受け取り、該当する仮予約行に
+// 実際のお名前・メールを書き込んで「確定」にする
+function handleStripeWebhook_(e) {
+  var event = JSON.parse(e.postData.contents);
+  if (event.type !== 'checkout.session.completed') {
+    return res({ok: true, ignored: true});
+  }
+
+  var session = event.data && event.data.object;
+  var refId = session && session.client_reference_id;
+  if (!refId) return res({ok: false, reason: 'no_ref_id'});
+
+  var row = findRowByRefId_(refId);
+  if (!row) return res({ok: false, reason: 'row_not_found'});
+
+  var customerName  = (session.customer_details && session.customer_details.name)  || '';
+  var customerEmail = (session.customer_details && session.customer_details.email) || '';
+
+  var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('予約台帳');
+  if (customerName)  sheet.getRange(row, 2).setValue(customerName);
+  if (customerEmail) sheet.getRange(row, 3).setValue(customerEmail);
+  sheet.getRange(row, 8).setValue('確定');
+
+  var rowData = sheet.getRange(row, 1, 1, 9).getValues()[0];
+  sendPaymentConfirmedNotification_({
+    name: customerName || rowData[1],
+    email: customerEmail,
+    roomType: rowData[3],
+    checkin: formatDate_(rowData[4]),
+    checkout: formatDate_(rowData[5])
+  });
+
+  return res({ok: true});
 }
 
 function formatDate_(v) {
@@ -261,16 +317,37 @@ function sendPendingPaymentNotification(d) {
   body += '泊数　　：' + (d.nights || '') + '泊\n';
   body += '数量　　：' + (d.guests || '') + '\n';
   body += '━━━━━━━━━━━━━━━━━━━━\n\n';
-  body += 'Stripe側で実際の入金が確認できたら、スプレッドシートの該当行を選んで\n';
-  body += '「🌵 COMPA予約」→「選択行を『決済確認済み』にする」を押してください（メールは送りません）。\n\n';
-  body += 'このまま入金が確認できない場合は、同じメニューの\n';
-  body += '「選択行の決済保留を解除する」で空室に戻せます。\n\n';
+  body += '実際にStripeで決済が完了すると、お名前・メールが自動で予約台帳に書き込まれ、\n';
+  body += 'ステータスも自動で「確定」になります（このメール以降、通常は操作不要です）。\n\n';
+  body += 'もし決済されずこのまま放置された場合は、スプレッドシートの該当行を選んで\n';
+  body += '「🌵 COMPA予約」→「選択行の決済保留を解除する」で空室に戻せます。\n\n';
   body += '▶ 予約台帳: ' + sheetUrl();
 
   MailApp.sendEmail({
     to: HOST_EMAIL,
     cc: CC_EMAIL,
     subject: '【COMPA VILLAGE】決済ページへ進みました — ' + (ROOM_NAMES[d.roomType] || ''),
+    body: body
+  });
+}
+
+// Stripe Webhookが決済完了を検知した時にホストへ送る、実名入りの確定通知
+function sendPaymentConfirmedNotification_(d) {
+  var body = 'Stripeで決済が完了し、自動的に「確定」にしました。\n\n';
+  body += '━━━━━━━━━━━━━━━━━━━━\n';
+  body += 'お名前　：' + (d.name || '（取得できませんでした）') + '\n';
+  body += 'メール　：' + (d.email || '（取得できませんでした）') + '\n';
+  body += '部屋タイプ：' + (ROOM_NAMES[d.roomType] || d.roomType) + '\n';
+  body += 'チェックイン：' + d.checkin + '\n';
+  body += 'チェックアウト：' + d.checkout + '\n';
+  body += '━━━━━━━━━━━━━━━━━━━━\n\n';
+  body += 'この操作は自動なので、特にやることはありません。\n\n';
+  body += '▶ 予約台帳: ' + sheetUrl();
+
+  MailApp.sendEmail({
+    to: HOST_EMAIL,
+    cc: CC_EMAIL,
+    subject: '【COMPA VILLAGE】決済が確定しました — ' + (ROOM_NAMES[d.roomType] || ''),
     body: body
   });
 }

@@ -1418,10 +1418,14 @@
             qtyStatus.className = 'bk-request-status err';
             return;
           }
+          // Stripe決済とGAS台帳の行を後で紐づけるための一意な参照ID
+          const refId = 'cv' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+          payBtn.href = PAYMENT_LINKS[room.key] + '?client_reference_id=' + encodeURIComponent(refId);
           // 決済ページを開くのと同時に、空室管理用の仮予約をバックグラウンドで記録する
           logPendingPayment({
             kind: 'stripe_pending',
             roomType: room.key,
+            refId: refId,
             checkin: toISO(checkin),
             checkout: toISO(checkout),
             nights: nights,

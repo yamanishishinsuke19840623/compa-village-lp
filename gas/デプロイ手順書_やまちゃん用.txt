@@ -3,6 +3,26 @@
   （やまちゃん作業用）
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+【2026-08-15 更新④】Stripe Webhookで決済完了時にお名前・メールを自動取得するようにしました。
+・doPost冒頭で `?wh=シークレットトークン` を照合し、一致すればStripeのWebhookとして
+  handleStripeWebhook_(e) に処理を渡す（既存のLP予約ロジックとは完全に別分岐）
+・STRIPE_WEBHOOK_SECRET定数を新設（値: 2922dae4fb4470280cb48a0ace5778231f81d463c94879e0）
+・logPendingPayment(d)が10列目にrefId（LP側で生成する一意な参照ID）を書き込むように変更
+・findRowByRefId_(refId)でrefId一致行を検索し、Stripeのcheckout.session.completedイベントから
+  お名前・メールを取得して該当行に書き込み、ステータスを自動で「確定」にする
+・確定時はsendPaymentConfirmedNotification_で実名入りメールをホストへ送信
+
+再デプロイ後、やまちゃんはGASのWebアプリURLの末尾に
+`?wh=2922dae4fb4470280cb48a0ace5778231f81d463c94879e0` を付けたURLを
+ゆうさんに送り、Stripeダッシュボードのwebhook設定に登録してもらう
+（手順は「Stripe手順書_ゆうさん用.txt」STEP7参照）。
+STEP6（Payment Linkで氏名収集をON）もゆうさんの作業として必要。
+
+※ GAS doPost(e)はStripe-Signatureヘッダーを読み取れない制約があるため、
+  標準的な署名検証はできない。URLクエリの`?wh=`トークン照合で簡易的に認証している。
+  このURLはページのソースには出てこない（Stripeダッシュボードにのみ登録する）ので、
+  index.html内のGAS_BOOKING_ENDPOINTより秘匿性は高いが、絶対に外部に漏らさないこと。
+
 【2026-08-13 更新③】スタンダード/ドミトリーが直接Stripe決済へ進む方式に変わったことで、
 GASに記録が残らず空室表示が更新されない問題を修正しました。
 「予約に進む」を押した瞬間に、名前・メール不要の「仮予約」を予約台帳に記録するようにし、
