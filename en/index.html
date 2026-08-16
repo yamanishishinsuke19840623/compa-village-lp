@@ -58,6 +58,7 @@
     --lime:#8FBE3F;
     --lime-deep:#6E9A2C;
     --sunset:#E2762E;
+    --sunset-deep:#A8541C;
     --sand:#DCCFAE;
     --line:rgba(31,43,30,0.16);
     --radius:18px;
@@ -218,7 +219,7 @@
   .section-head{max-width:640px; margin:0 0 48px;}
   .kicker{
     font-family:'Space Mono',monospace; font-size:.74rem; letter-spacing:.16em;
-    text-transform:uppercase; color:var(--sunset); margin:0 0 12px;
+    text-transform:uppercase; color:var(--sunset-deep); margin:0 0 12px;
   }
   h2{
     font-family:'Yomogi',cursive; font-size:clamp(1.7rem,3.4vw,2.5rem);
@@ -236,7 +237,7 @@
     border-left:4px solid var(--lime); border-radius:4px;
   }
   .story-body p.host-note{
-    font-family:'Space Mono',monospace; font-size:.86rem; color:var(--sunset);
+    font-family:'Space Mono',monospace; font-size:.86rem; color:var(--sunset-deep);
     border-top:1px dashed var(--line); padding-top:20px; margin-top:30px;
   }
 
@@ -251,7 +252,7 @@
   }
   .game-hud{display:flex; align-items:center; justify-content:space-between; margin-top:14px; gap:14px; flex-wrap:wrap;}
   .game-hud .mono{font-size:.85rem; color:var(--forest-deep);}
-  .game-hud #gameHighScore{color:var(--sunset);}
+  .game-hud #gameHighScore{color:var(--sunset-deep);}
   .game-hud .btn{padding:11px 20px; font-size:.9rem; margin-left:auto;}
 
   /* ---------- gallery ---------- */
@@ -279,7 +280,7 @@
   .room-type{border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--paper-2);}
   .room-type img{width:100%; aspect-ratio:16/9; object-fit:cover; display:block;}
   .room-type .room-type-body{padding:20px;}
-  .room-type .mono{font-family:'Space Mono',monospace; font-size:.68rem; color:var(--sunset); letter-spacing:.1em;}
+  .room-type .mono{font-family:'Space Mono',monospace; font-size:.68rem; color:var(--sunset-deep); letter-spacing:.1em;}
   .room-type h4{margin:8px 0 6px; font-size:1rem;}
   .room-type p{margin:0; font-size:.86rem; color:rgba(31,43,30,.72);}
   .amenity-strip{display:flex; flex-wrap:wrap; gap:10px; margin-top:24px;}
@@ -318,7 +319,7 @@
     font-weight:700; text-decoration:none; color:var(--forest-deep);
     border-bottom:2px solid var(--lime); padding-bottom:2px;
   }
-  .ig-link:hover{color:var(--sunset); border-color:var(--sunset);}
+  .ig-link:hover{color:var(--sunset-deep); border-color:var(--sunset-deep);}
 
   /* ---------- shop ---------- */
   .shop-layout{display:grid; grid-template-columns:.85fr 1.15fr; gap:44px; align-items:center;}
@@ -346,7 +347,7 @@
   .yt-item:hover{transform:translateY(-3px); box-shadow:0 10px 20px rgba(31,43,30,.1);}
   .yt-item img{width:100%; aspect-ratio:16/9; object-fit:cover; display:block; background:#111;}
   .yt-item span{display:block; padding:10px 12px; font-size:.78rem; line-height:1.4;}
-  .yt-item span strong{display:block; margin-top:4px; color:var(--sunset); font-family:'Space Mono',monospace; font-size:.7rem; font-weight:400;}
+  .yt-item span strong{display:block; margin-top:4px; color:var(--sunset-deep); font-family:'Space Mono',monospace; font-size:.7rem; font-weight:400;}
 
   /* ---------- pricing ---------- */
   .price-layout{display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:stretch;}
@@ -453,7 +454,7 @@
   .bk-room-card{border:1px solid var(--line); border-radius:12px; padding:18px; background:var(--paper); display:flex; flex-direction:column;}
   .bk-room-card.unavailable{opacity:.55;}
   .bk-room-card h4{margin:0 0 4px; font-size:.98rem; display:flex; align-items:center; gap:8px;}
-  .bk-room-card .badge-full{font-family:'Space Mono',monospace; font-size:.62rem; background:var(--sunset); color:#fff; padding:2px 7px; border-radius:999px;}
+  .bk-room-card .badge-full{font-family:'Space Mono',monospace; font-size:.62rem; background:var(--sunset-deep); color:#fff; padding:2px 7px; border-radius:999px;}
   .bk-room-card .badge-remaining{font-family:'Space Mono',monospace; font-size:.62rem; background:var(--lime); color:var(--forest-deep); padding:2px 7px; border-radius:999px;}
   .bk-room-card .cap{font-size:.8rem; color:rgba(31,43,30,.6); margin:0 0 14px;}
   .bk-room-card .price{font-family:'Space Mono',monospace; font-size:1.05rem; color:var(--forest-deep); margin:0 0 16px; display:block;}
@@ -956,7 +957,6 @@
     <div class="footer-bottom">
       <span>© COMPA VILLAGE GUESTHOUSE</span>
       <span>License No.: M350032414</span>
-      <span>DESIGN DRAFT — v0.1</span>
     </div>
   </div>
 </footer>
