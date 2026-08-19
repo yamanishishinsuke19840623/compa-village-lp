@@ -128,7 +128,7 @@ function setupSheet() {
   sheet.setFrozenRows(1);
 
   var statusRule = SpreadsheetApp.newDataValidation()
-    .requireValueInList(['リクエスト受付', '決済へ進行中', '確定', 'キャンセル'], true).build();
+    .requireValueInList(['リクエスト受付', '決済へ進行中', '確定', 'キャンセル', 'オーナーブロック'], true).build();
   sheet.getRange('H2:H1000').setDataValidation(statusRule);
 
   sheet.autoResizeColumns(1, headers.length);
@@ -138,6 +138,18 @@ function setupSheet() {
   Logger.log('Sheet URL: ' + ss.getUrl());
   Logger.log('');
   Logger.log('↑ この Sheet ID を、コード冒頭の SHEET_ID に貼り付けてください');
+}
+
+// 既に稼働中の台帳（setupSheetは初回しか使えないため）のステータス列プルダウンに
+// 「オーナーブロック」を追加する一度きりの移行用関数。実行メニューから1回だけ動かせばOK
+// （動かさなくても、スクリプトからの書き込みはプルダウンの制約を受けないため動作に支障はない）
+function addBlockStatusToValidation() {
+  if (!SHEET_ID) return;
+  var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('予約台帳');
+  var statusRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['リクエスト受付', '決済へ進行中', '確定', 'キャンセル', 'オーナーブロック'], true).build();
+  sheet.getRange('H2:H1000').setDataValidation(statusRule);
+  Logger.log('ステータスのプルダウンに「オーナーブロック」を追加しました');
 }
 
 // =============================================
@@ -411,7 +423,102 @@ function onOpen() {
     .addSeparator()
     .addItem('💳 選択行を「決済確認済み」にする（メール送信なし）', 'menuMarkPaymentReceived')
     .addItem('🗑 選択行の決済保留を解除する（メール送信なし）', 'menuCancelPendingHold')
+    .addSeparator()
+    .addItem('📅 空室ブロック管理（オーナー不在・臨時休業など）', 'openBlockSidebar')
     .addToUi();
+}
+
+// =============================================
+//  オーナーブロック（Booking.com等の「予約不可に設定」相当）
+//  ゆうさんが旅行・メンテナンス等で部屋を予約不可にしたい時に使う。
+//  実装上は「（オーナーブロック）」という名前の仮予約行として台帳に記録するだけで、
+//  既存のisAvailable()/getBookedRanges()がそのまま空室カウントに反映してくれる
+//  （新規ロジックを増やさず、既存の予約行カウント方式に相乗りする設計）。
+// =============================================
+
+function openBlockSidebar() {
+  var html = HtmlService.createHtmlOutputFromFile('BlockSidebar')
+    .setTitle('空室ブロック管理')
+    .setWidth(360);
+  SpreadsheetApp.getUi().showSidebar(html);
+}
+
+// サイドバーの初期表示用：部屋タイプごとの最大数（＝全室ブロック時のデフォルト台数）
+function getRoomMeta() {
+  return { capacity: ROOM_CAPACITY, names: ROOM_NAMES };
+}
+
+// 台数分だけ「オーナーブロック」行を積む。1回の操作で作った行は同じblockIdでまとめて管理し、
+// 「解除」ボタン1回でまとめて空室に戻せるようにする
+function addOwnerBlock(payload) {
+  if (!SHEET_ID) return { ok: false, reason: 'no_sheet' };
+  var roomType = payload && payload.roomType;
+  if (!ROOM_NAMES[roomType]) return { ok: false, reason: 'invalid_room' };
+
+  var checkin = payload.checkin;
+  var checkout = payload.checkout;
+  if (!checkin || !checkout || !(new Date(checkin) < new Date(checkout))) {
+    return { ok: false, reason: 'invalid_dates' };
+  }
+
+  // 全体ブロック（オーナー不在等）はgroupタイプ1行でstandard/dorm/groupを丸ごと塞げる
+  // （GROUND_FLOOR_TYPESの相互ブロックに乗るため）。standard/dormの部分ブロックは台数分だけ行を積む
+  var maxQty = roomType === 'group' ? 1 : (ROOM_CAPACITY[roomType] || 1);
+  var qty = parseInt(payload.quantity, 10);
+  if (!qty || qty < 1) qty = maxQty;
+  if (qty > maxQty) qty = maxQty;
+
+  var blockId = 'blk-' + new Date().getTime() + '-' + Math.floor(Math.random() * 10000);
+  var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('予約台帳');
+  for (var i = 0; i < qty; i++) {
+    sheet.appendRow([
+      new Date(), '（オーナーブロック）', '', roomType,
+      checkin, checkout, '', 'オーナーブロック',
+      payload.memo || '', blockId
+    ]);
+  }
+  return { ok: true, blockId: blockId, quantity: qty };
+}
+
+// 現在有効なオーナーブロックを一覧取得（サイドバー表示用。同じblockIdの行はまとめて1件にする）
+function getActiveBlocks() {
+  if (!SHEET_ID) return [];
+  var rows = getBookingRows();
+  var byBlockId = {};
+  rows.forEach(function (row) {
+    if (row[7] !== 'オーナーブロック') return;
+    var blockId = row[9];
+    if (!blockId) return;
+    if (!byBlockId[blockId]) {
+      byBlockId[blockId] = {
+        blockId: blockId,
+        roomType: row[3],
+        roomName: ROOM_NAMES[row[3]] || row[3],
+        checkin: formatDate_(row[4]),
+        checkout: formatDate_(row[5]),
+        memo: row[8] || '',
+        quantity: 0
+      };
+    }
+    byBlockId[blockId].quantity++;
+  });
+  return Object.keys(byBlockId).map(function (k) { return byBlockId[k]; })
+    .sort(function (a, b) { return a.checkin < b.checkin ? -1 : (a.checkin > b.checkin ? 1 : 0); });
+}
+
+// blockIdが一致する行を全て「キャンセル」にして空室へ戻す
+function removeOwnerBlock(blockId) {
+  if (!SHEET_ID || !blockId) return { ok: false };
+  var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('予約台帳');
+  var values = sheet.getDataRange().getValues();
+  var released = 0;
+  for (var i = 1; i < values.length; i++) {
+    if (values[i][7] === 'オーナーブロック' && String(values[i][9] || '') === blockId) {
+      sheet.getRange(i + 1, 8).setValue('キャンセル');
+      released++;
+    }
+  }
+  return { ok: true, released: released };
 }
 
 // スタンダード/ドミトリーの仮予約（決済へ進行中）で、Stripe側の入金を確認できた時に使う。

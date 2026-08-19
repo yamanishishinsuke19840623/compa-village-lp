@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+      background: #F6F1E4;
+      color: #1F2B1E;
+      margin: 0;
+      padding: 16px;
+      font-size: 13px;
+    }
+    h1 {
+      font-size: 14px;
+      color: #1D3420;
+      margin: 0 0 4px;
+    }
+    p.lead {
+      margin: 0 0 16px;
+      color: rgba(31,43,30,.7);
+      line-height: 1.6;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      color: #1D3420;
+      margin: 12px 0 4px;
+    }
+    select, input[type="date"], input[type="number"], input[type="text"] {
+      width: 100%;
+      padding: 7px 8px;
+      border: 1px solid #DCCFAE;
+      border-radius: 8px;
+      font-size: 13px;
+      background: #fff;
+      color: #1F2B1E;
+    }
+    .row2 { display: flex; gap: 8px; }
+    .row2 > div { flex: 1; }
+    .hint {
+      font-size: 11px;
+      color: rgba(31,43,30,.55);
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 13px;
+    }
+    #submitBtn {
+      width: 100%;
+      margin-top: 16px;
+      padding: 10px;
+      background: #8FBE3F;
+      color: #1D3420;
+    }
+    #submitBtn:disabled { opacity: .5; cursor: default; }
+    #msg {
+      margin-top: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      display: none;
+    }
+    #msg.ok { display: block; background: #E7F2D6; color: #2B4A2E; }
+    #msg.err { display: block; background: #F7DCD2; color: #8A2E14; }
+
+    hr { border: none; border-top: 1px solid #DCCFAE; margin: 20px 0; }
+
+    .block-item {
+      background: #fff;
+      border: 1px solid #DCCFAE;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+    }
+    .block-item .room {
+      font-weight: bold;
+      color: #1D3420;
+      font-size: 12.5px;
+    }
+    .block-item .dates {
+      font-size: 12px;
+      color: rgba(31,43,30,.75);
+      margin-top: 2px;
+    }
+    .block-item .memo {
+      font-size: 11.5px;
+      color: rgba(31,43,30,.6);
+      margin-top: 2px;
+    }
+    .block-item .release {
+      margin-top: 8px;
+      width: 100%;
+      padding: 6px;
+      background: #F6F1E4;
+      border: 1px solid #DCCFAE;
+      color: #8A2E14;
+    }
+    #blockList .empty {
+      color: rgba(31,43,30,.5);
+      font-size: 12px;
+    }
+    #loading { font-size: 12px; color: rgba(31,43,30,.5); }
+  </style>
+</head>
+<body>
+  <h1>📅 空室ブロック管理</h1>
+  <p class="lead">オーナー不在・メンテナンス等で予約を受け付けたくない日程をここで登録します。ここで登録した日程は、サイト側で「満室」と表示され、お客様は予約できなくなります（理由はお客様には表示されません）。</p>
+
+  <label for="roomType">対象</label>
+  <select id="roomType">
+    <option value="group">全体（休業・オーナー不在など）</option>
+    <option value="standard">スタンダードツインルームのみ</option>
+    <option value="dorm">ドミトリールームのみ</option>
+  </select>
+
+  <div class="row2">
+    <div>
+      <label for="checkin">開始日</label>
+      <input type="date" id="checkin">
+    </div>
+    <div>
+      <label for="checkout">終了日</label>
+      <input type="date" id="checkout">
+    </div>
+  </div>
+  <p class="hint">終了日の朝はチェックアウト扱いのため、その日から先は予約可能に戻ります（ホテル予約サイトと同じルールです）。</p>
+
+  <div id="qtyWrap">
+    <label for="quantity">ブロックする数</label>
+    <input type="number" id="quantity" min="1">
+    <p class="hint" id="qtyHint"></p>
+  </div>
+
+  <label for="memo">メモ（任意・自分用の記録）</label>
+  <input type="text" id="memo" placeholder="例：オーナー旅行、清掃・修繕 など">
+
+  <button id="submitBtn">この期間をブロックする</button>
+  <div id="msg"></div>
+
+  <hr>
+
+  <h1>現在ブロック中の日程</h1>
+  <div id="loading">読み込み中…</div>
+  <div id="blockList"></div>
+
+  <script>
+    var ROOM_META = { capacity: { standard: 3, dorm: 4, group: 1 }, names: {} };
+
+    google.script.run.withSuccessHandler(function (meta) {
+      ROOM_META = meta;
+      onRoomTypeChange();
+    }).getRoomMeta();
+
+    function onRoomTypeChange() {
+      var roomType = document.getElementById('roomType').value;
+      var qtyWrap = document.getElementById('qtyWrap');
+      var qtyInput = document.getElementById('quantity');
+      var qtyHint = document.getElementById('qtyHint');
+      var max = ROOM_META.capacity[roomType] || 1;
+
+      if (roomType === 'group') {
+        qtyWrap.style.display = 'none';
+      } else {
+        qtyWrap.style.display = 'block';
+        qtyInput.max = max;
+        qtyInput.value = max;
+        var roomLabel = roomType === 'standard' ? '室' : 'ベッド';
+        qtyHint.textContent = '全' + max + roomLabel + '中、何' + roomLabel + 'をブロックするか（未入力なら全' + roomLabel + 'ブロック）';
+      }
+    }
+    document.getElementById('roomType').addEventListener('change', onRoomTypeChange);
+
+    function showMsg(text, isOk) {
+      var el = document.getElementById('msg');
+      el.textContent = text;
+      el.className = isOk ? 'ok' : 'err';
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', function () {
+      var roomType = document.getElementById('roomType').value;
+      var checkin = document.getElementById('checkin').value;
+      var checkout = document.getElementById('checkout').value;
+      var quantity = document.getElementById('quantity').value;
+      var memo = document.getElementById('memo').value;
+
+      if (!checkin || !checkout) {
+        showMsg('開始日と終了日を入力してください', false);
+        return;
+      }
+      if (checkin >= checkout) {
+        showMsg('終了日は開始日より後にしてください', false);
+        return;
+      }
+
+      var btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = '処理中…';
+
+      google.script.run
+        .withSuccessHandler(function (result) {
+          btn.disabled = false;
+          btn.textContent = 'この期間をブロックする';
+          if (result.ok) {
+            showMsg('ブロックしました（' + result.quantity + '件）', true);
+            document.getElementById('memo').value = '';
+            loadBlocks();
+          } else {
+            showMsg('エラー：' + result.reason, false);
+          }
+        })
+        .withFailureHandler(function (err) {
+          btn.disabled = false;
+          btn.textContent = 'この期間をブロックする';
+          showMsg('エラー：' + err.message, false);
+        })
+        .addOwnerBlock({ roomType: roomType, checkin: checkin, checkout: checkout, quantity: quantity, memo: memo });
+    });
+
+    function loadBlocks() {
+      google.script.run.withSuccessHandler(renderBlocks).getActiveBlocks();
+    }
+
+    function renderBlocks(blocks) {
+      document.getElementById('loading').style.display = 'none';
+      var listEl = document.getElementById('blockList');
+      listEl.innerHTML = '';
+
+      if (!blocks || blocks.length === 0) {
+        listEl.innerHTML = '<p class="empty">現在ブロック中の日程はありません</p>';
+        return;
+      }
+
+      blocks.forEach(function (b) {
+        var item = document.createElement('div');
+        item.className = 'block-item';
+
+        var qtyLabel = '';
+        if (b.roomType !== 'group') {
+          qtyLabel = '（' + b.quantity + (b.roomType === 'standard' ? '室' : 'ベッド') + '）';
+        }
+
+        item.innerHTML =
+          '<div class="room">' + b.roomName + qtyLabel + '</div>' +
+          '<div class="dates">' + b.checkin + ' 〜 ' + b.checkout + '</div>' +
+          (b.memo ? '<div class="memo">' + b.memo + '</div>' : '');
+
+        var releaseBtn = document.createElement('button');
+        releaseBtn.className = 'release';
+        releaseBtn.textContent = '解除する（予約可能に戻す）';
+        releaseBtn.addEventListener('click', function () {
+          releaseBtn.disabled = true;
+          releaseBtn.textContent = '解除中…';
+          google.script.run
+            .withSuccessHandler(function () { loadBlocks(); })
+            .withFailureHandler(function (err) { showMsg('エラー：' + err.message, false); })
+            .removeOwnerBlock(b.blockId);
+        });
+        item.appendChild(releaseBtn);
+
+        listEl.appendChild(item);
+      });
+    }
+
+    loadBlocks();
+  </script>
+</body>
+</html>
