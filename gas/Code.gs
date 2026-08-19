@@ -308,13 +308,31 @@ function handleStripeWebhook_(e) {
   sheet.getRange(row, 8).setValue('確定');
 
   var rowData = sheet.getRange(row, 1, 1, 9).getValues()[0];
-  sendPaymentConfirmedNotification_({
+  var confirmedGuest = {
     name: customerName || rowData[1],
     email: customerEmail,
     roomType: rowData[3],
     checkin: formatDate_(rowData[4]),
     checkout: formatDate_(rowData[5])
-  });
+  };
+  sendPaymentConfirmedNotification_(confirmedGuest);
+
+  // 即決済型（standard/dorm）はこれまでゲストへのご案内メールが無かったため、
+  // 決済完了と同時にチェックイン詳細等の案内メールを送る（2026-08-19追加）
+  if (customerEmail) {
+    var guideData = {
+      name: confirmedGuest.name, roomType: confirmedGuest.roomType,
+      checkin: confirmedGuest.checkin, checkout: confirmedGuest.checkout,
+      alreadyPaid: true
+    };
+    MailApp.sendEmail({
+      to: customerEmail,
+      replyTo: HOST_EMAIL,
+      subject: '【COMPA VILLAGE】ご予約が確定しました',
+      body: buildConfirmationText_(guideData),
+      htmlBody: buildConfirmationHtml_(guideData)
+    });
+  }
 
   return res({ok: true});
 }
@@ -636,47 +654,114 @@ function menuRejectBooking() {
 }
 
 // 確定メール：プレーンテキスト版（HTML非対応クライアント向けフォールバック）
+// d.alreadyPaid=true の場合は決済案内を省略する（Stripe決済直後の即決済型で使用）
 function buildConfirmationText_(d) {
   var payLink = STRIPE_LINKS[d.roomType];
   var body = d.name + ' 様\n\n';
-  body += 'ご予約が確定しましたのでご連絡いたします。\n\n';
+  body += 'COMPA VILLAGEへようこそ🌵\n\n';
+  body += 'このたびはご予約いただきありがとうございます。\n';
+  body += '以下、ご滞在に関する大切なご案内ですので、ご確認をお願いいたします。\n\n';
   body += '━━━━━━━━━━━━━━━━━━━━\n';
   body += '部屋タイプ：' + (ROOM_NAMES[d.roomType] || d.roomType) + '\n';
   body += 'チェックイン：' + d.checkin + '\n';
   body += 'チェックアウト：' + d.checkout + '\n';
   body += '━━━━━━━━━━━━━━━━━━━━\n\n';
-  body += '【チェックインについて】\n';
-  body += 'チェックイン：16:00〜22:00 / チェックアウト：10:00まで\n';
-  body += '駐車場は無料でご利用いただけます。全室・共用スペースで高速無料WiFiもご利用いただけます。\n\n';
+
+  body += '🕒 チェックイン・チェックアウト\n';
+  body += '・チェックイン：16:00〜22:00（22時以降は別途¥1,000）\n';
+  body += '・チェックアウト：10:00まで\n\n';
+
+  body += '🚗 駐車について\n';
+  body += '・敷地内に合計4台（満車の場合は近隣駐車場をご案内する場合がございます）\n';
+  body += '・お車はガレージ横にお停めください\n\n';
+
+  body += '⚠️ 立ち入り禁止エリア\n';
+  body += '・納屋、蔵（1階・2階とも）※安全面のため立ち入りはご遠慮ください\n\n';
+
+  body += '⚡ 電気について\n';
+  body += '・キッチンの電力容量に限りがございます。電子レンジ・ポットなどを同時に2つ以上使用すると、ブレーカーが落ちる場合があります\n';
+  body += '・万が一落ちた際は、脱衣所内の分電盤をご確認ください\n\n';
+
+  body += '🔇 夜間のお願い\n';
+  body += '・23時以降の室内では会話にご配慮をお願いいたします\n\n';
+
+  body += '🍖 BBQをされる場合\n';
+  body += '・BBQセット（コンロ・網・トング）レンタル代¥2,000を頂きます（現金のみ）\n';
+  body += '・炭や食材などはご自由にお持ち込みください\n';
+  body += '・宿泊者以外の方が参加される場合は、場所代として1人¥2,500を頂いています\n\n';
+
+  body += '📍 道案内について\n';
+  body += '道が少し分かりづらく、Googleマップのナビだとお隣のご自宅に案内されてしまう場合がございます。\n';
+  body += 'iPhoneをお持ちでしたら、Appleマップで「下関市蒲生野280」と入力していただくと正確に到着できます\n\n';
+
+  body += '※貴重品（財布・パスポート等）の管理はご自身にてしっかりとお願いいたします\n\n';
+
   body += '【アクセス】\n';
-  body += '山口県下関市（下関市立美術館・長府庭園エリア）／最寄り：JR新下関駅\n';
   body += ACCESS_MAP_URL + '\n\n';
-  if (payLink) {
+
+  if (payLink && !d.alreadyPaid) {
     body += '【お支払い】\n';
     body += 'まだお支払いがお済みでない場合は、以下より決済をお願いいたします。\n';
     body += payLink + '\n\n';
   }
-  body += 'ご不明な点があれば、このメールに返信いただくか、\n';
-  body += 'Instagram（@compa0601）のDMでもお気軽にご連絡ください。\n\n';
+  body += '🐾 ご不明な点があれば、いつでもこのメールへの返信、またはInstagram（@compa0601）のDMでご連絡ください。\n\n';
   body += '当日を楽しみにお待ちしております！\n\n';
   body += 'COMPA VILLAGE\n' + IG_URL;
   return body;
 }
 
 // 確定メール：HTML版（ブランドカラーで整形。Gmail等HTML対応クライアントで表示）
+// d.alreadyPaid=true の場合は決済案内を省略する（Stripe決済直後の即決済型で使用）
 function buildConfirmationHtml_(d) {
   var roomName = ROOM_NAMES[d.roomType] || d.roomType;
   var payLink = STRIPE_LINKS[d.roomType];
   var esc = function(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
 
   var payButton = '';
-  if (payLink) {
+  if (payLink && !d.alreadyPaid) {
     payButton =
       '<tr><td style="padding:24px 28px 0;">' +
         '<p style="margin:0 0 10px; font-size:14px; color:#1F2B1E;">まだお支払いがお済みでない場合は、以下より決済をお願いいたします。</p>' +
         '<a href="' + esc(payLink) + '" style="display:inline-block; background:#8FBE3F; color:#1D3420; text-decoration:none; font-weight:bold; padding:12px 22px; border-radius:999px; font-size:14px;">お支払いはこちら →</a>' +
       '</td></tr>';
   }
+
+  var guideItems = [
+    { icon: '🕒', title: 'チェックイン・チェックアウト', lines: [
+      'チェックイン：16:00〜22:00（22時以降は別途¥1,000）',
+      'チェックアウト：10:00まで'
+    ]},
+    { icon: '🚗', title: '駐車について', lines: [
+      '敷地内に合計4台（満車の場合は近隣駐車場をご案内する場合がございます）',
+      'お車はガレージ横にお停めください'
+    ]},
+    { icon: '⚠️', title: '立ち入り禁止エリア', lines: [
+      '納屋、蔵（1階・2階とも）※安全面のため立ち入りはご遠慮ください'
+    ]},
+    { icon: '⚡', title: '電気について', lines: [
+      'キッチンの電力容量に限りがございます。電子レンジ・ポットなどを同時に2つ以上使用すると、ブレーカーが落ちる場合があります',
+      '万が一落ちた際は、脱衣所内の分電盤をご確認ください'
+    ]},
+    { icon: '🔇', title: '夜間のお願い', lines: [
+      '23時以降の室内では会話にご配慮をお願いいたします'
+    ]},
+    { icon: '🍖', title: 'BBQをされる場合', lines: [
+      'BBQセット（コンロ・網・トング）レンタル代¥2,000（現金のみ）',
+      '炭や食材などはご自由にお持ち込みください',
+      '宿泊者以外の方が参加される場合は、場所代として1人¥2,500を頂いています'
+    ]},
+    { icon: '📍', title: '道案内について', lines: [
+      'Googleマップのナビだとお隣のご自宅に案内される場合がございます',
+      'iPhoneをお持ちでしたら、Appleマップで「下関市蒲生野280」と検索いただくと正確に到着できます'
+    ]}
+  ];
+  var guideHtml = guideItems.map(function (g) {
+    var lines = g.lines.map(function (l) { return '<li style="margin:0 0 4px;">' + esc(l) + '</li>'; }).join('');
+    return '<tr><td style="padding:18px 28px 0;">' +
+      '<p style="margin:0 0 6px; font-size:13px; font-weight:bold; color:#1D3420;">' + g.icon + ' ' + esc(g.title) + '</p>' +
+      '<ul style="margin:0; padding-left:18px; font-size:12.5px; color:rgba(31,43,30,.75); line-height:1.7;">' + lines + '</ul>' +
+    '</td></tr>';
+  }).join('');
 
   return '' +
   '<div style="font-family:\'Hiragino Sans\',\'Yu Gothic\',sans-serif; background:#F6F1E4; padding:28px 16px;">' +
@@ -687,7 +772,7 @@ function buildConfirmationHtml_(d) {
       '</td></tr>' +
       '<tr><td style="padding:26px 28px 0;">' +
         '<p style="margin:0 0 4px; font-size:15px; color:#1F2B1E;">' + esc(d.name) + ' 様</p>' +
-        '<p style="margin:0; font-size:14px; color:rgba(31,43,30,.75); line-height:1.7;">ご予約が確定しましたのでご連絡いたします。当日を楽しみにお待ちしております！</p>' +
+        '<p style="margin:0; font-size:14px; color:rgba(31,43,30,.75); line-height:1.7;">COMPA VILLAGEへようこそ🌵　ご予約が確定しましたのでご連絡いたします。以下、ご滞在に関する大切なご案内ですので、ご確認をお願いいたします。</p>' +
       '</td></tr>' +
       '<tr><td style="padding:20px 28px 0;">' +
         '<table role="presentation" width="100%" style="background:#EFE7D3; border-radius:12px;">' +
@@ -696,9 +781,9 @@ function buildConfirmationHtml_(d) {
           '<tr><td style="padding:0 20px 16px; font-size:13px; color:#1F2B1E;">チェックアウト</td><td style="padding:0 20px 16px; font-size:13px; color:#1D3420; font-weight:bold; text-align:right;">' + esc(d.checkout) + '</td></tr>' +
         '</table>' +
       '</td></tr>' +
-      '<tr><td style="padding:20px 28px 0;">' +
-        '<p style="margin:0 0 6px; font-size:13px; font-weight:bold; color:#1D3420;">チェックインについて</p>' +
-        '<p style="margin:0; font-size:13px; color:rgba(31,43,30,.75); line-height:1.8;">チェックイン 16:00〜22:00 ／ チェックアウト 10:00まで<br>駐車場：無料 ／ WiFi：全室・共用スペースで高速無料</p>' +
+      guideHtml +
+      '<tr><td style="padding:18px 28px 0;">' +
+        '<p style="margin:0; font-size:12px; color:rgba(31,43,30,.6); line-height:1.7;">※貴重品（財布・パスポート等）の管理はご自身にてしっかりとお願いいたします</p>' +
       '</td></tr>' +
       '<tr><td style="padding:18px 28px 0;">' +
         '<p style="margin:0 0 6px; font-size:13px; font-weight:bold; color:#1D3420;">アクセス</p>' +
@@ -706,7 +791,7 @@ function buildConfirmationHtml_(d) {
       '</td></tr>' +
       payButton +
       '<tr><td style="padding:24px 28px 26px;">' +
-        '<p style="margin:0; font-size:12px; color:rgba(31,43,30,.6); line-height:1.7;">ご不明な点があれば、このメールに返信いただくか、Instagram（<a href="' + esc(IG_URL) + '" style="color:#2B4A2E;">@compa0601</a>）のDMでもお気軽にご連絡ください。<br><br>旅の途中に、最高の出会いを。<br>COMPA VILLAGE</p>' +
+        '<p style="margin:0; font-size:12px; color:rgba(31,43,30,.6); line-height:1.7;">🐾 ご不明な点があれば、このメールに返信いただくか、Instagram（<a href="' + esc(IG_URL) + '" style="color:#2B4A2E;">@compa0601</a>）のDMでもお気軽にご連絡ください。<br><br>旅の途中に、最高の出会いを。<br>COMPA VILLAGE</p>' +
       '</td></tr>' +
     '</table>' +
   '</div>';
