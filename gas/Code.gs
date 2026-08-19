@@ -140,6 +140,17 @@ function setupSheet() {
   Logger.log('↑ この Sheet ID を、コード冒頭の SHEET_ID に貼り付けてください');
 }
 
+// このGASはsetupSheet()で新規作成した台帳スプレッドシートに「コンテナバインド」されていない
+// スタンドアロン型スクリプトのため、onOpen(e)は自動発火せず「🌵 COMPA予約」メニューが出ない。
+// インストール型トリガーで明示的にこの台帳へ紐付ける一度きりの関数（関数選択で実行すればOK）
+function installOnOpenTrigger() {
+  ScriptApp.getProjectTriggers().forEach(function (t) {
+    if (t.getHandlerFunction() === 'onOpen') ScriptApp.deleteTrigger(t);
+  });
+  ScriptApp.newTrigger('onOpen').forSpreadsheet(SHEET_ID).onOpen().create();
+  Logger.log('台帳スプレッドシートのonOpenトリガーを登録しました。台帳を開き直すとメニューが表示されます');
+}
+
 // 既に稼働中の台帳（setupSheetは初回しか使えないため）のステータス列プルダウンに
 // 「オーナーブロック」を追加する一度きりの移行用関数。実行メニューから1回だけ動かせばOK
 // （動かさなくても、スクリプトからの書き込みはプルダウンの制約を受けないため動作に支障はない）
