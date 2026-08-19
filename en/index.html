@@ -27,7 +27,7 @@
   "description": "A pet-friendly guesthouse in Shimonoseki, Yamaguchi. The best encounters, right in the middle of your journey.",
   "image": "https://yamanishishinsuke19840623.github.io/compa-village-lp/photos/compa-hero.jpg",
   "url": "https://yamanishishinsuke19840623.github.io/compa-village-lp/en/",
-  "priceRange": "¥2,250 - ¥30,000",
+  "priceRange": "¥2,250 - ¥32,000",
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "Shimonoseki",
@@ -782,7 +782,7 @@
     <div class="room-types">
       <div class="room-type">
         <img src="../photos/room-group-common.jpg" alt="A toast with friends in the shared ground-floor lounge, included with the Whole-Building Rental Plan" loading="lazy" decoding="async">
-        <div class="room-type-body"><span class="mono">TYPE 01</span><h4>Whole-Building Rental Plan</h4><p>For up to 10 guests · Enjoy the whole ground floor like a private rental (¥30,000/night)</p></div>
+        <div class="room-type-body"><span class="mono">TYPE 01</span><h4>Whole-Building Rental Plan</h4><p>For up to 10 guests · Enjoy the whole ground floor like a private rental (¥20,000/night for up to 6 guests, +¥3,000 per additional guest)</p></div>
       </div>
       <div class="room-type">
         <img src="../photos/room-standard.jpg" alt="One of the Standard Twin Rooms" loading="lazy" decoding="async">
@@ -802,7 +802,7 @@
       <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10l1.3-4h11.4L19 10"/><rect x="3" y="10" width="18" height="7" rx="2"/><circle cx="7.5" cy="17.3" r="1.5" fill="var(--forest-deep)" stroke="none"/><circle cx="16.5" cy="17.3" r="1.5" fill="var(--forest-deep)" stroke="none"/></svg> Free private parking</span>
       <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 15h13v3H2z"/><path d="M15 15.5c1-1 2.3-1 3.2 0M18.2 13.3c1.4-1.4 3.2-1.4 4.6 0"/><path d="M3 20L20 4"/></svg> No smoking throughout</span>
     </div>
-    <p style="margin-top:26px; font-size:.92rem; color:rgba(31,43,30,.7);">With the Whole-Building Rental Plan (up to 10 guests, ¥30,000/night), you can use the entire ground floor like a private rental — with your travel companions, family, or pets. Travelers, long-term stays, solo trips: everyone's welcome.</p>
+    <p style="margin-top:26px; font-size:.92rem; color:rgba(31,43,30,.7);">With the Whole-Building Rental Plan (up to 10 guests, ¥20,000/night for up to 6 guests, +¥3,000 per additional guest), you can use the entire ground floor like a private rental — with your travel companions, family, or pets. Travelers, long-term stays, solo trips: everyone's welcome.</p>
   </div>
 </section>
 
@@ -821,7 +821,7 @@
       <div class="faq-item"><h4>Is there a restaurant?</h4><p>There's no restaurant on-site, but you can cook in the shared kitchen or enjoy a BBQ in the garden (¥2,000/group).</p></div>
       <div class="faq-item"><h4>Is there an airport shuttle?</h4><p>No shuttle service is available. The nearest station is JR Shin-Shimonoseki.</p></div>
       <div class="faq-item"><h4>Is there a spa or pool?</h4><p>Neither is available, but enjoy your time in nature instead — a walking trail in the hills behind us, BBQs in the garden, or a movie night.</p></div>
-      <div class="faq-item"><h4>Are towels and sheets included?</h4><p>Sheets are provided free of charge. Toothbrushes and towels are available for an additional fee.</p></div>
+      <div class="faq-item"><h4>Are towels and sheets included?</h4><p>Sheets are provided free of charge. Toothbrushes and towels are available for ¥100 each.</p></div>
       <div class="faq-item"><h4>Can I bring my pet?</h4><p>Small dogs only, ¥2,000 per additional pet (up to 2 per room). A carrier/crate is required, and pets may not run loose in shared areas or wherever other guests are present, or be placed on the guest room beds (they're welcome to roam freely in the garage or outdoors). Full house rules are included in your booking confirmation email.</p></div>
       <div class="faq-item"><h4>Is English support available?</h4><p>Yes, we can support you in English — travelers from overseas are very welcome.</p></div>
     </div>
@@ -944,7 +944,7 @@
         <h5>Guesthouse</h5>
         <p>Shimonoseki, Yamaguchi (near the Shimonoseki City Art Museum / Chofu Garden area)</p>
         <p>Nearest station: JR Shin-Shimonoseki</p>
-        <p>Private rooms from ¥3,250/night · Whole-Building Rental Plan (up to 10 guests) also available at ¥30,000/night</p>
+        <p>Private rooms from ¥3,250/night · Whole-Building Rental Plan (¥20,000/night for up to 6 guests, up to 10 guests total) also available</p>
         <p>Check-in 16:00–22:00 / Check-out by 10:00</p>
       </div>
       <div class="footer-col">
@@ -1142,7 +1142,7 @@
   const PAYMENT_LINKS = {
     standard: 'https://buy.stripe.com/14A8wOewD4yC4mG0qM87K01',
     dorm: 'https://buy.stripe.com/00w5kCfAHc147ySa1m87K03',
-    group: 'https://buy.stripe.com/9B600i3RZ8OS1auehC87K04' // Whole-Building Rental Plan (up to 10 guests) ¥30,000/night
+    group: 'https://buy.stripe.com/dRmaEW3RZ7KO06qc9u87K05' // Whole-Building Rental Plan (up to 10 guests) ¥20,000/night for up to 6 guests, +¥3,000 per additional guest
   };
   const GAS_BOOKING_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzDjZTTgivfNKeEE7_--Cx_MAaob7ZuBV2plVSP0woGOnMj21z8SsyP905NvJrSLbtR/exec';
   const IG_URL = 'https://www.instagram.com/compa0601/';
@@ -1174,7 +1174,7 @@
   const ROOMS = [
     { key:'standard', name:'Standard Twin Room', cap:'Shared bathroom · up to 2 guests per room · 3 rooms total', price:3250, unit:'room', maxGuests:3, qtyLabel:'Rooms', qtyUnit:'' },
     { key:'dorm', name:'Dormitory Room', cap:'4-bed mixed-gender room · bookable from a single bed', price:2250, unit:'bed', maxGuests:4, qtyLabel:'Beds', qtyUnit:'' },
-    { key:'group', name:'Whole-Building Rental Plan', cap:'Whole-building rental · for up to 10 guests · enjoy the whole ground floor like a private rental', price:30000, unit:null, maxGuests:10, qtyLabel:'Guests', qtyUnit:'', requiresRequest:true }
+    { key:'group', name:'Whole-Building Rental Plan', cap:'Whole-building rental · for up to 10 guests · enjoy the whole ground floor like a private rental (¥20,000 for up to 6 guests, +¥3,000 per additional guest)', price:20000, unit:null, maxGuests:10, qtyLabel:'Guests', qtyUnit:'', requiresRequest:true }
   ];
   const ROOM_CAPACITY = { standard: 3, dorm: 4, group: 1 };
 
