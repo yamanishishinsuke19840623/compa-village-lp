@@ -827,7 +827,7 @@
       <div class="faq-item"><h4>Is there an airport shuttle?</h4><p>No shuttle service is available. The nearest station is JR Shin-Shimonoseki.</p></div>
       <div class="faq-item"><h4>Is there a spa or pool?</h4><p>Neither is available, but enjoy your time in nature instead — a walking trail in the hills behind us, BBQs in the garden, or a movie night.</p></div>
       <div class="faq-item"><h4>Are towels and sheets included?</h4><p>Sheets are provided free of charge. Toothbrushes and towels are available for ¥100 each.</p></div>
-      <div class="faq-item"><h4>Can I bring my pet?</h4><p>Small dogs only, ¥2,000 per additional pet (up to 2 per room). A carrier/crate is required, and pets may not run loose in shared areas or wherever other guests are present, or be placed on the guest room beds (they're welcome to roam freely in the garage or outdoors). Full house rules are included in your booking confirmation email.</p></div>
+      <div class="faq-item"><h4>Can I bring my pet?</h4><p>Small dogs only, ¥2,000 per additional pet (up to 2 per room). Available for the Standard Twin Room and the Whole-Building Rental Plan; pets are not permitted in the shared Dormitory Room. A carrier/crate is required, and pets may not run loose in shared areas or wherever other guests are present, or be placed on the guest room beds (they're welcome to roam freely in the garage or outdoors). Full house rules are included in your booking confirmation email.</p></div>
       <div class="faq-item"><h4>Is English support available?</h4><p>Yes, we can support you in English — travelers from overseas are very welcome.</p></div>
     </div>
   </div>
@@ -1449,7 +1449,7 @@
         payLink.target = '_blank'; payLink.rel = 'noopener';
         payLink.textContent = 'Proceed to booking →';
         card.append(qtyWrap, payLink, qtyStatus);
-        appendPetAddon(card);
+        if(room.key === 'standard') appendPetAddon(card);
       } else if(GAS_BOOKING_ENDPOINT){
         if(room.requiresRequest){
           const reqNote = document.createElement('p'); reqNote.className = 'bk-cal-hint';
