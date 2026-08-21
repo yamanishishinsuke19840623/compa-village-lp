@@ -467,12 +467,7 @@
     text-decoration:none; font-weight:700; transition:background .18s ease;
   }
   .bk-room-card .btn-pay:hover{background:var(--forest-deep); color:var(--paper);}
-  .pet-addon{margin-top:14px; padding-top:14px; border-top:1px dashed var(--line);}
-  .pet-addon-toggle{display:flex; align-items:flex-start; gap:8px; font-size:.8rem; color:rgba(31,43,30,.75); cursor:pointer;}
-  .pet-addon-toggle input{margin-top:3px; flex:none;}
-  .pet-addon-details{margin-top:10px; display:grid; gap:8px;}
-  .pet-addon-details p{margin:0; font-size:.76rem; color:rgba(31,43,30,.6); line-height:1.6;}
-  .pet-addon-details a.ig-link{font-size:.76rem; margin-top:0;}
+  .pet-addon-note{margin-top:14px; padding-top:14px; border-top:1px dashed var(--line); font-size:.78rem; color:rgba(31,43,30,.65); line-height:1.6;}
   .bk-request-form{display:grid; gap:8px; margin-top:auto;}
   .bk-request-form input{
     border:1px solid var(--line); border-radius:8px; padding:9px 11px; font-size:.84rem;
@@ -1155,9 +1150,6 @@
     dorm: 'https://buy.stripe.com/00w5kCfAHc147ySa1m87K03',     // ドミトリールーム ¥2,250/泊
     group: 'https://buy.stripe.com/dRmaEW3RZ7KO06qc9u87K05'     // 一棟貸しプラン(10名様まで) 6名様まで¥20,000/泊+追加1名ごとに¥3,000(2026-08-19変更、数量調整可能な複数商品リンク)
   };
-  // ペット追加料金(¥2,000/匹・小型犬のみ・1室2匹まで)専用の決済リンク。スタンダードツインルームのみ対象
-  // (2026-08-19 やまちゃん作成。以前は現金徴収の想定だったが、こちらのStripeリンク経由に変更)
-  const PET_ADDON_LINK = 'https://buy.stripe.com/7sYbJ0dsz6GKbP81uQ87K06';
   // GASデプロイ後、ここにウェブアプリURLを貼る（gas/デプロイ手順書_やまちゃん用.txt参照）
   const GAS_BOOKING_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzDjZTTgivfNKeEE7_--Cx_MAaob7ZuBV2plVSP0woGOnMj21z8SsyP905NvJrSLbtR/exec';
   const IG_URL = 'https://www.instagram.com/compa0601/';
@@ -1277,24 +1269,11 @@
     bookedRanges[payload.roomType].push({checkin: payload.checkin, checkout: payload.checkout});
   }
 
-  // ペット追加オプション(スタンダード/ドミトリー/一棟貸し共通・チェックを入れて初めて決済リンクが表示される)
+  // ペット追加の注意書き(スタンダードツインルームのみ・料金はチェックイン時に現金徴収)
   function appendPetAddon(card){
-    if(!PET_ADDON_LINK) return;
-    const petWrap = document.createElement('div'); petWrap.className = 'pet-addon';
-    const petToggle = document.createElement('label'); petToggle.className = 'pet-addon-toggle';
-    const petCheck = document.createElement('input'); petCheck.type = 'checkbox';
-    petToggle.append(petCheck, document.createTextNode('🐾 小型犬を同伴する（追加1匹¥2,000・中型犬以上は同伴不可・下記ポリシーに同意）'));
-    const petDetails = document.createElement('div'); petDetails.className = 'pet-addon-details'; petDetails.hidden = true;
-    const petNote = document.createElement('p');
-    petNote.textContent = '※必ず小型犬（抱きかかえられるサイズ）に限ります。中型犬・大型犬はご同伴いただけません。サイズにご不安な場合は、ご予約前に一度お問い合わせください。1室2匹まで。ケージ必須持参、共用部での放し飼い不可、客室ベッドへの同伴不可（詳しいポリシーはFAQ「ペットと一緒に泊まれますか?」をご確認ください）。';
-    const petPayBtn = document.createElement('a');
-    petPayBtn.className = 'btn-pay'; petPayBtn.href = PET_ADDON_LINK;
-    petPayBtn.target = '_blank'; petPayBtn.rel = 'noopener';
-    petPayBtn.textContent = 'ペット追加料金を支払う →';
-    petDetails.append(petNote, petPayBtn);
-    petCheck.addEventListener('change', function(){ petDetails.hidden = !petCheck.checked; });
-    petWrap.append(petToggle, petDetails);
-    card.appendChild(petWrap);
+    const petNote = document.createElement('p'); petNote.className = 'pet-addon-note';
+    petNote.textContent = '🐾 小型犬同伴の場合、追加1匹¥2,000（チェックイン時に現金でお支払い・中型犬以上は同伴不可・1室2匹まで。詳しくはFAQ「ペットと一緒に泊まれますか?」をご確認ください）';
+    card.appendChild(petNote);
   }
 
   // その日にまだ空きがあるプランの中で、最安の1泊料金を返す（全プラン満室ならnull）

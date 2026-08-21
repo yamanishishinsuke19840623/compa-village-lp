@@ -467,11 +467,7 @@
     text-decoration:none; font-weight:700; transition:background .18s ease;
   }
   .bk-room-card .btn-pay:hover{background:var(--forest-deep); color:var(--paper);}
-  .pet-addon{margin-top:14px; padding-top:14px; border-top:1px dashed var(--line);}
-  .pet-addon-toggle{display:flex; align-items:flex-start; gap:8px; font-size:.8rem; color:rgba(31,43,30,.75); cursor:pointer;}
-  .pet-addon-toggle input{margin-top:3px; flex:none;}
-  .pet-addon-details{margin-top:10px; display:grid; gap:8px;}
-  .pet-addon-details p{margin:0; font-size:.76rem; color:rgba(31,43,30,.6); line-height:1.6;}
+  .pet-addon-note{margin-top:14px; padding-top:14px; border-top:1px dashed var(--line); font-size:.78rem; color:rgba(31,43,30,.65); line-height:1.6;}
   .bk-request-form{display:grid; gap:8px; margin-top:auto;}
   .bk-request-form input{
     border:1px solid var(--line); border-radius:8px; padding:9px 11px; font-size:.84rem;
@@ -1149,8 +1145,6 @@
     dorm: 'https://buy.stripe.com/00w5kCfAHc147ySa1m87K03',
     group: 'https://buy.stripe.com/dRmaEW3RZ7KO06qc9u87K05' // Whole-Building Rental Plan (up to 10 guests) ¥20,000/night for up to 6 guests, +¥3,000 per additional guest
   };
-  // Dedicated payment link for the pet add-on fee (¥2,000/dog, small dogs only, up to 2 per room). Standard Twin Room only.
-  const PET_ADDON_LINK = 'https://buy.stripe.com/7sYbJ0dsz6GKbP81uQ87K06';
   const GAS_BOOKING_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzDjZTTgivfNKeEE7_--Cx_MAaob7ZuBV2plVSP0woGOnMj21z8SsyP905NvJrSLbtR/exec';
   const IG_URL = 'https://www.instagram.com/compa0601/';
   let bookedRanges = { standard: [], dorm: [], group: [] };
@@ -1265,24 +1259,11 @@
     bookedRanges[payload.roomType].push({checkin: payload.checkin, checkout: payload.checkout});
   }
 
-  // Pet add-on option (Standard/Dorm/Whole-Building common; payment link only appears once the box is checked)
+  // Pet add-on note (Standard Twin Room only; fee is collected in cash at check-in)
   function appendPetAddon(card){
-    if(!PET_ADDON_LINK) return;
-    const petWrap = document.createElement('div'); petWrap.className = 'pet-addon';
-    const petToggle = document.createElement('label'); petToggle.className = 'pet-addon-toggle';
-    const petCheck = document.createElement('input'); petCheck.type = 'checkbox';
-    petToggle.append(petCheck, document.createTextNode('🐾 Bringing a small dog (extra ¥2,000/dog, medium/large dogs not permitted, agree to the policy below)'));
-    const petDetails = document.createElement('div'); petDetails.className = 'pet-addon-details'; petDetails.hidden = true;
-    const petNote = document.createElement('p');
-    petNote.textContent = 'Small dogs only (must be liftable/carriable). Medium and large dogs cannot be accommodated. If unsure about your dog\'s size, please contact us before booking. Up to 2 per room. A carrier/crate is required, pets may not run loose in shared areas, and may not be placed on the guest room beds (see the FAQ "Can I bring my pet?" for full details).';
-    const petPayBtn = document.createElement('a');
-    petPayBtn.className = 'btn-pay'; petPayBtn.href = PET_ADDON_LINK;
-    petPayBtn.target = '_blank'; petPayBtn.rel = 'noopener';
-    petPayBtn.textContent = 'Pay pet add-on fee →';
-    petDetails.append(petNote, petPayBtn);
-    petCheck.addEventListener('change', function(){ petDetails.hidden = !petCheck.checked; });
-    petWrap.append(petToggle, petDetails);
-    card.appendChild(petWrap);
+    const petNote = document.createElement('p'); petNote.className = 'pet-addon-note';
+    petNote.textContent = '🐾 Bringing a small dog costs an extra ¥2,000/dog (paid in cash at check-in; medium/large dogs not permitted; up to 2 per room. See the FAQ "Can I bring my pet?" for details).';
+    card.appendChild(petNote);
   }
 
   function datePriceHint(date){
