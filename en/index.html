@@ -827,7 +827,7 @@
       <div class="faq-item"><h4>Is there an airport shuttle?</h4><p>No shuttle service is available. The nearest station is JR Shin-Shimonoseki.</p></div>
       <div class="faq-item"><h4>Is there a spa or pool?</h4><p>Neither is available, but enjoy your time in nature instead — a walking trail in the hills behind us, BBQs in the garden, or a movie night.</p></div>
       <div class="faq-item"><h4>Are towels and sheets included?</h4><p>Sheets are provided free of charge. Toothbrushes and towels are available for ¥100 each.</p></div>
-      <div class="faq-item"><h4>Can I bring my pet?</h4><p>Small dogs only, ¥2,000 per additional pet (up to 2 per room). Available for the Standard Twin Room and the Whole-Building Rental Plan; pets are not permitted in the shared Dormitory Room. A carrier/crate is required, and pets may not run loose in shared areas or wherever other guests are present, or be placed on the guest room beds (they're welcome to roam freely in the garage or outdoors). Full house rules are included in your booking confirmation email.</p></div>
+      <div class="faq-item"><h4>Can I bring my pet?</h4><p>In the Standard Twin Room, small dogs only (must be liftable/carriable) are welcome, ¥2,000 per additional dog (up to 2 per room); medium and large dogs cannot be accommodated there, so please contact us first if you're unsure. The Whole-Building Rental Plan has no breed or size restriction (¥2,000 per additional dog). Pets are not permitted in the shared Dormitory Room. A carrier/crate is required, and pets may not run loose in shared areas or wherever other guests are present, or be placed on the guest room beds (they're welcome to roam freely in the garage or outdoors). Full house rules are included in your booking confirmation email.</p></div>
       <div class="faq-item"><h4>Is English support available?</h4><p>Yes, we can support you in English — travelers from overseas are very welcome.</p></div>
     </div>
   </div>
@@ -1271,10 +1271,10 @@
     const petWrap = document.createElement('div'); petWrap.className = 'pet-addon';
     const petToggle = document.createElement('label'); petToggle.className = 'pet-addon-toggle';
     const petCheck = document.createElement('input'); petCheck.type = 'checkbox';
-    petToggle.append(petCheck, document.createTextNode('🐾 Bringing a small dog (extra ¥2,000/dog, agree to the policy below)'));
+    petToggle.append(petCheck, document.createTextNode('🐾 Bringing a small dog (extra ¥2,000/dog, medium/large dogs not permitted, agree to the policy below)'));
     const petDetails = document.createElement('div'); petDetails.className = 'pet-addon-details'; petDetails.hidden = true;
     const petNote = document.createElement('p');
-    petNote.textContent = 'Small dogs only, up to 2 per room. A carrier/crate is required, pets may not run loose in shared areas, and may not be placed on the guest room beds (see the FAQ "Can I bring my pet?" for full details).';
+    petNote.textContent = 'Small dogs only (must be liftable/carriable). Medium and large dogs cannot be accommodated. If unsure about your dog\'s size, please contact us before booking. Up to 2 per room. A carrier/crate is required, pets may not run loose in shared areas, and may not be placed on the guest room beds (see the FAQ "Can I bring my pet?" for full details).';
     const petPayBtn = document.createElement('a');
     petPayBtn.className = 'btn-pay'; petPayBtn.href = PET_ADDON_LINK;
     petPayBtn.target = '_blank'; petPayBtn.rel = 'noopener';

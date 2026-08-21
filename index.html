@@ -828,7 +828,7 @@
       <div class="faq-item"><h4>空港シャトルサービスはありますか?</h4><p>ご用意はありません。最寄りはJR新下関駅です。</p></div>
       <div class="faq-item"><h4>スパ・プールはありますか?</h4><p>ご用意はありません。裏山の散歩道や庭でのBBQ・映画上映など、自然の中で過ごす時間をお楽しみください。</p></div>
       <div class="faq-item"><h4>タオルやシーツはついていますか?</h4><p>シーツは無料でご用意しています。歯ブラシ・タオルは各¥100の追加料金でご提供しています。</p></div>
-      <div class="faq-item"><h4>ペットと一緒に泊まれますか?</h4><p>小型犬に限り、追加1匹ごとに¥2,000（1室2匹まで）でご一緒いただけます（スタンダードツインルーム・一棟貸しプランが対象。他のお客様と相部屋になるドミトリールームはペットの同伴不可です）。ケージのご持参が必須で、共用部や他のお客様がいらっしゃる場所での放し飼い・客室ベッドへの同伴はご遠慮いただいています（ガレージや屋外での開放は可能です）。詳しいお願い事項はご予約確定メールにてご案内します。</p></div>
+      <div class="faq-item"><h4>ペットと一緒に泊まれますか?</h4><p>スタンダードツインルームは、小型犬（抱きかかえられるサイズ）に限り、追加1匹ごとに¥2,000（1室2匹まで）でご一緒いただけます。中型犬・大型犬はサイズの都合上ご同伴いただけませんので、ご不安な場合は事前にお問い合わせください。一棟貸しプランは犬種・サイズの制限なくご同伴いただけます（追加料金¥2,000/匹）。他のお客様と相部屋になるドミトリールームはペットの同伴不可です。ケージのご持参が必須で、共用部や他のお客様がいらっしゃる場所での放し飼い・客室ベッドへの同伴はご遠慮いただいています（ガレージや屋外での開放は可能です）。詳しいお願い事項はご予約確定メールにてご案内します。</p></div>
       <div class="faq-item"><h4>英語での対応は可能ですか?</h4><p>はい、英語対応可能です。海外からの旅人もお気軽にどうぞ。</p></div>
     </div>
   </div>
@@ -1283,10 +1283,10 @@
     const petWrap = document.createElement('div'); petWrap.className = 'pet-addon';
     const petToggle = document.createElement('label'); petToggle.className = 'pet-addon-toggle';
     const petCheck = document.createElement('input'); petCheck.type = 'checkbox';
-    petToggle.append(petCheck, document.createTextNode('🐾 小型犬を同伴する（追加1匹¥2,000・下記ポリシーに同意）'));
+    petToggle.append(petCheck, document.createTextNode('🐾 小型犬を同伴する（追加1匹¥2,000・中型犬以上は同伴不可・下記ポリシーに同意）'));
     const petDetails = document.createElement('div'); petDetails.className = 'pet-addon-details'; petDetails.hidden = true;
     const petNote = document.createElement('p');
-    petNote.textContent = '小型犬のみ・1室2匹まで。ケージ必須持参、共用部での放し飼い不可、客室ベッドへの同伴不可（詳しいポリシーはFAQ「ペットと一緒に泊まれますか?」をご確認ください）。';
+    petNote.textContent = '※必ず小型犬（抱きかかえられるサイズ）に限ります。中型犬・大型犬はご同伴いただけません。サイズにご不安な場合は、ご予約前に一度お問い合わせください。1室2匹まで。ケージ必須持参、共用部での放し飼い不可、客室ベッドへの同伴不可（詳しいポリシーはFAQ「ペットと一緒に泊まれますか?」をご確認ください）。';
     const petPayBtn = document.createElement('a');
     petPayBtn.className = 'btn-pay'; petPayBtn.href = PET_ADDON_LINK;
     petPayBtn.target = '_blank'; petPayBtn.rel = 'noopener';
