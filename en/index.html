@@ -1265,6 +1265,26 @@
     bookedRanges[payload.roomType].push({checkin: payload.checkin, checkout: payload.checkout});
   }
 
+  // Pet add-on option (Standard/Dorm/Whole-Building common; payment link only appears once the box is checked)
+  function appendPetAddon(card){
+    if(!PET_ADDON_LINK) return;
+    const petWrap = document.createElement('div'); petWrap.className = 'pet-addon';
+    const petToggle = document.createElement('label'); petToggle.className = 'pet-addon-toggle';
+    const petCheck = document.createElement('input'); petCheck.type = 'checkbox';
+    petToggle.append(petCheck, document.createTextNode('🐾 Bringing a small dog (extra ¥2,000/dog, agree to the policy below)'));
+    const petDetails = document.createElement('div'); petDetails.className = 'pet-addon-details'; petDetails.hidden = true;
+    const petNote = document.createElement('p');
+    petNote.textContent = 'Small dogs only, up to 2 per room. A carrier/crate is required, pets may not run loose in shared areas, and may not be placed on the guest room beds (see the FAQ "Can I bring my pet?" for full details).';
+    const petPayBtn = document.createElement('a');
+    petPayBtn.className = 'btn-pay'; petPayBtn.href = PET_ADDON_LINK;
+    petPayBtn.target = '_blank'; petPayBtn.rel = 'noopener';
+    petPayBtn.textContent = 'Pay pet add-on fee →';
+    petDetails.append(petNote, petPayBtn);
+    petCheck.addEventListener('change', function(){ petDetails.hidden = !petCheck.checked; });
+    petWrap.append(petToggle, petDetails);
+    card.appendChild(petWrap);
+  }
+
   function datePriceHint(date){
     const next = new Date(date); next.setDate(next.getDate()+1);
     let min = null;
@@ -1429,25 +1449,7 @@
         payLink.target = '_blank'; payLink.rel = 'noopener';
         payLink.textContent = 'Proceed to booking →';
         card.append(qtyWrap, payLink, qtyStatus);
-
-        // Pet add-on option (Standard Twin Room only, payment link only appears once the box is checked)
-        if(room.key === 'standard' && PET_ADDON_LINK){
-          const petWrap = document.createElement('div'); petWrap.className = 'pet-addon';
-          const petToggle = document.createElement('label'); petToggle.className = 'pet-addon-toggle';
-          const petCheck = document.createElement('input'); petCheck.type = 'checkbox';
-          petToggle.append(petCheck, document.createTextNode('🐾 Bringing a small dog (extra ¥2,000/dog, agree to the policy below)'));
-          const petDetails = document.createElement('div'); petDetails.className = 'pet-addon-details'; petDetails.hidden = true;
-          const petNote = document.createElement('p');
-          petNote.textContent = 'Small dogs only, up to 2 per room. A carrier/crate is required, pets may not run loose in shared areas, and may not be placed on the guest room beds (see the FAQ "Can I bring my pet?" for full details).';
-          const petPayBtn = document.createElement('a');
-          petPayBtn.className = 'btn-pay'; petPayBtn.href = PET_ADDON_LINK;
-          petPayBtn.target = '_blank'; petPayBtn.rel = 'noopener';
-          petPayBtn.textContent = 'Pay pet add-on fee →';
-          petDetails.append(petNote, petPayBtn);
-          petCheck.addEventListener('change', function(){ petDetails.hidden = !petCheck.checked; });
-          petWrap.append(petToggle, petDetails);
-          card.appendChild(petWrap);
-        }
+        appendPetAddon(card);
       } else if(GAS_BOOKING_ENDPOINT){
         if(room.requiresRequest){
           const reqNote = document.createElement('p'); reqNote.className = 'bk-cal-hint';
@@ -1495,6 +1497,7 @@
         });
         form.append(nameInput, emailInput, guestsWrap, btn, status);
         card.appendChild(form);
+        appendPetAddon(card);
       } else {
         const a = document.createElement('a'); a.className = 'btn btn-primary';
         a.href = PAYMENT_LINKS[room.key] || IG_URL; a.target = '_blank'; a.rel = 'noopener';

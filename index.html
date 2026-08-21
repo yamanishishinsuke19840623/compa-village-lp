@@ -1277,6 +1277,26 @@
     bookedRanges[payload.roomType].push({checkin: payload.checkin, checkout: payload.checkout});
   }
 
+  // ペット追加オプション(スタンダード/ドミトリー/一棟貸し共通・チェックを入れて初めて決済リンクが表示される)
+  function appendPetAddon(card){
+    if(!PET_ADDON_LINK) return;
+    const petWrap = document.createElement('div'); petWrap.className = 'pet-addon';
+    const petToggle = document.createElement('label'); petToggle.className = 'pet-addon-toggle';
+    const petCheck = document.createElement('input'); petCheck.type = 'checkbox';
+    petToggle.append(petCheck, document.createTextNode('🐾 小型犬を同伴する（追加1匹¥2,000・下記ポリシーに同意）'));
+    const petDetails = document.createElement('div'); petDetails.className = 'pet-addon-details'; petDetails.hidden = true;
+    const petNote = document.createElement('p');
+    petNote.textContent = '小型犬のみ・1室2匹まで。ケージ必須持参、共用部での放し飼い不可、客室ベッドへの同伴不可（詳しいポリシーはFAQ「ペットと一緒に泊まれますか?」をご確認ください）。';
+    const petPayBtn = document.createElement('a');
+    petPayBtn.className = 'btn-pay'; petPayBtn.href = PET_ADDON_LINK;
+    petPayBtn.target = '_blank'; petPayBtn.rel = 'noopener';
+    petPayBtn.textContent = 'ペット追加料金を支払う →';
+    petDetails.append(petNote, petPayBtn);
+    petCheck.addEventListener('change', function(){ petDetails.hidden = !petCheck.checked; });
+    petWrap.append(petToggle, petDetails);
+    card.appendChild(petWrap);
+  }
+
   // その日にまだ空きがあるプランの中で、最安の1泊料金を返す（全プラン満室ならnull）
   function datePriceHint(date){
     const next = new Date(date); next.setDate(next.getDate()+1);
@@ -1443,25 +1463,7 @@
           });
         });
         card.append(qtyWrap, payBtn, qtyStatus);
-
-        // ペット追加オプション(スタンダードツインルームのみ・チェックを入れて初めて決済リンクが表示される)
-        if(room.key === 'standard' && PET_ADDON_LINK){
-          const petWrap = document.createElement('div'); petWrap.className = 'pet-addon';
-          const petToggle = document.createElement('label'); petToggle.className = 'pet-addon-toggle';
-          const petCheck = document.createElement('input'); petCheck.type = 'checkbox';
-          petToggle.append(petCheck, document.createTextNode('🐾 小型犬を同伴する（追加1匹¥2,000・下記ポリシーに同意）'));
-          const petDetails = document.createElement('div'); petDetails.className = 'pet-addon-details'; petDetails.hidden = true;
-          const petNote = document.createElement('p');
-          petNote.textContent = '小型犬のみ・1室2匹まで。ケージ必須持参、共用部での放し飼い不可、客室ベッドへの同伴不可（詳しいポリシーはFAQ「ペットと一緒に泊まれますか?」をご確認ください）。';
-          const petPayBtn = document.createElement('a');
-          petPayBtn.className = 'btn-pay'; petPayBtn.href = PET_ADDON_LINK;
-          petPayBtn.target = '_blank'; petPayBtn.rel = 'noopener';
-          petPayBtn.textContent = 'ペット追加料金を支払う →';
-          petDetails.append(petNote, petPayBtn);
-          petCheck.addEventListener('change', function(){ petDetails.hidden = !petCheck.checked; });
-          petWrap.append(petToggle, petDetails);
-          card.appendChild(petWrap);
-        }
+        appendPetAddon(card);
       } else if(GAS_BOOKING_ENDPOINT){
         if(room.requiresRequest){
           const reqNote = document.createElement('p'); reqNote.className = 'bk-cal-hint';
@@ -1509,6 +1511,7 @@
         });
         form.append(nameInput, emailInput, guestsWrap, btn, status);
         card.appendChild(form);
+        appendPetAddon(card);
       } else {
         const a = document.createElement('a'); a.className = 'btn btn-primary';
         a.href = PAYMENT_LINKS[room.key] || IG_URL; a.target = '_blank'; a.rel = 'noopener';
