@@ -1173,7 +1173,7 @@
   const DOW = ['Su','Mo','Tu','We','Th','Fr','Sa'];
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   const ROOMS = [
-    { key:'standard', name:'Standard Twin Room', cap:'Shared bathroom · up to 2 guests per room · 3 rooms total', price:3250, unit:'room', maxGuests:3, qtyLabel:'Rooms', qtyUnit:'' },
+    { key:'standard', name:'Standard Twin Room', cap:'Shared bathroom · up to 2 guests per room · 3 rooms total', price:3250, unit:'room', maxGuests:2, qtyLabel:'Guests', qtyUnit:'' },
     { key:'dorm', name:'Dormitory Room', cap:'4-bed mixed-gender room · bookable from a single bed', price:2250, unit:'bed', maxGuests:4, qtyLabel:'Beds', qtyUnit:'' },
     { key:'group', name:'Whole-Building Rental Plan', cap:'Whole-building rental · for up to 10 guests · enjoy the whole ground floor like a private rental (¥20,000 for up to 6 guests, +¥3,000 per additional guest)', price:20000, unit:null, maxGuests:10, qtyLabel:'Guests', qtyUnit:'', requiresRequest:true }
   ];
@@ -1415,7 +1415,9 @@
           }
           // A unique reference ID used to match this Stripe payment back to this GAS row later
           const refId = 'cv' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
-          payLink.href = PAYMENT_LINKS[room.key] + '?client_reference_id=' + encodeURIComponent(refId);
+          // Pass quantity so the charge scales with the selected count (requires
+          // "allow adjustable quantity" to be enabled on the Stripe Payment Link)
+          payLink.href = PAYMENT_LINKS[room.key] + '?client_reference_id=' + encodeURIComponent(refId) + '&quantity=' + qty;
           logPendingPayment({
             kind: 'stripe_pending',
             roomType: room.key,

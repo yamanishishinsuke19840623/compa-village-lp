@@ -1179,7 +1179,7 @@
   const DOW = ['日','月','火','水','木','金','土'];
   // standard/dormは「部屋数・ベッド数」を選ぶ予約単位、groupは一棟貸しで「人数」を選ぶ予約単位(2026-08-13 やまちゃん指示に合わせて区別)
   const ROOMS = [
-    { key:'standard', name:'スタンダード ツインルーム', cap:'共用バスルーム・1部屋2名まで・全3室', price:3250, unit:'部屋', maxGuests:3, qtyLabel:'部屋数', qtyUnit:'室' },
+    { key:'standard', name:'スタンダード ツインルーム', cap:'共用バスルーム・1部屋2名まで・全3室', price:3250, unit:'部屋', maxGuests:2, qtyLabel:'人数', qtyUnit:'名' },
     { key:'dorm', name:'ドミトリールーム', cap:'4人部屋・男女共用・1ベッドから予約可', price:2250, unit:'ベッド', maxGuests:4, qtyLabel:'ベッド数', qtyUnit:'ベッド' },
     { key:'group', name:'一棟貸しプラン', cap:'一棟貸し・10名様まで・1階部分を貸し切りでご利用いただけます（6名様まで¥20,000、7名様以降1名ごとに+¥3,000）', price:20000, unit:null, maxGuests:10, qtyLabel:'人数', qtyUnit:'名', requiresRequest:true }
   ];
@@ -1429,7 +1429,10 @@
           }
           // Stripe決済とGAS台帳の行を後で紐づけるための一意な参照ID
           const refId = 'cv' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
-          payBtn.href = PAYMENT_LINKS[room.key] + '?client_reference_id=' + encodeURIComponent(refId);
+          // quantityを渡すことで選択した人数分の金額になる（Stripe側の決済リンクで
+          // 「数量の調整を許可」がONになっている必要あり。2026-09-22 修正：
+          // これまでquantityを渡していなかったため、何人選んでも1人分しか課金されていなかった）
+          payBtn.href = PAYMENT_LINKS[room.key] + '?client_reference_id=' + encodeURIComponent(refId) + '&quantity=' + qty;
           // 決済ページを開くのと同時に、空室管理用の仮予約をバックグラウンドで記録する
           logPendingPayment({
             kind: 'stripe_pending',
