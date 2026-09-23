@@ -1429,10 +1429,14 @@
           }
           // Stripe決済とGAS台帳の行を後で紐づけるための一意な参照ID
           const refId = 'cv' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
-          // quantityを渡すことで選択した人数分の金額になる（Stripe側の決済リンクで
-          // 「数量の調整を許可」がONになっている必要あり。2026-09-22 修正：
-          // これまでquantityを渡していなかったため、何人選んでも1人分しか課金されていなかった）
-          payBtn.href = PAYMENT_LINKS[room.key] + '?client_reference_id=' + encodeURIComponent(refId) + '&quantity=' + qty;
+          // StripeのPayment LinkはURLのquantityパラメータを反映しないため（実機確認済み）、
+          // お客様に決済ページ上で手動で数量を変更してもらう必要がある。
+          // 2名以上の場合、決済ページへ進む直前に必ず変更するよう明示する
+          // （2026-09-23：quantityをURLで渡す方式では反映されないことが判明したための修正）
+          if(qty > 1){
+            alert('次の決済ページで「数量」を必ず「' + qty + '」に変更してから、お支払いへお進みください。\n（変更しないと料金が1名分のままになってしまいます）');
+          }
+          payBtn.href = PAYMENT_LINKS[room.key] + '?client_reference_id=' + encodeURIComponent(refId);
           // 決済ページを開くのと同時に、空室管理用の仮予約をバックグラウンドで記録する
           logPendingPayment({
             kind: 'stripe_pending',
