@@ -1255,20 +1255,6 @@
     });
   }
 
-  // スタンダード/ドミトリーは予約リクエストなしで直接Stripe決済へ進むため、
-  // 決済ページを開くのと同時に空室管理用の仮予約をGASへ記録する（名前・メール不要、通知メールなし）
-  function logPendingPayment(payload){
-    if(!GAS_BOOKING_ENDPOINT) return;
-    fetch(GAS_BOOKING_ENDPOINT, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {'Content-Type': 'text/plain'},
-      body: JSON.stringify(payload)
-    }).catch(function(){});
-    bookedRanges[payload.roomType] = bookedRanges[payload.roomType] || [];
-    bookedRanges[payload.roomType].push({checkin: payload.checkin, checkout: payload.checkout});
-  }
-
   // ペット追加の注意書き(スタンダードツインルームのみ・料金はチェックイン時に現金徴収)
   function appendPetAddon(card){
     const petNote = document.createElement('p'); petNote.className = 'pet-addon-note';
@@ -1415,38 +1401,58 @@
         qtyValueWrap.appendChild(document.createTextNode(room.qtyUnit || ''));
         qtyWrap.appendChild(qtyValueWrap);
         const payBtn = document.createElement('a');
-        payBtn.className = 'btn btn-primary'; payBtn.href = PAYMENT_LINKS[room.key];
-        payBtn.target = '_blank'; payBtn.rel = 'noopener';
+        payBtn.className = 'btn btn-primary'; payBtn.href = '#';
         payBtn.textContent = '予約に進む →';
         const qtyStatus = document.createElement('p'); qtyStatus.className = 'bk-request-status';
+        // 人数分の金額が入った決済ページをGAS(Stripe API経由)でその場で作ってもらい、
+        // そのURLを開く方式（2026-09-23：Payment LinkのURLでは数量を渡せないため変更）。
+        // ポップアップブロック対策として、クリック直後（同期処理中）に空タブを開いておき、
+        // GASからの応答が届いたらそのタブの行き先を差し替える
         payBtn.addEventListener('click', function(e){
+          e.preventDefault();
           const qty = parseInt(qtyInput.value, 10);
           if(!qty || qty < 1 || qty > (room.maxGuests || 1)){
-            e.preventDefault();
             qtyStatus.textContent = (room.qtyLabel || '数量') + 'をご確認ください（最大' + (room.maxGuests || 1) + (room.qtyUnit || '') + '）。';
             qtyStatus.className = 'bk-request-status err';
             return;
           }
-          // Stripe決済とGAS台帳の行を後で紐づけるための一意な参照ID
-          const refId = 'cv' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
-          // StripeのPayment LinkはURLのquantityパラメータを反映しないため（実機確認済み）、
-          // お客様に決済ページ上で手動で数量を変更してもらう必要がある。
-          // 2名以上の場合、決済ページへ進む直前に必ず変更するよう明示する
-          // （2026-09-23：quantityをURLで渡す方式では反映されないことが判明したための修正）
-          if(qty > 1){
-            alert('次の決済ページで「数量」を必ず「' + qty + '」に変更してから、お支払いへお進みください。\n（変更しないと料金が1名分のままになってしまいます）');
-          }
-          payBtn.href = PAYMENT_LINKS[room.key] + '?client_reference_id=' + encodeURIComponent(refId);
-          // 決済ページを開くのと同時に、空室管理用の仮予約をバックグラウンドで記録する
-          logPendingPayment({
-            kind: 'stripe_pending',
-            roomType: room.key,
-            refId: refId,
-            checkin: toISO(checkin),
-            checkout: toISO(checkout),
-            nights: nights,
-            guests: qty
-          });
+          qtyStatus.textContent = '決済ページを準備しています…';
+          qtyStatus.className = 'bk-request-status';
+          const newTab = window.open('', '_blank');
+          const cbName = 'compaCheckoutCb_' + Date.now();
+          const script = document.createElement('script');
+          window[cbName] = function(data){
+            delete window[cbName];
+            script.remove();
+            if(data && data.ok && data.url){
+              if(newTab){ newTab.location.href = data.url; } else { window.location.href = data.url; }
+              qtyStatus.textContent = '';
+              // 決済ページへ進んだ日程をカレンダー表示にも即反映しておく（次にGASへ問い合わせるまでのつなぎ）
+              bookedRanges[room.key] = bookedRanges[room.key] || [];
+              bookedRanges[room.key].push({checkin: toISO(checkin), checkout: toISO(checkout)});
+            } else {
+              if(newTab) newTab.close();
+              qtyStatus.textContent = (data && data.reason === 'unavailable')
+                ? 'この日程は満室になってしまいました。別の日程をお試しください。'
+                : '決済ページの準備に失敗しました。時間をおいて再度お試しいただくか、Instagramからご連絡ください。';
+              qtyStatus.className = 'bk-request-status err';
+            }
+          };
+          script.src = GAS_BOOKING_ENDPOINT + '?action=create_checkout' +
+            '&roomType=' + encodeURIComponent(room.key) +
+            '&checkin=' + encodeURIComponent(toISO(checkin)) +
+            '&checkout=' + encodeURIComponent(toISO(checkout)) +
+            '&nights=' + encodeURIComponent(nights) +
+            '&guests=' + encodeURIComponent(qty) +
+            '&callback=' + cbName;
+          script.onerror = function(){
+            delete window[cbName];
+            script.remove();
+            if(newTab) newTab.close();
+            qtyStatus.textContent = '通信エラーが発生しました。時間をおいて再度お試しください。';
+            qtyStatus.className = 'bk-request-status err';
+          };
+          document.body.appendChild(script);
         });
         card.append(qtyWrap, payBtn, qtyStatus);
         if(room.key === 'standard') appendPetAddon(card);

@@ -1245,20 +1245,6 @@
     });
   }
 
-  // Standard/Dormitory go straight to Stripe with no request form, so we log a lightweight
-  // placeholder booking to keep availability accurate the moment checkout is opened
-  function logPendingPayment(payload){
-    if(!GAS_BOOKING_ENDPOINT) return;
-    fetch(GAS_BOOKING_ENDPOINT, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {'Content-Type': 'text/plain'},
-      body: JSON.stringify(payload)
-    }).catch(function(){});
-    bookedRanges[payload.roomType] = bookedRanges[payload.roomType] || [];
-    bookedRanges[payload.roomType].push({checkin: payload.checkin, checkout: payload.checkout});
-  }
-
   // Pet add-on note (Standard Twin Room only; fee is collected in cash at check-in)
   function appendPetAddon(card){
     const petNote = document.createElement('p'); petNote.className = 'pet-addon-note';
@@ -1405,35 +1391,56 @@
         qtyWrap.appendChild(qtyValueWrap);
         const qtyStatus = document.createElement('p'); qtyStatus.className = 'bk-request-status';
         const payLink = document.createElement('a');
+        // Build a checkout session with the correct quantity server-side via GAS/Stripe API,
+        // instead of relying on a static Payment Link (which ignores a "quantity" URL param —
+        // confirmed by testing). Open a blank tab synchronously to avoid popup blockers, then
+        // redirect it once the session URL comes back (2026-09-23 fix).
         payLink.addEventListener('click', function(e){
+          e.preventDefault();
           const qty = parseInt(qtyInput.value, 10);
           if(!qty || qty < 1 || qty > (room.maxGuests || 1)){
-            e.preventDefault();
             qtyStatus.textContent = 'Please check the ' + (room.qtyLabel || 'quantity').toLowerCase() + ' (max ' + (room.maxGuests || 1) + ').';
             qtyStatus.className = 'bk-request-status err';
             return;
           }
-          // A unique reference ID used to match this Stripe payment back to this GAS row later
-          const refId = 'cv' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
-          // Stripe Payment Links do not honor a "quantity" URL parameter (confirmed by
-          // testing), so the guest must change the quantity manually on Stripe's page.
-          // Remind them clearly right before they proceed (2026-09-23 fix).
-          if(qty > 1){
-            alert('On the next payment page, please change "Quantity" to ' + qty + ' before paying.\n(Otherwise you will only be charged for 1 person.)');
-          }
-          payLink.href = PAYMENT_LINKS[room.key] + '?client_reference_id=' + encodeURIComponent(refId);
-          logPendingPayment({
-            kind: 'stripe_pending',
-            roomType: room.key,
-            refId: refId,
-            checkin: toISO(checkin),
-            checkout: toISO(checkout),
-            nights: nights,
-            guests: qty
-          });
+          qtyStatus.textContent = 'Preparing your payment page…';
+          qtyStatus.className = 'bk-request-status';
+          const newTab = window.open('', '_blank');
+          const cbName = 'compaCheckoutCb_' + Date.now();
+          const script = document.createElement('script');
+          window[cbName] = function(data){
+            delete window[cbName];
+            script.remove();
+            if(data && data.ok && data.url){
+              if(newTab){ newTab.location.href = data.url; } else { window.location.href = data.url; }
+              qtyStatus.textContent = '';
+              bookedRanges[room.key] = bookedRanges[room.key] || [];
+              bookedRanges[room.key].push({checkin: toISO(checkin), checkout: toISO(checkout)});
+            } else {
+              if(newTab) newTab.close();
+              qtyStatus.textContent = (data && data.reason === 'unavailable')
+                ? 'These dates just became fully booked. Please try a different date range.'
+                : 'Could not prepare the payment page. Please try again later or contact us on Instagram.';
+              qtyStatus.className = 'bk-request-status err';
+            }
+          };
+          script.src = GAS_BOOKING_ENDPOINT + '?action=create_checkout' +
+            '&roomType=' + encodeURIComponent(room.key) +
+            '&checkin=' + encodeURIComponent(toISO(checkin)) +
+            '&checkout=' + encodeURIComponent(toISO(checkout)) +
+            '&nights=' + encodeURIComponent(nights) +
+            '&guests=' + encodeURIComponent(qty) +
+            '&callback=' + cbName;
+          script.onerror = function(){
+            delete window[cbName];
+            script.remove();
+            if(newTab) newTab.close();
+            qtyStatus.textContent = 'A network error occurred. Please try again later.';
+            qtyStatus.className = 'bk-request-status err';
+          };
+          document.body.appendChild(script);
         });
-        payLink.className = 'btn btn-primary'; payLink.href = PAYMENT_LINKS[room.key];
-        payLink.target = '_blank'; payLink.rel = 'noopener';
+        payLink.className = 'btn btn-primary'; payLink.href = '#';
         payLink.textContent = 'Proceed to booking →';
         card.append(qtyWrap, payLink, qtyStatus);
         if(room.key === 'standard') appendPetAddon(card);
